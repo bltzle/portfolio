@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
 import './style.css'
 
 const projects = [
@@ -23,7 +24,54 @@ function Nav({ page, setPage }) {
 function WorkPage({ setPage }) {
   return (
     <div className="split">
-      <div className="left" />
+      <div className="left">
+        <div className="grain-overlay" />
+        <span className="left-label animate" style={{ animationDelay: '0.1s' }}>Hover a project</span>
+        <ShaderGradientCanvas style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
+          <ShaderGradient
+            animate="on"
+            axesHelper="off"
+            brightness={1.2}
+            cAzimuthAngle={0}
+            cDistance={3.5}
+            cPolarAngle={90}
+            cameraZoom={1}
+            color1="#708238"
+            color2="#8A9A5B"
+            color3="#556B2F"
+            destination="onCanvas"
+            embedMode="off"
+            envPreset="city"
+            format="gif"
+            fov={40}
+            frameRate={10}
+            gizmoHelper="hide"
+            grain="off"
+            lightType="3d"
+            pixelDensity={1.2}
+            positionX={0}
+            positionY={0}
+            positionZ={0}
+            range="disabled"
+            rangeEnd={40}
+            rangeStart={0}
+            reflection={0.1}
+            rotationX={0}
+            rotationY={0}
+            rotationZ={0}
+            shader="defaults"
+            type="waterPlane"
+            uAmplitude={1}
+            uDensity={0.6}
+            uFrequency={5.5}
+            uSpeed={0.1}
+            uStrength={3.4}
+            uTime={0}
+            wireframe={false}
+            zoomOut={false}
+          />
+        </ShaderGradientCanvas>
+      </div>
       <div className="right">
         <Nav page="work" setPage={setPage} />
         <div className="content">
@@ -51,12 +99,12 @@ function WorkPage({ setPage }) {
 }
 
 const albums = [
-  { title: 'Album 1', img: '/images/music/album1.jpg', fallback: 'https://picsum.photos/seed/a1/120/120' },
-  { title: 'Album 2', img: '/images/music/album2.jpg', fallback: 'https://picsum.photos/seed/a2/120/120' },
-  { title: 'Album 3', img: '/images/music/album3.jpg', fallback: 'https://picsum.photos/seed/a3/120/120' },
-  { title: 'Album 4', img: '/images/music/album4.jpg', fallback: 'https://picsum.photos/seed/a4/120/120' },
-  { title: 'Album 5', img: '/images/music/album5.jpg', fallback: 'https://picsum.photos/seed/a5/120/120' },
-  { title: 'Album 6', img: '/images/music/album6.jpg', fallback: 'https://picsum.photos/seed/a6/120/120' },
+  { title: 'Album 1', img: '/images/music/album1.jpg', fallback: 'https://picsum.photos/seed/a1/120/120', href: 'https://tidal.com/track/396213085/u' },
+  { title: 'Album 2', img: '/images/music/album2.jpg', fallback: 'https://picsum.photos/seed/a2/120/120', href: 'https://tidal.com/track/452623922/u' },
+  { title: 'Album 3', img: '/images/music/album3.jpg', fallback: 'https://picsum.photos/seed/a3/120/120', href: 'https://tidal.com/track/97458481/u'  },
+  { title: 'Album 4', img: '/images/music/album4.jpg', fallback: 'https://picsum.photos/seed/a4/120/120', href: 'https://tidal.com/track/474707709/u' },
+  { title: 'Album 5', img: '/images/music/album5.jpg', fallback: 'https://picsum.photos/seed/a5/120/120', href: 'https://tidal.com/track/314943653/u' },
+  { title: 'Album 6', img: '/images/music/album6.jpg', fallback: 'https://picsum.photos/seed/a6/120/120', href: 'https://tidal.com/track/304142580/u' },
 ]
 
 function MusicPage({ setPage }) {
@@ -70,14 +118,14 @@ function MusicPage({ setPage }) {
         </p>
         <div className="album-grid">
           {albums.map((a, i) => (
-            <div key={a.title} className="album-wrap animate" style={{ animationDelay: `${0.2 + i * 0.05}s` }}>
+            <a key={a.title} className="album-wrap animate" href={a.href} target="_blank" rel="noreferrer" style={{ animationDelay: `${0.2 + i * 0.05}s` }}>
               <img
                 className="album"
                 src={a.img}
                 alt={a.title}
                 onError={e => { if (e.target.src !== a.fallback) e.target.src = a.fallback }}
               />
-            </div>
+            </a>
           ))}
         </div>
       </div>
