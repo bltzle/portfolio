@@ -11,7 +11,7 @@ const projects = [
   { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025' },
   { name: 'Underline',             desc: 'An investment platform for alternative assets',              year: '2023' },
   { name: 'Komi',                  desc: 'Neatly organize and keep track of your anime history',       year: '2025', dim: true },
-  { name: 'Interaction prototypes',desc: 'Fluid and delightful interfaces',                            year: '2026', page: 'interactions' },
+  { name: 'Digital Playground',     desc: 'A collection of visual experiments',                                        year: '2026', page: 'interactions' },
 ]
 
 function BackNav({ setPage }) {
@@ -96,7 +96,7 @@ function WorkPage({ setPage }) {
               <li
                 key={p.name}
                 className={`project animate${p.dim ? ' dim' : ''}`}
-                style={{ animationDelay: `${0.3 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1 }}
+                style={{ animationDelay: `${0.3 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: p.dim ? 'not-allowed' : 'pointer' }}
                 onClick={() => p.page && setPage(p.page)}
               >
                 <span className="project-name">{p.name}</span>
