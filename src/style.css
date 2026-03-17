@@ -32,6 +32,8 @@ html, body, #app {
   font-size: 14px;
   background: #fff;
   color: var(--dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Page transition — scroll container for full-screen pages */
@@ -118,6 +120,7 @@ html, body, #app {
   text-decoration: none;
   font-weight: 500;
   color: var(--light);
+  transition: color 0.15s ease;
 }
 
 .nav a.active {
@@ -147,12 +150,14 @@ html, body, #app {
   font-size: 14px;
   font-weight: 500;
   color: var(--dark);
+  text-wrap: balance;
 }
 
 .header p {
   font-size: 14px;
   font-weight: 400;
   color: var(--dark);
+  text-wrap: pretty;
 }
 
 /* Projects */
@@ -169,6 +174,7 @@ html, body, #app {
   gap: 10px;
   height: 56px;
   padding: 0 76px;
+  transition: background 0.15s ease, opacity 0.2s ease;
 }
 
 .project:hover {
@@ -224,6 +230,7 @@ html, body, #app {
   font-size: 14px;
   font-weight: 500;
   color: var(--dark);
+  text-wrap: balance;
 }
 
 /* About */
@@ -235,6 +242,7 @@ html, body, #app {
   font-weight: 400;
   color: var(--dark);
   line-height: 1.6;
+  text-wrap: pretty;
 }
 
 .about-links {
@@ -257,9 +265,11 @@ html, body, #app {
 /* Back nav */
 .back-nav {
   background: #F5F5F5;
-  border: 1px solid white;
   border-radius: 999px;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.16), 0 1px 4px rgba(0,0,0,0.08);
+  border: 1px solid white;
+  box-shadow:
+    0 12px 36px rgba(0,0,0,0.22),
+    0 2px 8px rgba(0,0,0,0.12);
   font-family: 'Matter', sans-serif;
   font-size: 12px;
   font-weight: 500;
@@ -270,6 +280,7 @@ html, body, #app {
   align-items: center;
   gap: 4px;
   line-height: 1;
+  transition: color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .back-nav svg {
@@ -352,6 +363,7 @@ html, body, #app {
   font-size: 14px;
   font-weight: 500;
   color: var(--dark);
+  text-wrap: balance;
 }
 
 .interaction-card-meta {
@@ -381,8 +393,15 @@ html, body, #app {
   border-radius: 4px;
   display: block;
   cursor: pointer;
+  outline: 1px solid rgba(0,0,0,0.07);
+  outline-offset: -1px;
+  transition: opacity 0.15s ease, scale 0.15s ease-out;
 }
 
 .album:hover {
   opacity: 0.8;
+}
+
+.album:active {
+  scale: 0.96;
 }
