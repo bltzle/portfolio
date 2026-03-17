@@ -1,15 +1,27 @@
 import { useState } from 'react'
+import { CornerDownLeftIcon } from './CornerDownLeftIcon'
 import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
 import './style.css'
 
 const projects = [
-  { name: 'Ritual Dental', desc: 'Using AI to better inform patient oral health',      year: '2024' },
-  { name: 'Goodword',      desc: 'Maintain relationships in your professional network', year: '2024' },
-  { name: 'Workmate',      desc: 'Turning your inbox into an auto-updating task list',  year: '2024' },
-  { name: 'Sensible',      desc: 'A high yield account for your crypto',                year: '2024' },
-  { name: 'Dex',           desc: 'Learning camera for children',                        year: '2025' },
-  { name: 'Underline',     desc: 'An investment platform for alternative assets',       year: '2023' },
+  { name: 'Ritual Dental',         desc: 'Using AI to better inform patient oral health',              year: '2024' },
+  { name: 'Goodword',              desc: 'Maintain relationships in your professional network',         year: '2024' },
+  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024' },
+  { name: 'Sensible',              desc: 'A high yield account for your crypto',                       year: '2024' },
+  { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025' },
+  { name: 'Underline',             desc: 'An investment platform for alternative assets',              year: '2023' },
+  { name: 'Komi',                  desc: 'Neatly organize and keep track of your anime history',       year: '2025', dim: true },
+  { name: 'Interaction prototypes',desc: 'Fluid and delightful interfaces',                            year: '2026', page: 'interactions' },
 ]
+
+function BackNav({ setPage }) {
+  return (
+    <button className="back-nav" onClick={() => setPage('work')}>
+      <CornerDownLeftIcon size={12} />
+      Back
+    </button>
+  )
+}
 
 function Nav({ page, setPage }) {
   return (
@@ -27,13 +39,13 @@ function WorkPage({ setPage }) {
       <div className="left">
         <div className="grain-overlay" />
         <span className="left-label animate" style={{ animationDelay: '0.1s' }}>Hover a project</span>
-        <ShaderGradientCanvas style={{ width: '100%', height: '100%', pointerEvents: 'none' }}>
+        <ShaderGradientCanvas style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
           <ShaderGradient
             animate="on"
             axesHelper="off"
             brightness={1.2}
             cAzimuthAngle={0}
-            cDistance={3.5}
+            cDistance={5.5}
             cPolarAngle={90}
             cameraZoom={1}
             color1="#708238"
@@ -83,8 +95,9 @@ function WorkPage({ setPage }) {
             {projects.map((p, i) => (
               <li
                 key={p.name}
-                className="project animate"
-                style={{ animationDelay: `${0.3 + i * 0.05}s` }}
+                className={`project animate${p.dim ? ' dim' : ''}`}
+                style={{ animationDelay: `${0.3 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1 }}
+                onClick={() => p.page && setPage(p.page)}
               >
                 <span className="project-name">{p.name}</span>
                 <span className="project-desc">{p.desc}</span>
@@ -133,6 +146,36 @@ function MusicPage({ setPage }) {
   )
 }
 
+const placeholderCards = [
+  { title: 'Card 1', meta: 'Interaction', img: 'https://picsum.photos/seed/p1/600/800' },
+  { title: 'Card 2', meta: 'Interaction', img: 'https://picsum.photos/seed/p2/600/800' },
+  { title: 'Card 3', meta: 'Interaction', img: 'https://picsum.photos/seed/p3/600/800' },
+  { title: 'Card 4', meta: 'Interaction', img: 'https://picsum.photos/seed/p4/600/800' },
+  { title: 'Card 5', meta: 'Interaction', img: 'https://picsum.photos/seed/p5/600/800' },
+  { title: 'Card 6', meta: 'Interaction', img: 'https://picsum.photos/seed/p6/600/800' },
+]
+
+function InteractionsPage({ setPage }) {
+  return (
+    <div className="page interactions-page">
+      <div className="interactions-header">
+        <BackNav setPage={setPage} />
+      </div>
+      <div className="interactions-grid">
+        {placeholderCards.map((c, i) => (
+          <div key={c.title} className="interaction-card">
+            <img className="interaction-card-img" src={c.img} alt={c.title} />
+            <div className="interaction-card-info">
+              <span className="interaction-card-title">{c.title}</span>
+              <span className="interaction-card-meta">{c.meta}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function AboutPage({ setPage }) {
   return (
     <div className="page">
@@ -158,9 +201,10 @@ export default function App() {
 
   return (
     <div key={page} className="page-transition">
-      {page === 'work'  && <WorkPage  setPage={setPage} />}
-      {page === 'about' && <AboutPage setPage={setPage} />}
-      {page === 'music' && <MusicPage setPage={setPage} />}
+      {page === 'work'         && <WorkPage         setPage={setPage} />}
+      {page === 'about'        && <AboutPage        setPage={setPage} />}
+      {page === 'music'        && <MusicPage        setPage={setPage} />}
+      {page === 'interactions' && <InteractionsPage setPage={setPage} />}
     </div>
   )
 }
