@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { CornerDownLeftIcon } from './CornerDownLeftIcon'
 import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
+import { Agentation } from 'agentation'
 import './style.css'
 
 const projects = [
@@ -10,9 +11,60 @@ const projects = [
   { name: 'Sensible',              desc: 'A high yield account for your crypto',                       year: '2024' },
   { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025' },
   { name: 'Underline',             desc: 'An investment platform for alternative assets',              year: '2023' },
-  { name: 'Komi',                  desc: 'Neatly organize and keep track of your anime history',       year: '2025', dim: true },
-  { name: 'Digital Playground',     desc: 'A collection of visual experiments',                                        year: '2026', page: 'interactions' },
 ]
+
+function useVisitorLocation() {
+  const [location, setLocation] = useState(null)
+  useEffect(() => {
+    fetch('https://ipinfo.io/json')
+      .then(r => r.json())
+      .then(d => { if (d.city && d.region) setLocation(`${d.city}, ${d.region}`) })
+      .catch(() => {})
+  }, [])
+  return location
+}
+
+function WorkFooter() {
+  const location = useVisitorLocation()
+  return (
+    <div className="work-links">
+      <a href="mailto:mabaltzelle@gmail.com">Email</a>
+      <a href="http://www.linkedin.com/in/matthew-baltzelle" target="_blank" rel="noreferrer">LinkedIn</a>
+      <a href="https://twitter.com/bltzle" target="_blank" rel="noreferrer">Twitter</a>
+      <span className="visitor-location">Last visitor from {location ?? '—'}</span>
+    </div>
+  )
+}
+
+function GrainOverlay() {
+  const ref = useRef(null)
+  useEffect(() => {
+    const canvas = ref.current
+    const ctx = canvas.getContext('2d')
+    let raf
+    let last = 0
+    const fps = 12
+    const interval = 1000 / fps
+    const draw = (now) => {
+      raf = requestAnimationFrame(draw)
+      if (now - last < interval) return
+      last = now
+      const w = canvas.width  = canvas.offsetWidth
+      const h = canvas.height = canvas.offsetHeight
+      const img = ctx.createImageData(w, h)
+      const data = img.data
+      for (let i = 0; i < data.length; i += 4) {
+        const v = Math.random() * 255 | 0
+        data[i] = data[i+1] = data[i+2] = v
+        data[i+3] = 255
+      }
+      ctx.putImageData(img, 0, 0)
+    }
+    raf = requestAnimationFrame(draw)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.06, pointerEvents: 'none', zIndex: 2, mixBlendMode: 'overlay' }} />
+}
 
 function BackNav({ setPage }) {
   return (
@@ -28,7 +80,7 @@ function Nav({ page, setPage }) {
     <nav className="nav">
       <a href="#" className={page === 'work'  ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('work')  }}>Work</a>
       <a href="#" className={page === 'about' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('about') }}>About</a>
-      <a href="#" className={page === 'music' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('music') }}>Music</a>
+      <a href="#" className={page === 'thoughts' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('thoughts') }}>Thoughts</a>
     </nav>
   )
 }
@@ -37,7 +89,7 @@ function WorkPage({ setPage }) {
   return (
     <div className="split">
       <div className="left">
-        <div className="grain-overlay" />
+        <GrainOverlay />
         <span className="left-label animate" style={{ animationDelay: '0.1s' }}>Hover a project</span>
         <ShaderGradientCanvas style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
           <ShaderGradient
@@ -106,10 +158,13 @@ function WorkPage({ setPage }) {
             ))}
           </ul>
         </div>
+        <WorkFooter />
       </div>
     </div>
   )
 }
+
+
 
 const albums = [
   { title: 'Album 1', img: '/images/music/album1.jpg', fallback: 'https://picsum.photos/seed/a1/120/120', href: 'https://tidal.com/track/396213085/u' },
@@ -120,61 +175,6 @@ const albums = [
   { title: 'Album 6', img: '/images/music/album6.jpg', fallback: 'https://picsum.photos/seed/a6/120/120', href: 'https://tidal.com/track/304142580/u' },
 ]
 
-function MusicPage({ setPage }) {
-  return (
-    <div className="page">
-      <Nav page="music" setPage={setPage} />
-      <div className="page-content">
-        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Music</h1>
-        <p className="about-text animate" style={{ animationDelay: '0.15s' }}>
-          I am almost always listening to music. Currently I'm alternating between the Meze 109 Pro and ZMF Bokeh Open paired with the FiiO K11 R2R. The HD600's were my daily drivers for almost 6 years, but I wanted a warmer and more fun listening experience. Here is what has been in my rotation recently.
-        </p>
-        <div className="album-grid">
-          {albums.map((a, i) => (
-            <a key={a.title} className="album-wrap animate" href={a.href} target="_blank" rel="noreferrer" style={{ animationDelay: `${0.2 + i * 0.05}s` }}>
-              <img
-                className="album"
-                src={a.img}
-                alt={a.title}
-                onError={e => { if (e.target.src !== a.fallback) e.target.src = a.fallback }}
-              />
-            </a>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-const placeholderCards = [
-  { title: 'Card 1', meta: 'Interaction', img: 'https://picsum.photos/seed/p1/600/800' },
-  { title: 'Card 2', meta: 'Interaction', img: 'https://picsum.photos/seed/p2/600/800' },
-  { title: 'Card 3', meta: 'Interaction', img: 'https://picsum.photos/seed/p3/600/800' },
-  { title: 'Card 4', meta: 'Interaction', img: 'https://picsum.photos/seed/p4/600/800' },
-  { title: 'Card 5', meta: 'Interaction', img: 'https://picsum.photos/seed/p5/600/800' },
-  { title: 'Card 6', meta: 'Interaction', img: 'https://picsum.photos/seed/p6/600/800' },
-]
-
-function InteractionsPage({ setPage }) {
-  return (
-    <div className="page interactions-page">
-      <div className="interactions-header">
-        <BackNav setPage={setPage} />
-      </div>
-      <div className="interactions-grid">
-        {placeholderCards.map((c, i) => (
-          <div key={c.title} className="interaction-card">
-            <img className="interaction-card-img" src={c.img} alt={c.title} />
-            <div className="interaction-card-info">
-              <span className="interaction-card-title">{c.title}</span>
-              <span className="interaction-card-meta">{c.meta}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
 
 function AboutPage({ setPage }) {
   return (
@@ -187,10 +187,17 @@ function AboutPage({ setPage }) {
           <p className="animate" style={{ animationDelay: '0.2s' }}>In middle school I began making designs for my online gaming profile. Eventually, this would lead me to design school, but I've really grown by building things and being exposed to others who are exceptional at their craft.</p>
           <p className="animate" style={{ animationDelay: '0.25s' }}>Currently I'm interested in code and glyph dithers. Outside of work I'm interested in baroque art, competitive CoD, and collecting niche fragrances.</p>
         </div>
-        <div className="about-links">
-          <a href="mailto:mabaltzelle@gmail.com" className="animate" style={{ animationDelay: '0.3s' }}>Email</a>
-          <a href="http://www.linkedin.com/in/matthew-baltzelle" target="_blank" rel="noreferrer" className="animate" style={{ animationDelay: '0.3s' }}>LinkedIn</a>
-        </div>
+      </div>
+    </div>
+  )
+}
+
+function ThoughtsPage({ setPage }) {
+  return (
+    <div className="page">
+      <Nav page="thoughts" setPage={setPage} />
+      <div className="page-content">
+        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Thoughts</h1>
       </div>
     </div>
   )
@@ -203,8 +210,8 @@ export default function App() {
     <div key={page} className="page-transition">
       {page === 'work'         && <WorkPage         setPage={setPage} />}
       {page === 'about'        && <AboutPage        setPage={setPage} />}
-      {page === 'music'        && <MusicPage        setPage={setPage} />}
-      {page === 'interactions' && <InteractionsPage setPage={setPage} />}
+      {page === 'thoughts'      && <ThoughtsPage      setPage={setPage} />}
+      {/* <Agentation /> */}
     </div>
   )
 }

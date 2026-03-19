@@ -13,7 +13,7 @@
 
 :root {
   --dark: #1B1B1B;
-  --light: #9E9E9E;
+  --light: rgba(0,0,0,0.4);
 }
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -23,7 +23,7 @@
 ::-webkit-scrollbar-thumb { background: rgb(158 158 158 / 50%); border-radius: 16px; }
 ::-webkit-scrollbar-thumb:hover { background: rgb(158 158 158 / 100%); }
 
-::selection { background-color: rgb(138 76 25 / 100%); color: #fff; }
+::selection { background-color: #708238; color: #fff; }
 
 html, body, #app {
   height: 100%;
@@ -91,7 +91,7 @@ html, body, #app {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.08;
+  opacity: 0.18;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-size: 256px 256px;
   background-repeat: repeat;
@@ -104,7 +104,68 @@ html, body, #app {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding-bottom: 48px;
+}
+
+/* Work links */
+.work-links {
+  display: flex;
+  gap: 24px;
+  padding: 0 76px 48px;
+  margin-top: auto;
+  justify-content: flex-start;
+}
+
+/* Music */
+.album-grid {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  width: 100%;
+}
+
+.album-wrap {
+  flex: 1;
+  min-width: 0;
+  aspect-ratio: 1;
+}
+
+.album {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+  cursor: pointer;
+  outline: 1px solid rgba(0,0,0,0.07);
+  outline-offset: -1px;
+  transition: opacity 0.15s ease, scale 0.15s ease-out;
+}
+
+.album:hover {
+  opacity: 0.8;
+}
+
+.album:active {
+  scale: 0.96;
+}
+
+.visitor-location {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--light);
+}
+
+.work-links a {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--light);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.work-links a:hover {
+  color: var(--dark);
 }
 
 /* Nav */
@@ -291,117 +352,5 @@ html, body, #app {
   color: var(--light);
 }
 
-/* Interactions */
-.interactions-page {
-  overflow-y: auto;
-}
 
-.interactions-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  z-index: 10;
-  pointer-events: none;
-}
 
-.interactions-header .back-nav {
-  pointer-events: all;
-}
-
-.interactions-bottom-fade {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 40px;
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.85) 0%,
-    rgba(255,255,255,0.4) 40%,
-    rgba(255,255,255,0) 100%
-  );
-  pointer-events: none;
-  z-index: 5;
-}
-
-.interactions-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  padding: 140px 160px 48px;
-}
-
-.interaction-card {
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-}
-
-.interaction-card-img {
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
-  border-radius: 10px;
-  display: block;
-  background: #EFEFED;
-}
-
-.interaction-card-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 16px 0 24px;
-}
-
-.interaction-card-title {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--dark);
-  text-wrap: balance;
-}
-
-.interaction-card-meta {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--light);
-}
-
-/* Music */
-.album-grid {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  width: 100%;
-}
-
-.album-wrap {
-  flex: 1;
-  min-width: 0;
-  aspect-ratio: 1;
-}
-
-.album {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 4px;
-  display: block;
-  cursor: pointer;
-  outline: 1px solid rgba(0,0,0,0.07);
-  outline-offset: -1px;
-  transition: opacity 0.15s ease, scale 0.15s ease-out;
-}
-
-.album:hover {
-  opacity: 0.8;
-}
-
-.album:active {
-  scale: 0.96;
-}
