@@ -80,7 +80,7 @@ function Nav({ page, setPage }) {
     <nav className="nav">
       <a href="#" className={page === 'work'  ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('work')  }}>Work</a>
       <a href="#" className={page === 'about' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('about') }}>About</a>
-      <a href="#" className={page === 'thoughts' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('thoughts') }}>Thoughts</a>
+      <a href="#" className={page === 'writing' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('writing') }}>Writing</a>
     </nav>
   )
 }
@@ -192,12 +192,28 @@ function AboutPage({ setPage }) {
   )
 }
 
-function ThoughtsPage({ setPage }) {
+const writings = [
+  { title: 'On the surface of things',       desc: 'How material texture shapes perception in design',         year: '2025' },
+  { title: 'Designing for early stage',       desc: 'What changes when there is no existing system to follow',  year: '2025' },
+  { title: 'The case for slower interfaces',  desc: 'Speed as a default assumption worth questioning',          year: '2024' },
+  { title: 'Type as atmosphere',              desc: 'Beyond legibility — how typography sets emotional tone',    year: '2024' },
+  { title: 'What drawing taught me',          desc: 'Lessons from analogue practice applied to digital craft',  year: '2023' },
+]
+
+function WritingPage({ setPage }) {
   return (
     <div className="page">
-      <Nav page="thoughts" setPage={setPage} />
+      <Nav page="writing" setPage={setPage} />
       <div className="page-content">
-        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Thoughts</h1>
+        <ul className="projects no-bg-hover" style={{ width: '100%' }}>
+          {writings.map((w, i) => (
+            <li key={w.title} className="project animate" style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }}>
+              <span className="project-name">{w.title}</span>
+              <span className="project-desc">{w.desc}</span>
+              <span className="project-year">{w.year}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   )
@@ -210,7 +226,7 @@ export default function App() {
     <div key={page} className="page-transition">
       {page === 'work'         && <WorkPage         setPage={setPage} />}
       {page === 'about'        && <AboutPage        setPage={setPage} />}
-      {page === 'thoughts'      && <ThoughtsPage      setPage={setPage} />}
+      {page === 'writing'      && <WritingPage      setPage={setPage} />}
       {/* <Agentation /> */}
     </div>
   )

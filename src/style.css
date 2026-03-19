@@ -242,12 +242,20 @@ html, body, #app {
   background: rgba(0,0,0,0.04);
 }
 
+.no-bg-hover .project:hover {
+  background: none;
+}
+
+.no-bg-hover .project {
+  padding: 0;
+}
+
 .project.dim {
   cursor: not-allowed;
 }
 
 .projects:has(.project:hover) .project:not(:hover) {
-  opacity: 0.2;
+  opacity: 0.2 !important;
 }
 
 .project-name {
