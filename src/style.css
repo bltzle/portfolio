@@ -40,6 +40,17 @@ html, body, #app {
 .page-transition {
   height: 100%;
   overflow-y: auto;
+  animation: page-fade 0.6s ease forwards;
+}
+
+@keyframes page-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes content-fade {
+  from { opacity: 0; filter: blur(8px); }
+  to   { opacity: 1; filter: blur(0px); }
 }
 
 @keyframes itemIn {
@@ -154,6 +165,21 @@ html, body, #app {
   font-size: 12px;
   font-weight: 400;
   color: var(--light);
+}
+
+.visitor-location-value {
+  display: inline-block;
+}
+
+.work-links > * {
+  opacity: 0;
+  animation: blur-in 0.6s ease forwards;
+  animation-delay: 1.6s;
+}
+
+@keyframes blur-in {
+  from { filter: blur(6px); opacity: 0; }
+  to   { filter: blur(0px); opacity: 1; }
 }
 
 .work-links a {
@@ -362,3 +388,120 @@ html, body, #app {
 
 
 
+
+/* Note detail */
+.note-layout {
+  display: flex;
+  min-height: 100%;
+  background: #fff;
+}
+
+.note-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100vh;
+  padding: 140px 32px 48px 140px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.note-back {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: 'Matter', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--light);
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.note-back:hover {
+  color: var(--dark);
+}
+
+.note-toc {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.note-toc-item {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--light);
+  text-decoration: none;
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.note-toc-item:hover,
+.note-toc-item.active {
+  color: var(--dark);
+}
+
+.note-article {
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 140px 48px 40vh;
+  animation: content-fade 0.6s ease forwards;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.note-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.note-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--dark);
+  line-height: 1.2;
+}
+
+.note-date {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--light);
+}
+
+.note-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.note-section-heading {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark);
+}
+
+.note-body {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--dark);
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+.note-image-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(27, 27, 27, 0.03);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.15);
+}
