@@ -9,6 +9,8 @@ const projects = [
     name: 'Ritual Dental',
     desc: 'Using AI to better inform patient oral health',
     year: '2024',
+    img: '/images/ritual-dental/cover.jpg',
+    href: 'https://ritualdental.com',
     tagline: 'Personalized preventative oral care that sticks',
     role: 'Product Designer',
     tools: 'Figma',
@@ -31,17 +33,17 @@ const projects = [
       {
         id: 'gum',
         heading: 'Gum Health',
-        body: `Placeholder content for Gum Health.`,
+        body: `Gum health is one of the most overlooked indicators of overall oral wellness. Patients rarely receive clear feedback about the state of their gum tissue — only that something is wrong after it's already progressed. We designed a view that communicates gum condition over time, making trends visible rather than waiting for the next appointment to surface a problem.\n\nThe goal was to make the invisible visible. Most people don't know what healthy gums look like compared to inflamed or receding tissue. By giving patients a consistent frame of reference, they can start to understand what their daily habits are actually doing.`,
       },
       {
         id: 'bacteria',
         heading: 'Bacteria Table',
-        body: `Placeholder content for Bacteria Table.`,
+        body: `The oral microbiome is complex, but its implications for health are increasingly well understood. Certain bacterial strains are directly linked to gum disease, tooth decay, and systemic conditions. Rather than hiding this data from patients, we surfaced it — translated into language that doesn't require a clinical background to interpret.\n\nThe bacteria table became one of the more distinctive parts of the product. It reframes a lab result as a story: here's what's living in your mouth, here's what that means, and here's what you can do about it. Patients found it unsettling in exactly the right way — the kind of unsettling that actually changes behavior.`,
       },
       {
         id: 'abundance',
         heading: 'Abundance levels',
-        body: `Placeholder content for Abundance levels.`,
+        body: `Abundance levels measure how much of each bacterial strain is present relative to a healthy baseline. A single number doesn't communicate much — what matters is whether a strain is elevated, within range, or suppressed, and how that's shifted since the last reading.\n\nWe designed around the idea of relative change rather than absolute values. The interface shows whether things are moving in the right direction, which turns out to be more motivating than a static snapshot. Progress is legible at a glance, without needing to understand the underlying science.`,
       },
       {
         id: 'impact',
@@ -65,7 +67,7 @@ const projects = [
     ],
   },
   { name: 'Goodword',              desc: 'Maintain relationships in your professional network',         year: '2024' },
-  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024' },
+  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024', img: '/images/workmate/cover.jpg' },
   { name: 'Sensible',              desc: 'A high yield account for your crypto',                       year: '2024' },
   { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025' },
   { name: 'Underline',             desc: 'An investment platform for alternative assets',              year: '2023' },
@@ -188,7 +190,11 @@ function ProjectDetailPage({ project, onBack }) {
       </aside>
       <article className="note-article">
         <header className="note-header">
-          <h1 className="note-title">{project.name}</h1>
+          <h1 className="note-title">
+            {project.href
+              ? <a href={project.href} target="_blank" rel="noreferrer" className="project-title-link">{project.name}</a>
+              : project.name}
+          </h1>
           <span className="note-date">{project.desc}</span>
         </header>
         {project.content.map((section, si) => (
@@ -218,6 +224,7 @@ function ProjectDetailPage({ project, onBack }) {
 
 function WorkPage({ setPage }) {
   const [activeProject, setActiveProject] = useState(null)
+  const [hoveredProject, setHoveredProject] = useState(null)
 
   if (activeProject) {
     return (
@@ -231,7 +238,16 @@ function WorkPage({ setPage }) {
     <div className="split">
       <div className="left">
         <GrainOverlay />
-        <span className="left-label animate" style={{ animationDelay: '0.1s' }}>Hover a project</span>
+        <span className="left-label animate" style={{ animationDelay: '0.1s', transition: 'opacity 0.3s ease', opacity: hoveredProject?.img ? 0 : 1 }}>Hover a project</span>
+        {projects.filter(p => p.img).map(p => (
+          <img
+            key={p.name}
+            src={p.img}
+            alt={p.name}
+            className="project-preview"
+            style={{ opacity: hoveredProject?.name === p.name ? 1 : 0 }}
+          />
+        ))}
         <ShaderGradientCanvas style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
           <ShaderGradient
             animate="on"
@@ -290,7 +306,9 @@ function WorkPage({ setPage }) {
                 key={p.name}
                 className={`project animate${p.dim ? ' dim' : ''}`}
                 style={{ animationDelay: `${0.3 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: p.sections ? 'pointer' : 'not-allowed' }}
-                onClick={() => p.sections && setActiveProject(p)}
+                onClick={() => { if (p.sections) { setHoveredProject(null); setActiveProject(p) } }}
+                onMouseEnter={() => setHoveredProject(p)}
+                onMouseLeave={() => setHoveredProject(null)}
               >
                 <span className="project-name">{p.name}</span>
                 <span className="project-desc">{p.desc}</span>

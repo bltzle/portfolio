@@ -81,6 +81,18 @@ html, body, #app {
   background: #4a5c20;
 }
 
+.project-preview {
+  position: absolute;
+  z-index: 3;
+  max-width: 72%;
+  max-height: 78%;
+  object-fit: contain;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  filter: drop-shadow(0 24px 48px rgba(0,0,0,0.3));
+}
+
 .left-label {
   position: absolute;
   z-index: 2;
@@ -532,6 +544,18 @@ html, body, #app {
 
 .note-section--tight {
   gap: 12px;
+}
+
+.project-title-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(0,0,0,0.08);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.project-title-link:hover {
+  text-decoration-color: var(--dark);
 }
 
 .note-image-caption a {
