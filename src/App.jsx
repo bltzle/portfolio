@@ -1,4 +1,86 @@
 import { useState, useEffect, useRef } from 'react'
+
+const SPOTIFY_CLIENT_ID = '5ee9147feda6434aa4414c48c2a472bd'
+const SPOTIFY_REDIRECT  = 'http://127.0.0.1:5173/callback'
+const SPOTIFY_SCOPES    = 'user-read-recently-played'
+
+function formatDate(str) {
+  return new Date(str).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+function cleanTitle(name) {
+  return name.replace(/\s*[\(\[].*?[\)\]]/g, '').trim()
+}
+
+function generateVerifier() {
+  const arr = new Uint8Array(32)
+  crypto.getRandomValues(arr)
+  return btoa(String.fromCharCode(...arr)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
+}
+
+async function generateChallenge(verifier) {
+  const data = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier))
+  return btoa(String.fromCharCode(...new Uint8Array(data))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
+}
+
+function initiateSpotifyAuth() {
+  const verifier = generateVerifier()
+  sessionStorage.setItem('spotify_verifier', verifier)
+  generateChallenge(verifier).then(challenge => {
+    const params = new URLSearchParams({
+      client_id: SPOTIFY_CLIENT_ID,
+      response_type: 'code',
+      redirect_uri: SPOTIFY_REDIRECT,
+      scope: SPOTIFY_SCOPES,
+      code_challenge_method: 'S256',
+      code_challenge: challenge,
+    })
+    window.location.href = `https://accounts.spotify.com/authorize?${params}`
+  })
+}
+
+async function exchangeCode(code) {
+  const res = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: SPOTIFY_CLIENT_ID,
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: SPOTIFY_REDIRECT,
+      code_verifier: sessionStorage.getItem('spotify_verifier'),
+    })
+  })
+  return res.json()
+}
+
+async function refreshToken(token) {
+  const res = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: SPOTIFY_CLIENT_ID,
+      grant_type: 'refresh_token',
+      refresh_token: token,
+    })
+  })
+  return res.json()
+}
+
+async function getValidToken() {
+  const stored = JSON.parse(localStorage.getItem('spotify_tokens') || 'null')
+  if (!stored) return null
+  if (Date.now() < stored.expires_at) return stored.access_token
+  const data = await refreshToken(stored.refresh_token)
+  if (!data.access_token) return null
+  const tokens = {
+    access_token: data.access_token,
+    refresh_token: data.refresh_token ?? stored.refresh_token,
+    expires_at: Date.now() + data.expires_in * 1000 - 60000,
+  }
+  localStorage.setItem('spotify_tokens', JSON.stringify(tokens))
+  return tokens.access_token
+}
 import { CornerDownLeftIcon } from './CornerDownLeftIcon'
 import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
 import { Agentation } from 'agentation'
@@ -358,56 +440,107 @@ const writings = [
     year: '2026',
     date: 'March 2026',
     sections: [
-      { id: 'motion',    heading: 'Motion as language' },
-      { id: 'camera',    heading: 'Camera and composition' },
-      { id: 'sound',     heading: 'Sound and timing' },
-      { id: 'weight',    heading: 'Weight' },
-      { id: 'bar',       heading: 'The bar' },
+      { id: 'motion',    heading: 'Fluidity' },
+      { id: 'camera',    heading: 'Presence' },
+      { id: 'sound',     heading: 'Restraint' },
+      { id: 'weight',    heading: 'Emotion' },
+      { id: 'bar',       heading: 'Care' },
     ],
     content: [
       {
+        id: 'intro',
+        body: `I draw a lot of inspiration from Japanese animation and manga. What makes it such a rich source is how many disciplines it holds at once: storytelling and pacing, music and sound, camera angles, fluid motion, color.\n\nWhat elevates the best of it is the commitment to craft, the willingness to build entire visual languages, mythologies, and atmospheres from scratch. That level of ambition is something I try to carry into everything I design. What follows are the things I notice when watching high-quality anime, and what I think makes them great.`,
+        noImageAfter: true,
+      },
+      {
         id: 'motion',
-        heading: 'Motion as language',
-        body: `In Jujutsu Kaisen, characters don't just move — they communicate through motion. A sword swing carries weight. A step backward says something about fear. The animation studio isn't filling time between story beats; the movement is the story beat. Every frame is a decision.\n\nMost software animation doesn't work this way. Transitions happen because they were added, not because they mean something. An element fades in because fade is the default, not because fading in is the right way for that element to arrive.\n\nThe question worth asking isn't "should this animate?" but "what should this motion say?" That reframe alone would eliminate most of what currently gets shipped.`,
+        heading: 'Fluidity',
+        body: `Jujutsu Kaisen is a good place to start. The animation is fluid in a way that's immediately noticeable. Movements carry through, cloth settles a beat late, impacts feel heavy. None of it is realistic, but it all reads as true.\n\nWhat makes it work is the attention underneath it. Anticipation before a movement, follow-through after. Small decisions that compound into something that feels genuinely alive.`,
         captionPrefix: 'Maki and Mai Zenin, from ',
         caption: 'Jujutsu Kaisen',
         captionHref: 'https://en.wikipedia.org/wiki/Jujutsu_Kaisen',
       },
       {
         id: 'camera',
-        heading: 'Camera and composition',
-        body: `Demon Slayer uses camera angles the way a cinematographer would — low angles to establish scale, close-ups held just long enough to feel uncomfortable, wide shots that let silence do the work. The framing is doing half the emotional labor.\n\nIn product design, the equivalent is hierarchy. Where does the eye go first? What gets space and what gets compressed? These aren't aesthetic choices — they're compositional ones, and they shape how people feel before they've read a word.\n\nA screen has edges the same way a frame does. Most interfaces forget this. Content gets centered and padded uniformly, which is another way of saying the composition wasn't considered at all.`,
+        heading: 'Presence',
+        body: `Frieren is different. Where most animation asks you to watch, Frieren asks you to feel. The story follows an elven mage long after the adventure is over. The hero has died, the party has scattered, the world has moved on. What's left is memory, time, and the quiet weight of outliving everyone you loved.\n\nLook at how she rests in the water. Her hair drifts with the current, the fabric of her dress responding to what's underneath her, light scattering through the foliage behind her. None of it announces itself, it's just physics rendered with enough care that she feels like she's genuinely inhabiting the world rather than sitting on top of it. That's what the polish is doing here, not impressing you but grounding you.`,
         captionPrefix: 'Frieren, from ',
         caption: 'Frieren: Beyond Journey\'s End',
         captionHref: 'https://en.wikipedia.org/wiki/Frieren',
       },
       {
         id: 'sound',
-        heading: 'Sound and timing',
-        body: `Frieren's score doesn't underscore — it breathes alongside the scene. The timing between a piece of music starting and a character speaking is deliberate to the frame. That precision is what separates animation that feels crafted from animation that feels produced.\n\nSoftware has an equivalent: the relationship between an interaction and its feedback. A button press, a confirmation, a transition. When the timing is off by 40ms it registers as cheap. Most people can't say why, but everyone feels it.\n\nTiming is the hardest craft to teach because it mostly lives in feel. But feel is learnable. You develop it by noticing when something lands wrong and being specific about why.`,
+        heading: 'Restraint',
+        body: `Vinland Saga knows when to be quiet. It's a show about war and revenge and the cost of violence, and yet some of its most powerful moments have nothing in them at all. Just a figure, a sky, and room to breathe. The clouds move slowly, the character sits small against all that open space, and nothing is asking for your attention.\n\nThat kind of restraint is a choice. Knowing what to take out is just as hard as knowing what to put in, maybe harder. The emptiness isn't absence, it's intention. And because nothing is competing, you give the moment everything you have. Simplicity isn't a lack of craft. It's often the hardest version of it.`,
         captionPrefix: 'Thorfinn, from ',
         caption: 'Vinland Saga',
         captionHref: 'https://en.wikipedia.org/wiki/Vinland_Saga_(manga)',
       },
       {
         id: 'weight',
-        heading: 'Weight',
-        body: `Well-animated characters feel like they have mass. A landing carries impact. A turn has inertia. The physics aren't realistic — they're expressive. The animators are using the illusion of weight to make you feel something, not to simulate reality.\n\nSoftware interactions almost never have weight. Buttons spring back instantly. Panels appear from nowhere. Everything is weightless by default, which means everything feels equally insignificant.\n\nThe moments in software that feel considered are usually the ones where something resists slightly, or settles, or takes a beat longer than expected. Weight is how you tell the user that what just happened mattered.`,
+        heading: 'Emotion',
+        body: `Ranking of Kings looks like a children's story. Round designs, a soft storybook world. Within the first few episodes it becomes one of the most emotionally devastating things you'll watch.\n\nBojji is deaf. The animation speaks for him. A slump of the shoulders. The way he looks up at someone twice his size. You feel what he feels without being told to.\n\nYou can't instruct someone to feel something. You build something honest, get out of the way, and let the moment land.`,
         captionPrefix: 'Bojji, from ',
         caption: 'Ranking of Kings',
         captionHref: 'https://en.wikipedia.org/wiki/Ranking_of_Kings',
       },
       {
         id: 'bar',
-        heading: 'The bar',
-        body: `High-craft anime sets a standard that's useful to borrow — not aesthetically, but as a way of thinking. Every element is load-bearing. Nothing is there without a reason. The question isn't "does this look good?" but "what does this communicate, and is it communicating the right thing?"\n\nThat's the bar. Most software doesn't clear it. Not because the people making it don't care, but because the habit of asking the question isn't there yet.\n\nBuilding that habit is the actual work. The anime is just a useful place to see what it looks like when someone has already done it.`,
+        heading: 'Care',
+        body: `High-craft anime sets a standard that's useful to borrow, not just aesthetically but as a way of thinking. The visual polish isn't decoration, it's the result of every element being considered. Nothing is there without a reason, and nothing looks the way it looks by accident.\n\nMost software doesn't reach that standard. Some of it is resources, some of it is habit, but a lot of it is just not caring enough. What separates the best anime is the people behind it. They have the craft and they genuinely care about the work they're producing. The same is true of great software. It usually comes down to the same thing: people who care enough to sweat the details.`,
       },
     ],
   },
   {
-    title: 'The Weight of Type',
-    desc: 'How font choices carry more than words',
+    title: 'Music I\'ve Been Listening To',
+    desc: 'A running list of what\'s been on',
+    year: '2026',
+    type: 'music',
+  },
+  {
+    title: 'Why I Chose Matter',
+    desc: 'On the typographic qualities I keep coming back to',
     year: '2025',
+    date: '2025',
+    sections: [
+      { id: 'first-impression', heading: 'Readability and legibility' },
+      { id: 'weight',           heading: 'Weight and contrast' },
+      { id: 'spacing',          heading: 'Spacing and rhythm' },
+      { id: 'voice',            heading: 'Hierarchy' },
+      { id: 'the-choice',       heading: 'Personality and tone' },
+    ],
+    content: [
+      {
+        id: 'type-intro',
+        body: `Matter is a grotesque sans-serif typeface designed by Martin Vácha and published by Displaay, an independent type foundry focused on developing distinctive typefaces that feel fresh without abandoning the classics.`,
+        noImageAfter: true,
+      },
+      {
+        id: 'first-impression',
+        heading: 'Readability and legibility',
+        body: `Placeholder text for first impression section. Type hits you before you read it. The shape of a letterform carries tone, weight, and attitude before a single word has been processed.`,
+      },
+      {
+        id: 'weight',
+        heading: 'Weight and contrast',
+        body: `Placeholder text for weight and contrast section. The thickness of a stroke, the contrast between thick and thin — these are not aesthetic choices in isolation. They carry history and intention.`,
+      },
+      {
+        id: 'spacing',
+        heading: 'Spacing and rhythm',
+        body: `Placeholder text for spacing and rhythm section. How letters sit next to each other, how lines breathe. Rhythm in type is the same as rhythm in music — you feel it before you understand it.`,
+      },
+      {
+        id: 'voice',
+        heading: 'Hierarchy',
+        body: `Placeholder text for hierarchy section. Every typeface has a voice. Some are authoritative, some are warm, some are neutral by design. Choosing one is choosing what to say before the words say anything.`,
+      },
+      {
+        id: 'the-choice',
+        heading: 'Personality and tone',
+        body: `Placeholder text for personality and tone section. The typeface is never just a container for content. It is content. Getting it wrong doesn't make the words less readable — it makes them say something you didn't mean.`,
+      },
+    ],
   },
 ]
 
@@ -484,16 +617,16 @@ function NoteDetailPage({ note, onBack }) {
                 ))}
               </section>
             )}
-            {si < note.content.length - 1 && (
+            {si < note.content.length - 1 && !section.noImageAfter && (
               <div key={`img-${section.id}`} className="note-image-wrap">
                 <div className="note-image-inner">
-                  {si === 0
+                  {si === 1
                     ? <img src="/tumblr_8b97eed4e22307c56b8c51612a492c87_8b2d8fbc_540.gif" alt="" className="note-image-placeholder" style={{ objectFit: 'cover' }} />
-                    : si === 1
-                    ? <img src="/frieren.gif" alt="" className="note-image-placeholder" style={{ objectFit: 'cover' }} />
                     : si === 2
-                    ? <img src="/vinland.gif" alt="" className="note-image-placeholder" style={{ objectFit: 'cover' }} />
+                    ? <img src="/frieren.gif" alt="" className="note-image-placeholder" style={{ objectFit: 'cover' }} />
                     : si === 3
+                    ? <img src="/vinland.gif" alt="" className="note-image-placeholder" style={{ objectFit: 'cover' }} />
+                    : si === 4
                     ? <img src="/boji.gif" alt="" className="note-image-placeholder" style={{ objectFit: 'cover' }} />
                     : <div className="note-image-placeholder" />}
                   <div className="grain-overlay" />
@@ -515,8 +648,83 @@ function NoteDetailPage({ note, onBack }) {
 }
 
 
+function MusicPage({ onBack }) {
+  const [tracks, setTracks] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [authed, setAuthed] = useState(!!localStorage.getItem('spotify_tokens'))
+
+  useEffect(() => {
+    if (!authed) { setLoading(false); return }
+    async function load() {
+      const token = await getValidToken()
+      if (!token) { setAuthed(false); setLoading(false); return }
+      const res = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=50', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      const data = await res.json()
+      const seen = new Set()
+      const unique = (data.items ?? []).filter(({ track }) => {
+        if (seen.has(track.id)) return false
+        seen.add(track.id)
+        return true
+      })
+      setTracks(unique)
+      setLoading(false)
+    }
+    load().catch(() => setLoading(false))
+  }, [authed])
+
+  return (
+    <div className="music-page">
+      <TopFade />
+      <div className="music-back-wrap">
+        <button className="note-back" onClick={onBack}>← Back</button>
+      </div>
+      <div className="music-scroll-fade" />
+      {!loading && authed && (
+        <div className="music-col-headers">
+          <div className="music-inner">
+            <div className="music-col-headers-row">
+              <span>Song</span>
+              <span>Artist</span>
+              <span>Played</span>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="music-scroll">
+        <div className="music-inner">
+          {loading ? (
+            <p className="music-empty">Loading...</p>
+          ) : !authed ? (
+            <button className="music-connect" onClick={initiateSpotifyAuth}>Connect Spotify</button>
+          ) : (
+            <div className="music-rows">
+              {tracks.map(({ track, played_at }, i) => (
+                <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')}>
+                  <span>{cleanTitle(track.name)}</span>
+                  <span className="music-artist">{track.artists.map(a => a.name).join(', ')}</span>
+                  <span className="music-col-date">{formatDate(played_at)}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function WritingPage({ setPage }) {
   const [activeNote, setActiveNote] = useState(null)
+
+  if (activeNote?.type === 'music') {
+    return (
+      <div key={activeNote.title} className="page-transition">
+        <MusicPage onBack={() => setActiveNote(null)} />
+      </div>
+    )
+  }
 
   if (activeNote) {
     return (
@@ -530,12 +738,12 @@ function WritingPage({ setPage }) {
     <div className="page">
       <Nav page="writing" setPage={setPage} />
       <div className="page-content">
-        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>A collection of thoughts, ideas, and observations</h1>
+        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>A collection of thoughts, ideas, and observations — mostly me talking to myself</h1>
         <ul className="projects no-bg-hover" style={{ width: '100%' }}>
           {writings.map((w, i) => (
-            <li key={w.title} className="project animate" style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)}>
-              <span className="project-year">{w.year}</span>
+            <li key={w.title} className="project writing-item animate" style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)}>
               <span className="project-name">{w.title}</span>
+              <span className="writing-meta">{w.desc}</span>
             </li>
           ))}
         </ul>
@@ -546,6 +754,23 @@ function WritingPage({ setPage }) {
 
 export default function App() {
   const [page, setPage] = useState('work')
+
+  useEffect(() => {
+    if (window.location.pathname !== '/callback') return
+    const code = new URLSearchParams(window.location.search).get('code')
+    if (!code) return
+    exchangeCode(code).then(data => {
+      if (data.access_token) {
+        localStorage.setItem('spotify_tokens', JSON.stringify({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token,
+          expires_at: Date.now() + data.expires_in * 1000 - 60000,
+        }))
+      }
+      window.history.replaceState({}, '', '/')
+      setPage('writing')
+    })
+  }, [])
 
   return (
     <div key={page} className="page-transition">
