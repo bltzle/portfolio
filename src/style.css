@@ -288,6 +288,7 @@ html, body, #app {
   font-size: 14px;
   font-weight: 400;
   color: var(--dark);
+  transition: color 0.15s ease;
 }
 
 .project-desc {
@@ -302,6 +303,7 @@ html, body, #app {
   font-weight: 400;
   color: var(--light);
 }
+
 
 /* Full-screen pages (About, Music, etc.) */
 .page {
@@ -452,7 +454,7 @@ html, body, #app {
   max-width: 640px;
   width: 100%;
   margin: 0 auto;
-  padding: 140px 48px 40vh;
+  padding: 140px 48px 70vh;
   animation: content-fade 0.6s ease forwards;
   display: flex;
   flex-direction: column;
@@ -466,14 +468,14 @@ html, body, #app {
 }
 
 .note-title {
-  font-size: 22px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--dark);
   line-height: 1.2;
 }
 
 .note-date {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--light);
 }
@@ -498,10 +500,62 @@ html, body, #app {
   text-wrap: pretty;
 }
 
+
+.note-image-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.note-image-inner {
+  position: relative;
+  width: 100%;
+}
+
+.note-image-inner .grain-overlay {
+  border-radius: 12px;
+}
+
+.note-image-caption {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--light);
+  text-align: center;
+}
+
+.note-image-caption--left {
+  text-align: left;
+  line-height: 2;
+}
+
+.note-section--tight {
+  gap: 12px;
+}
+
+.note-image-caption a {
+  color: var(--light);
+  text-decoration: underline;
+  text-decoration-color: rgba(0,0,0,0.2);
+  text-underline-offset: 2px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.note-image-caption a:hover {
+  color: var(--dark);
+  text-decoration-color: var(--dark);
+}
+
 .note-image-placeholder {
   width: 100%;
   aspect-ratio: 16 / 9;
-  border: 1px solid rgba(27, 27, 27, 0.03);
+  border: 1px solid rgba(27, 27, 27, 0.02);
   border-radius: 12px;
   background: rgba(0, 0, 0, 0.15);
+}
+
+img.note-image-placeholder {
+  background: none;
+  display: block;
 }
