@@ -434,7 +434,7 @@ html, body, #app {
   z-index: 20;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 48px;
 }
 
 .note-back {
@@ -442,13 +442,16 @@ html, body, #app {
   border: none;
   padding: 0;
   font-family: 'Matter', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--light);
   cursor: pointer;
   text-align: left;
   white-space: nowrap;
   transition: color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
 }
 
 .note-back:hover {
@@ -462,7 +465,7 @@ html, body, #app {
 }
 
 .note-toc-item {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--light);
   text-decoration: none;
@@ -475,6 +478,7 @@ html, body, #app {
 .note-toc-item.active {
   color: var(--dark);
 }
+
 
 .note-article {
   max-width: 640px;
@@ -510,6 +514,7 @@ html, body, #app {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  scroll-margin-top: 140px;
 }
 
 .note-section-heading {
@@ -645,6 +650,11 @@ img.note-image-placeholder {
 .music-col-headers-row span {
   padding: 0;
   margin: 0;
+  transition: color 0.15s ease;
+}
+
+.music-col-headers-row span:hover {
+  color: var(--dark);
 }
 
 .music-scroll {
@@ -668,11 +678,13 @@ img.note-image-placeholder {
 .music-rows {
   width: 100%;
   padding-top: 12px;
+  padding-bottom: 140px;
 }
 
 .music-row {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr;
+  align-items: center;
   transition: opacity 0.15s ease;
   cursor: pointer;
 }

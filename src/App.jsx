@@ -9,7 +9,10 @@ function formatDate(str) {
 }
 
 function cleanTitle(name) {
-  return name.replace(/\s*[\(\[].*?[\)\]]/g, '').trim()
+  return name
+    .replace(/\s*[\(\[].*?[\)\]]/g, '')
+    .replace(/\s+-\s+.+$/, '')
+    .trim()
 }
 
 function generateVerifier() {
@@ -81,6 +84,31 @@ async function getValidToken() {
   localStorage.setItem('spotify_tokens', JSON.stringify(tokens))
   return tokens.access_token
 }
+let _audioCtx = null, _audioFilter = null, _audioGain = null
+
+function playClick(intensity = 0.4) {
+  if (!_audioCtx) {
+    _audioCtx = new AudioContext()
+    _audioFilter = _audioCtx.createBiquadFilter()
+    _audioFilter.type = 'bandpass'
+    _audioFilter.Q.value = 8
+    _audioGain = _audioCtx.createGain()
+    _audioFilter.connect(_audioGain)
+    _audioGain.connect(_audioCtx.destination)
+  }
+  if (_audioCtx.state === 'suspended') _audioCtx.resume()
+  const buf = _audioCtx.createBuffer(1, Math.floor(_audioCtx.sampleRate * 0.004), _audioCtx.sampleRate)
+  const data = buf.getChannelData(0)
+  for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / 25)
+  _audioGain.gain.value = 0.5 * intensity
+  _audioFilter.frequency.value = 2000 + intensity * 2000
+  const src = _audioCtx.createBufferSource()
+  src.buffer = buf
+  src.connect(_audioFilter)
+  src.onended = () => src.disconnect()
+  src.start()
+}
+
 import { CornerDownLeftIcon } from './CornerDownLeftIcon'
 import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
 import { Agentation } from 'agentation'
@@ -170,10 +198,7 @@ function WorkFooter() {
   const location = useVisitorLocation()
   return (
     <div className="work-links">
-      <a href="mailto:mabaltzelle@gmail.com">Email</a>
-      <a href="http://www.linkedin.com/in/matthew-baltzelle" target="_blank" rel="noreferrer">LinkedIn</a>
-      <a href="https://twitter.com/bltzle" target="_blank" rel="noreferrer">Twitter</a>
-      <span className="visitor-location">Last visitor from <span className="visitor-location-value">{location ?? '—'}</span></span>
+<span className="visitor-location">Last visitor from <span className="visitor-location-value">{location ?? '—'}</span></span>
     </div>
   )
 }
@@ -252,7 +277,7 @@ function ProjectDetailPage({ project, onBack }) {
     <div className="note-layout" ref={containerRef}>
       <TopFade />
       <aside className="note-sidebar">
-        <button className="note-back" onClick={onBack}>← Back</button>
+        <button className="note-back" onClick={onBack}>Back</button>
         <nav className="note-toc">
           {project.sections.map(s => (
             <a
@@ -263,7 +288,7 @@ function ProjectDetailPage({ project, onBack }) {
                 e.preventDefault()
                 setActiveId(s.id)
                 scrollingRef.current = true
-                containerRef.current?.querySelector(`#${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                containerRef.current?.querySelector(`#${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                 setTimeout(() => { scrollingRef.current = false }, 1000)
               }}
             >{s.heading}</a>
@@ -389,7 +414,7 @@ function WorkPage({ setPage }) {
                 className={`project animate${p.dim ? ' dim' : ''}`}
                 style={{ animationDelay: `${0.3 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: p.sections ? 'pointer' : 'not-allowed' }}
                 onClick={() => { if (p.sections) { setHoveredProject(null); setActiveProject(p) } }}
-                onMouseEnter={() => setHoveredProject(p)}
+                onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
                 onMouseLeave={() => setHoveredProject(null)}
               >
                 <span className="project-name">{p.name}</span>
@@ -542,6 +567,39 @@ const writings = [
       },
     ],
   },
+  {
+    title: 'Why I Chose to Build My Website',
+    desc: 'On owning the thing that represents you',
+    year: '2026',
+    date: 'March 2026',
+    sections: [
+      { id: 'control',   heading: 'Control' },
+      { id: 'craft',     heading: 'Craft' },
+      { id: 'permanence', heading: 'Permanence' },
+    ],
+    content: [
+      {
+        id: 'intro',
+        body: `Most designers have a Squarespace. A template, a grid, a set of constraints somebody else decided. That's fine. But at some point I wanted to know if I could build the thing myself — and what it would feel like if I did.`,
+        noImageAfter: true,
+      },
+      {
+        id: 'control',
+        heading: 'Control',
+        body: `A portfolio template is someone else's opinion about how a portfolio should look. It carries assumptions about hierarchy, about what matters, about what a designer is supposed to show. Building from scratch means every decision is yours. The spacing, the type, the way things move. You can't blame the theme.`,
+      },
+      {
+        id: 'craft',
+        heading: 'Craft',
+        body: `There's a version of this that's just ego — wanting to say you built it yourself. But the more honest reason is that I think the website is part of the work. How it feels to use says something about how you think. If I'm asking companies to trust me with their product, it helps to have made something I'm proud of on my own terms.`,
+      },
+      {
+        id: 'permanence',
+        heading: 'Permanence',
+        body: `Templates get discontinued. Platforms pivot. Hosted tools go away or change pricing. A site you built yourself lives as long as you want it to. That's worth something.`,
+      },
+    ],
+  },
 ]
 
 function TopFade() {
@@ -560,32 +618,48 @@ function TopFade() {
 }
 
 function NoteDetailPage({ note, onBack }) {
-  const [activeId, setActiveId] = useState(note.sections[0]?.id)
+  const [activeId, setActiveId] = useState('__intro')
   const containerRef = useRef(null)
   const scrollingRef = useRef(false)
 
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
-    const observers = note.sections.map(({ id }) => {
-      const el = container.querySelector(`#${id}`)
-      if (!el) return null
-      const observer = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting && !scrollingRef.current) setActiveId(id) },
-        { root: null, rootMargin: '-30% 0px -60% 0px', threshold: 0 }
-      )
-      observer.observe(el)
-      return observer
-    }).filter(Boolean)
-    return () => observers.forEach(o => o.disconnect())
+    const scrollEl = container.closest('.page-transition') ?? window
+    const onScroll = () => {
+      if (scrollingRef.current) return
+      const scrollTop = scrollEl instanceof Element ? scrollEl.scrollTop : window.scrollY
+      if (scrollTop < 80) { setActiveId('__intro'); return }
+      const threshold = scrollTop + (scrollEl instanceof Element ? scrollEl.clientHeight : window.innerHeight) * 0.3
+      let active = '__intro'
+      for (const { id } of note.sections) {
+        const el = container.querySelector(`#${id}`)
+        if (el && el.offsetTop <= threshold) active = id
+      }
+      setActiveId(active)
+    }
+    scrollEl.addEventListener('scroll', onScroll)
+    return () => scrollEl.removeEventListener('scroll', onScroll)
   }, [note])
 
   return (
     <div className="note-layout" ref={containerRef}>
       <TopFade />
       <aside className="note-sidebar">
-        <button className="note-back" onClick={onBack}>← Back</button>
+        <button className="note-back" onClick={onBack}>Back</button>
         <nav className="note-toc">
+          <a
+            className={`note-toc-item${activeId === '__intro' ? ' active' : ''}`}
+            href="#"
+            onClick={e => {
+              e.preventDefault()
+              setActiveId('__intro')
+              scrollingRef.current = true
+              const scrollEl = containerRef.current?.closest('.page-transition') ?? window
+              scrollEl.scrollTo({ top: 0, behavior: 'smooth' })
+              setTimeout(() => { scrollingRef.current = false }, 1000)
+            }}
+          >Intro</a>
           {note.sections.map(s => (
             <a
               key={s.id}
@@ -595,7 +669,7 @@ function NoteDetailPage({ note, onBack }) {
                 e.preventDefault()
                 setActiveId(s.id)
                 scrollingRef.current = true
-                containerRef.current?.querySelector(`#${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                containerRef.current?.querySelector(`#${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                 setTimeout(() => { scrollingRef.current = false }, 1000)
               }}
             >{s.heading}</a>
@@ -648,10 +722,37 @@ function NoteDetailPage({ note, onBack }) {
 }
 
 
+function dedupeTracks(items) {
+  const seen = new Set()
+  return items.filter(({ track }) => {
+    if (seen.has(track.id)) return false
+    seen.add(track.id)
+    return true
+  })
+}
+
+
 function MusicPage({ onBack }) {
-  const [tracks, setTracks] = useState([])
-  const [loading, setLoading] = useState(true)
+  const cached = localStorage.getItem('spotify_tracks')
+  const [tracks, setTracks] = useState(cached ? dedupeTracks(JSON.parse(cached)) : [])
+  const [loading, setLoading] = useState(!cached)
   const [authed, setAuthed] = useState(!!localStorage.getItem('spotify_tokens'))
+  const [sort, setSort] = useState({ col: null, dir: null })
+
+  const cycleSort = (col) => setSort(s => {
+    if (col === 'played') return s.col === 'played' ? { col: null, dir: null } : { col, dir: 'asc' }
+    return s.col !== col ? { col, dir: 'asc' } : s.dir === 'asc' ? { col, dir: 'desc' } : { col: null, dir: null }
+  })
+
+  const displayedTracks = sort.col
+    ? [...tracks].sort((a, b) => {
+        let cmp = 0
+        if (sort.col === 'song')   cmp = cleanTitle(a.track.name).localeCompare(cleanTitle(b.track.name))
+        if (sort.col === 'artist') cmp = a.track.artists[0]?.name.localeCompare(b.track.artists[0]?.name)
+        if (sort.col === 'played') cmp = new Date(a.played_at) - new Date(b.played_at)
+        return sort.dir === 'asc' ? cmp : -cmp
+      })
+    : tracks
 
   useEffect(() => {
     if (!authed) { setLoading(false); return }
@@ -662,12 +763,8 @@ function MusicPage({ onBack }) {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const data = await res.json()
-      const seen = new Set()
-      const unique = (data.items ?? []).filter(({ track }) => {
-        if (seen.has(track.id)) return false
-        seen.add(track.id)
-        return true
-      })
+      const unique = dedupeTracks(data.items ?? [])
+      localStorage.setItem('spotify_tracks', JSON.stringify(unique))
       setTracks(unique)
       setLoading(false)
     }
@@ -678,16 +775,18 @@ function MusicPage({ onBack }) {
     <div className="music-page">
       <TopFade />
       <div className="music-back-wrap">
-        <button className="note-back" onClick={onBack}>← Back</button>
+        <button className="note-back" onClick={onBack}>Back</button>
       </div>
       <div className="music-scroll-fade" />
       {!loading && authed && (
         <div className="music-col-headers">
           <div className="music-inner">
             <div className="music-col-headers-row">
-              <span>Song</span>
-              <span>Artist</span>
-              <span>Played</span>
+              {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
+                <span key={col} onClick={() => cycleSort(col)} style={{ cursor: 'pointer', userSelect: 'none', color: sort.col === col ? 'var(--dark)' : '' }}>
+                  {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
+                </span>
+              ))}
             </div>
           </div>
         </div>
@@ -700,9 +799,12 @@ function MusicPage({ onBack }) {
             <button className="music-connect" onClick={initiateSpotifyAuth}>Connect Spotify</button>
           ) : (
             <div className="music-rows">
-              {tracks.map(({ track, played_at }, i) => (
-                <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')}>
-                  <span>{cleanTitle(track.name)}</span>
+              {displayedTracks.map(({ track, played_at }, i) => (
+                <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" style={{ width: 34, height: 34, borderRadius: 8, flexShrink: 0 }} />}
+                    {cleanTitle(track.name)}
+                  </span>
                   <span className="music-artist">{track.artists.map(a => a.name).join(', ')}</span>
                   <span className="music-col-date">{formatDate(played_at)}</span>
                 </div>
@@ -741,7 +843,7 @@ function WritingPage({ setPage }) {
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>A collection of thoughts, ideas, and observations — mostly me talking to myself</h1>
         <ul className="projects no-bg-hover" style={{ width: '100%' }}>
           {writings.map((w, i) => (
-            <li key={w.title} className="project writing-item animate" style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)}>
+            <li key={w.title} className="project writing-item animate" style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
               <span className="project-name">{w.title}</span>
               <span className="writing-meta">{w.desc}</span>
             </li>
@@ -754,6 +856,14 @@ function WritingPage({ setPage }) {
 
 export default function App() {
   const [page, setPage] = useState('work')
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (getComputedStyle(e.target).cursor === 'pointer') playClick(0.3)
+    }
+    document.addEventListener('pointerdown', handler)
+    return () => document.removeEventListener('pointerdown', handler)
+  }, [])
 
   useEffect(() => {
     if (window.location.pathname !== '/callback') return
