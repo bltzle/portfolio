@@ -277,7 +277,6 @@ function ProjectDetailPage({ project, onBack }) {
     <div className="note-layout" ref={containerRef}>
       <TopFade />
       <aside className="note-sidebar">
-        <button className="note-back" onClick={onBack}>Back</button>
         <nav className="note-toc">
           {project.sections.map(s => (
             <a
@@ -296,6 +295,7 @@ function ProjectDetailPage({ project, onBack }) {
         </nav>
       </aside>
       <article className="note-article">
+        <button className="note-back" onClick={onBack}>Home</button>
         <header className="note-header">
           <h1 className="note-title">
             {project.href
@@ -462,6 +462,7 @@ const writings = [
   {
     title: 'The Animation Bar',
     desc: 'On craft, borrowed from anime',
+    category: 'Writing',
     year: '2026',
     date: 'March 2026',
     sections: [
@@ -517,14 +518,16 @@ const writings = [
     ],
   },
   {
-    title: 'Music I\'ve Been Listening To',
+    title: 'Recent Listening',
     desc: 'A running list of what\'s been on',
+    category: 'Music',
     year: '2026',
     type: 'music',
   },
   {
-    title: 'Why I Chose Matter',
+    title: 'Purchasing a Typeface',
     desc: 'On the typographic qualities I keep coming back to',
+    category: 'Writing',
     year: '2025',
     date: '2025',
     sections: [
@@ -568,8 +571,9 @@ const writings = [
     ],
   },
   {
-    title: 'Why I Chose to Build My Website',
+    title: 'Building My Website',
     desc: 'On owning the thing that represents you',
+    category: 'Writing',
     year: '2026',
     date: 'March 2026',
     sections: [
@@ -646,7 +650,6 @@ function NoteDetailPage({ note, onBack }) {
     <div className="note-layout" ref={containerRef}>
       <TopFade />
       <aside className="note-sidebar">
-        <button className="note-back" onClick={onBack}>Back</button>
         <nav className="note-toc">
           <a
             className={`note-toc-item${activeId === '__intro' ? ' active' : ''}`}
@@ -677,6 +680,7 @@ function NoteDetailPage({ note, onBack }) {
         </nav>
       </aside>
       <article className="note-article">
+        <button className="note-back" onClick={onBack}>Notes</button>
         <header className="note-header">
           <h1 className="note-title">{note.title}</h1>
           <span className="note-date">{note.date}</span>
@@ -732,7 +736,7 @@ function dedupeTracks(items) {
 }
 
 
-function MusicPage({ onBack }) {
+function MusicPage({ note, onBack }) {
   const cached = localStorage.getItem('spotify_tracks')
   const [tracks, setTracks] = useState(cached ? dedupeTracks(JSON.parse(cached)) : [])
   const [loading, setLoading] = useState(!cached)
@@ -774,13 +778,15 @@ function MusicPage({ onBack }) {
   return (
     <div className="music-page">
       <TopFade />
-      <div className="music-back-wrap">
-        <button className="note-back" onClick={onBack}>Back</button>
-      </div>
       <div className="music-scroll-fade" />
-      {!loading && authed && (
-        <div className="music-col-headers">
-          <div className="music-inner">
+      <div className="music-col-headers">
+        <div className="music-inner">
+          <div className="music-breadcrumb">
+            <button className="music-back-arrow" onClick={onBack}>Notes</button>
+            <span className="music-breadcrumb-sep">›</span>
+            <span className="music-breadcrumb-current">{note?.title}</span>
+          </div>
+          {!loading && authed && (
             <div className="music-col-headers-row">
               {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
                 <span key={col} onClick={() => cycleSort(col)} style={{ cursor: 'pointer', userSelect: 'none', color: sort.col === col ? 'var(--dark)' : '' }}>
@@ -788,9 +794,9 @@ function MusicPage({ onBack }) {
                 </span>
               ))}
             </div>
-          </div>
+          )}
         </div>
-      )}
+      </div>
       <div className="music-scroll">
         <div className="music-inner">
           {loading ? (
@@ -802,7 +808,7 @@ function MusicPage({ onBack }) {
               {displayedTracks.map(({ track, played_at }, i) => (
                 <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" style={{ width: 34, height: 34, borderRadius: 8, flexShrink: 0 }} />}
+                    {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" style={{ width: 34, height: 34, borderRadius: 8, flexShrink: 0, border: '1px solid rgba(0,0,0,0.06)' }} />}
                     {cleanTitle(track.name)}
                   </span>
                   <span className="music-artist">{track.artists.map(a => a.name).join(', ')}</span>
@@ -823,7 +829,7 @@ function WritingPage({ setPage }) {
   if (activeNote?.type === 'music') {
     return (
       <div key={activeNote.title} className="page-transition">
-        <MusicPage onBack={() => setActiveNote(null)} />
+        <MusicPage note={activeNote} onBack={() => setActiveNote(null)} />
       </div>
     )
   }
@@ -840,12 +846,15 @@ function WritingPage({ setPage }) {
     <div className="page">
       <Nav page="writing" setPage={setPage} />
       <div className="page-content">
-        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>A collection of thoughts, ideas, and observations — mostly me talking to myself</h1>
+        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>A collection of thoughts, ideas, observations, and resources</h1>
         <ul className="projects no-bg-hover" style={{ width: '100%' }}>
           {writings.map((w, i) => (
             <li key={w.title} className="project writing-item animate" style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
-              <span className="project-name">{w.title}</span>
-              <span className="writing-meta">{w.desc}</span>
+              <div className="writing-item-main">
+                <span className="project-name">{w.title}</span>
+                <span className="writing-meta">{w.desc}</span>
+              </div>
+              {w.category && <span className="writing-category">{w.category}</span>}
             </li>
           ))}
         </ul>

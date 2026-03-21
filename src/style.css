@@ -289,17 +289,32 @@ html, body, #app {
 }
 
 .writing-item {
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
   height: auto;
-  gap: 4px;
+  gap: 0;
   padding: 14px 0 !important;
+}
+
+.writing-item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
 }
 
 .writing-meta {
   font-size: 13px;
   font-weight: 400;
   color: var(--light);
+}
+
+.writing-category {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--light);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .project.dim {
@@ -434,7 +449,6 @@ html, body, #app {
   z-index: 20;
   display: flex;
   flex-direction: column;
-  gap: 48px;
 }
 
 .note-back {
@@ -488,7 +502,7 @@ html, body, #app {
   animation: content-fade 0.6s ease forwards;
   display: flex;
   flex-direction: column;
-  gap: 56px;
+  gap: 40px;
 }
 
 .note-header {
@@ -611,19 +625,53 @@ img.note-image-placeholder {
   flex-direction: column;
 }
 
-.music-back-wrap {
-  position: fixed;
-  top: 0;
-  left: 0;
-  padding: 140px 32px 0 140px;
-  z-index: 20;
-}
 
 .music-col-headers {
   flex-shrink: 0;
   background: #fff;
   z-index: 10;
   padding-top: 140px;
+}
+
+.music-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 56px;
+}
+
+.music-breadcrumb-sep {
+  font-size: 12px;
+  color: var(--light);
+  opacity: 0.5;
+}
+
+.music-breadcrumb-current {
+  font-family: 'Matter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark);
+  white-space: nowrap;
+}
+
+.music-back-arrow {
+  display: block;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: 'Matter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--light);
+  cursor: pointer;
+  text-align: left;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+  line-height: 1;
+}
+
+.music-back-arrow:hover {
+  color: var(--dark);
 }
 
 .music-scroll-fade {
