@@ -5,7 +5,15 @@ const SPOTIFY_REDIRECT  = 'http://127.0.0.1:5173/callback'
 const SPOTIFY_SCOPES    = 'user-read-recently-played'
 
 function formatDate(str) {
-  return new Date(str).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  const diff = Date.now() - new Date(str).getTime()
+  const mins = Math.floor(diff / 60000)
+  const hours = Math.floor(diff / 3600000)
+  const days = Math.floor(diff / 86400000)
+  if (mins < 60) return `${mins}m ago`
+  if (hours < 24) return `${hours}h ago`
+  if (days < 7) return `${days}d ago`
+  if (days < 30) return `${Math.floor(days / 7)}w ago`
+  return `${Math.floor(days / 30)}mo ago`
 }
 
 function cleanTitle(name) {
@@ -109,7 +117,7 @@ function playClick(intensity = 0.4) {
   src.start()
 }
 
-import { CornerDownLeftIcon } from './CornerDownLeftIcon'
+import { Post, ArrowDownLeft, NavArrowRight, Xmark } from 'iconoir-react'
 import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
 import { Agentation } from 'agentation'
 import './style.css'
@@ -166,15 +174,10 @@ const projects = [
         body: `Patients reported feeling more confident in their treatment decisions and more likely to follow through with recommended care. The design reduced the perceived distance between the patient and their own health information — which turns out to be most of the problem.`,
         noImageAfter: true,
       },
-      {
-        id: 'acknowledgements',
-        heading: 'Acknowledgements',
-        headingClass: 'note-image-caption note-image-caption--left',
-        body: `This project was done with the help of my incredible teammates and in collaboration with Gabriel Valdivia, Alex Valdivia, Arman Ozgun, and Daniel Chung. We worked on this together over the course of summer 2024.`,
-        bodyClass: 'note-image-caption note-image-caption--left',
-        sectionClass: 'note-section--tight',
-      },
     ],
+    modalBody: `I came on as Product Designer to help lay the groundwork for the product. A lot of early decisions about how things looked and felt. We did this over the summer of 2024.`,
+    modalContent: `Special thanks to`,
+    collaborators: ['Gabriel Valdivia'],
   },
   { name: 'Goodword',              desc: 'Maintain relationships in your professional network',         year: '2024' },
   { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024', img: '/images/workmate/cover.jpg' },
@@ -236,7 +239,7 @@ function GrainOverlay() {
 function BackNav({ setPage }) {
   return (
     <button className="back-nav" onClick={() => setPage('work')}>
-      <CornerDownLeftIcon size={12} />
+      <ArrowDownLeft width={12} height={12} strokeWidth={1.75} />
       Back
     </button>
   )
@@ -254,8 +257,25 @@ function Nav({ page, setPage }) {
 
 function ProjectDetailPage({ project, onBack }) {
   const [activeId, setActiveId] = useState(project.sections[0]?.id)
+  const [sheetOpen, setSheetOpen] = useState(false)
+  const [crumbInView, setCrumbInView] = useState(true)
   const containerRef = useRef(null)
+  const breadcrumbRef = useRef(null)
   const scrollingRef = useRef(false)
+
+  useEffect(() => {
+    const el = breadcrumbRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => setCrumbInView(entry.isIntersecting), { threshold: 0 })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') setSheetOpen(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
 
   useEffect(() => {
     const container = containerRef.current
@@ -274,11 +294,17 @@ function ProjectDetailPage({ project, onBack }) {
   }, [project])
 
   return (
-    <div className="note-layout" ref={containerRef}>
+    <>
+    <div className={"note-layout"} ref={containerRef}>
       <TopFade />
       <aside className="note-sidebar">
+        <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
+          <button className="note-back" onClick={onBack}>Home</button>
+          <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
+          <span className="note-breadcrumb-current" style={{ color: 'var(--light)' }}>{project.name}</span>
+        </div>
         <nav className="note-toc">
-          {project.sections.map(s => (
+          {project.sections.map((s, si) => (
             <a
               key={s.id}
               href={`#${s.id}`}
@@ -290,25 +316,26 @@ function ProjectDetailPage({ project, onBack }) {
                 containerRef.current?.querySelector(`#${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                 setTimeout(() => { scrollingRef.current = false }, 1000)
               }}
-            >{s.heading}</a>
+            >{si === 0 ? 'Intro' : s.heading}</a>
           ))}
         </nav>
       </aside>
       <article className="note-article">
-        <button className="note-back" onClick={onBack}>Home</button>
-        <header className="note-header">
-          <h1 className="note-title">
-            {project.href
-              ? <a href={project.href} target="_blank" rel="noreferrer" className="project-title-link">{project.name}</a>
-              : project.name}
-          </h1>
-          <span className="note-date">{project.desc}</span>
-        </header>
+        <div className="note-breadcrumb" ref={breadcrumbRef}>
+          <div className="note-breadcrumb-left">
+            <button className="note-back" onClick={onBack}>Home</button>
+            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
+            <span className="note-breadcrumb-current">{project.name}</span>
+          </div>
+          <button className="note-info-btn" aria-label="Info" onClick={() => setSheetOpen(true)}>
+            <Post width={16} height={16} strokeWidth={1.75} />
+          </button>
+        </div>
         {project.content.map((section, si) => (
           <>
             {(section.heading || section.body) && (
               <section key={section.id} id={section.id} className={`note-section${section.sectionClass ? ` ${section.sectionClass}` : ''}`}>
-                {section.heading && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading}</h2>}
+                {(section.heading || si === 0) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? 'Intro'}</h2>}
                 {section.body && section.body.split('\n\n').map((p, i) => (
                   <p key={i} className={section.bodyClass ?? 'note-body'}>{p}</p>
                 ))}
@@ -326,6 +353,28 @@ function ProjectDetailPage({ project, onBack }) {
         ))}
       </article>
     </div>
+    <div className={`sheet-backdrop note-backdrop${sheetOpen ? ' open' : ''}`} onClick={() => setSheetOpen(false)} />
+    <div className={`setup-modal${sheetOpen ? ' open' : ''}`}>
+      <p className="setup-modal-heading">About this project</p>
+      <button className="setup-modal-close" onClick={() => setSheetOpen(false)}>
+        <Xmark width={16} height={16} strokeWidth={1.75} />
+      </button>
+      {project.modalBody && <p>{project.modalBody}</p>}
+      {(project.modalContent || project.collaborators) && (
+        <p>
+          {project.modalContent}
+          {project.collaborators && (
+            <>{' '}{project.collaborators.map((name, i) => (
+              <span key={name} className="modal-collaborator">
+                <span className="modal-avatar">{name.split(' ').map(n => n[0]).join('')}</span>
+                {name}{i < project.collaborators.length - 1 ? (i === project.collaborators.length - 2 ? ', and ' : ', ') : ''}
+              </span>
+            ))}{' '}for collaborating on this.</>
+          )}
+        </p>
+      )}
+    </div>
+    </>
   )
 }
 
@@ -453,6 +502,14 @@ function AboutPage({ setPage }) {
           <p className="animate" style={{ animationDelay: '0.2s' }}>In middle school I began making designs for my online gaming profile. Eventually, this would lead me to design school, but I've really grown by building things and being exposed to others who are exceptional at their craft.</p>
           <p className="animate" style={{ animationDelay: '0.25s' }}>Currently I'm interested in code and glyph dithers. Outside of work I'm interested in baroque art, competitive CoD, and collecting niche fragrances.</p>
         </div>
+        <div className="animate" style={{ animationDelay: '0.3s' }}>
+          <h2 className="page-heading" style={{ marginBottom: '12px' }}>Connect</h2>
+          <div className="about-links">
+            <a href="mailto:mabaltzelle@gmail.com">Email</a>
+            <a href="http://www.linkedin.com/in/matthew-baltzelle" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="https://x.com/bltzle" target="_blank" rel="noreferrer">Twitter</a>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -525,8 +582,15 @@ const writings = [
     type: 'music',
   },
   {
+    title: 'Currently Watching',
+    desc: 'Anime, ongoing',
+    category: 'Anime',
+    year: '2026',
+    type: 'anime',
+  },
+  {
     title: 'Purchasing a Typeface',
-    desc: 'On the typographic qualities I keep coming back to',
+    desc: 'What makes type worth it',
     category: 'Writing',
     year: '2025',
     date: '2025',
@@ -572,7 +636,7 @@ const writings = [
   },
   {
     title: 'Building My Website',
-    desc: 'On owning the thing that represents you',
+    desc: 'Turning the ideas in my head into things',
     category: 'Writing',
     year: '2026',
     date: 'March 2026',
@@ -612,7 +676,7 @@ function TopFade() {
       position: 'fixed',
       top: 0,
       left: 0,
-      right: 0,
+      right: 8,
       height: '120px',
       pointerEvents: 'none',
       zIndex: 10,
@@ -623,8 +687,25 @@ function TopFade() {
 
 function NoteDetailPage({ note, onBack }) {
   const [activeId, setActiveId] = useState('__intro')
+  const [crumbInView, setCrumbInView] = useState(true)
+  const [sheetOpen, setSheetOpen] = useState(false)
   const containerRef = useRef(null)
+  const breadcrumbRef = useRef(null)
   const scrollingRef = useRef(false)
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') setSheetOpen(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
+
+  useEffect(() => {
+    const el = breadcrumbRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => setCrumbInView(entry.isIntersecting), { threshold: 0 })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const container = containerRef.current
@@ -647,9 +728,15 @@ function NoteDetailPage({ note, onBack }) {
   }, [note])
 
   return (
-    <div className="note-layout" ref={containerRef}>
+    <>
+    <div className={"note-layout"} ref={containerRef}>
       <TopFade />
       <aside className="note-sidebar">
+        <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
+          <button className="note-back" onClick={onBack}>Notes</button>
+          <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
+          <span className="note-breadcrumb-current" style={{ color: 'var(--light)' }}>{note.title}</span>
+        </div>
         <nav className="note-toc">
           <a
             className={`note-toc-item${activeId === '__intro' ? ' active' : ''}`}
@@ -680,16 +767,21 @@ function NoteDetailPage({ note, onBack }) {
         </nav>
       </aside>
       <article className="note-article">
-        <button className="note-back" onClick={onBack}>Notes</button>
-        <header className="note-header">
-          <h1 className="note-title">{note.title}</h1>
-          <span className="note-date">{note.date}</span>
-        </header>
+        <div className="note-breadcrumb" ref={breadcrumbRef}>
+          <div className="note-breadcrumb-left">
+            <button className="note-back" onClick={onBack}>Notes</button>
+            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
+            <span className="note-breadcrumb-current">{note.title}</span>
+          </div>
+          <button className="note-info-btn" aria-label="Info" onClick={() => setSheetOpen(true)}>
+            <Post width={16} height={16} strokeWidth={1.75} />
+          </button>
+        </div>
         {note.content.map((section, si) => (
           <>
             {(section.heading || section.body) && (
               <section key={section.id} id={section.id} className={`note-section${section.sectionClass ? ` ${section.sectionClass}` : ''}`}>
-                {section.heading && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading}</h2>}
+                {(section.heading || si === 0) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? 'Intro'}</h2>}
                 {section.body && section.body.split('\n\n').map((p, i) => (
                   <p key={i} className={section.bodyClass ?? 'note-body'}>{p}</p>
                 ))}
@@ -722,6 +814,15 @@ function NoteDetailPage({ note, onBack }) {
         ))}
       </article>
     </div>
+    <div className={`sheet-backdrop note-backdrop${sheetOpen ? ' open' : ''}`} onClick={() => setSheetOpen(false)} />
+    <div className={`setup-modal${sheetOpen ? ' open' : ''}`}>
+      <p className="setup-modal-heading">About this note</p>
+      <button className="setup-modal-close" onClick={() => setSheetOpen(false)}>
+        <Xmark width={16} height={16} strokeWidth={1.75} />
+      </button>
+      <p>Placeholder text for {note.title}. Add context about this piece here — the thinking behind it, how it came together, or what it connects to.</p>
+    </div>
+    </>
   )
 }
 
@@ -736,12 +837,115 @@ function dedupeTracks(items) {
 }
 
 
+const animeData = {
+  watching: [
+    { title: 'Frieren: Beyond Journey\'s End', studio: 'Madhouse', episodes: 28, cover: 'https://image.tmdb.org/t/p/original/dqZENchTd7lp5zht7BdlqM7RBhD.jpg' },
+    { title: 'Vinland Saga', studio: 'MAPPA', episodes: 48, cover: 'https://image.tmdb.org/t/p/original/vUHlpA5c1NXkds59reY3HMb4Abs.jpg' },
+    { title: 'Dungeon Meshi', studio: 'Trigger', episodes: 24, cover: 'https://image.tmdb.org/t/p/original/9t3DYdGxK3i4WRzKvIZwJd4kBnr.jpg' },
+  ],
+  finished: [
+    { title: 'Jujutsu Kaisen', studio: 'MAPPA', episodes: 47, year: 2025, cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg' },
+    { title: 'Ranking of Kings', studio: 'Wit Studio', episodes: 23, year: 2025, cover: 'https://image.tmdb.org/t/p/original/ujMjMUi6z02uOfQEerEDC4rH6aG.jpg' },
+    { title: 'Mob Psycho 100', studio: 'Bones', episodes: 37, year: 2024, cover: 'https://image.tmdb.org/t/p/original/vR7hwaGQ0ySRoq1WobiNRaPs4WO.jpg' },
+    { title: 'Ping Pong the Animation', studio: 'Tatsunoko', episodes: 11, year: 2024, cover: 'https://image.tmdb.org/t/p/original/frgVn3ww547TVQH8vS2bWKZnEBu.jpg' },
+  ],
+}
+
+function AnimePage({ note, onBack }) {
+  const [sheetOpen, setSheetOpen] = useState(false)
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') setSheetOpen(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
+
+  const byYear = animeData.finished.reduce((acc, item) => {
+    acc[item.year] = acc[item.year] ?? []
+    acc[item.year].push(item)
+    return acc
+  }, {})
+  const years = Object.keys(byYear).sort((a, b) => b - a)
+
+  return (
+    <>
+    <div className="music-page">
+      <TopFade />
+      <div className="music-scroll-fade" />
+      <div className="music-col-headers">
+        <div className="music-inner">
+          <div className="music-breadcrumb">
+            <div className="note-breadcrumb-left">
+              <button className="music-back-arrow" onClick={onBack}>Notes</button>
+              <NavArrowRight className="music-breadcrumb-sep" width={12} height={12} />
+              <span className="music-breadcrumb-current">{note?.title}</span>
+            </div>
+            <button className="note-info-btn" aria-label="Info" onClick={() => setSheetOpen(true)}>
+              <Post width={16} height={16} strokeWidth={1.75} />
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="music-scroll">
+        <div className="music-inner">
+          <div className="anime-section">
+          <div className="anime-section-label">{new Date().getFullYear()}</div>
+          <div className="music-rows">
+            {animeData.watching.map((item) => (
+              <div key={item.title} className="music-row anime-row" onMouseEnter={() => playClick(0.4)}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  {item.cover && <img src={item.cover} alt="" style={{ width: 34, height: 34, borderRadius: 6, flexShrink: 0, objectFit: 'cover', border: '1px solid rgba(0,0,0,0.06)' }} />}
+                  <span className="music-song-name">{item.title}<span className="music-artist" style={{ marginLeft: 8 }}>{item.studio}</span></span>
+                </span>
+                <span className="music-col-date">{item.episodes} eps</span>
+              </div>
+            ))}
+          </div>
+          </div>
+          {years.map(year => (
+            <div key={year} className="anime-section">
+              <div className="anime-section-label">{year}</div>
+              <div className="music-rows">
+                {byYear[year].map(item => (
+                  <div key={item.title} className="music-row anime-row" onMouseEnter={() => playClick(0.4)}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      {item.cover && <img src={item.cover} alt="" style={{ width: 34, height: 34, borderRadius: 6, flexShrink: 0, objectFit: 'cover', border: '1px solid rgba(0,0,0,0.06)' }} />}
+                      <span className="music-song-name">{item.title}<span className="music-artist" style={{ marginLeft: 8 }}>{item.studio}</span></span>
+                    </span>
+                    <span className="music-col-date">{item.episodes} eps</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    <div className={`sheet-backdrop note-backdrop${sheetOpen ? ' open' : ''}`} onClick={() => setSheetOpen(false)} />
+    <div className={`setup-modal${sheetOpen ? ' open' : ''}`}>
+      <p className="setup-modal-heading">About this list</p>
+      <button className="setup-modal-close" onClick={() => setSheetOpen(false)}>
+        <Xmark width={16} height={16} strokeWidth={1.75} />
+      </button>
+      <p>A running list of what I'm watching and what I've finished. No ranking, no scoring. Just a record.</p>
+    </div>
+    </>
+  )
+}
+
 function MusicPage({ note, onBack }) {
   const cached = localStorage.getItem('spotify_tracks')
   const [tracks, setTracks] = useState(cached ? dedupeTracks(JSON.parse(cached)) : [])
   const [loading, setLoading] = useState(!cached)
   const [authed, setAuthed] = useState(!!localStorage.getItem('spotify_tokens'))
   const [sort, setSort] = useState({ col: null, dir: null })
+  const [sheetOpen, setSheetOpen] = useState(false)
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') setSheetOpen(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [])
 
   const cycleSort = (col) => setSort(s => {
     if (col === 'played') return s.col === 'played' ? { col: null, dir: null } : { col, dir: 'asc' }
@@ -776,15 +980,21 @@ function MusicPage({ note, onBack }) {
   }, [authed])
 
   return (
+    <>
     <div className="music-page">
       <TopFade />
       <div className="music-scroll-fade" />
       <div className="music-col-headers">
         <div className="music-inner">
           <div className="music-breadcrumb">
-            <button className="music-back-arrow" onClick={onBack}>Notes</button>
-            <span className="music-breadcrumb-sep">›</span>
-            <span className="music-breadcrumb-current">{note?.title}</span>
+            <div className="note-breadcrumb-left">
+              <button className="music-back-arrow" onClick={onBack}>Notes</button>
+              <NavArrowRight className="music-breadcrumb-sep" width={12} height={12} />
+              <span className="music-breadcrumb-current">{note?.title}</span>
+            </div>
+            <button className="note-info-btn" aria-label="Setup" onClick={() => setSheetOpen(true)}>
+              <Post width={16} height={16} strokeWidth={1.75} />
+            </button>
           </div>
           {!loading && authed && (
             <div className="music-col-headers-row">
@@ -809,7 +1019,7 @@ function MusicPage({ note, onBack }) {
                 <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" style={{ width: 34, height: 34, borderRadius: 8, flexShrink: 0, border: '1px solid rgba(0,0,0,0.06)' }} />}
-                    {cleanTitle(track.name)}
+                    <span className="music-song-name">{cleanTitle(track.name)}</span>
                   </span>
                   <span className="music-artist">{track.artists.map(a => a.name).join(', ')}</span>
                   <span className="music-col-date">{formatDate(played_at)}</span>
@@ -819,7 +1029,21 @@ function MusicPage({ note, onBack }) {
           )}
         </div>
       </div>
+
     </div>
+
+      {/* Setup modal */}
+      <div className={`sheet-backdrop note-backdrop${sheetOpen ? ' open' : ''}`} onClick={() => setSheetOpen(false)} />
+      <div className={`setup-modal${sheetOpen ? ' open' : ''}`}>
+        <p className="setup-modal-heading">Setup</p>
+        <button className="setup-modal-close" onClick={() => setSheetOpen(false)}>
+          <Xmark width={16} height={16} strokeWidth={1.75} />
+        </button>
+        <p>Good sound changes how music feels. That's really all there is to it.</p>
+        <p>I am almost always listening to music. Currently alternating between the <a href="https://mezeaudio.com/products/109-pro" target="_blank" rel="noreferrer">Meze 109 Pro</a> and <a href="https://shop.zmfheadphones.com/collections/stock-headphones/products/bokeh-open-copy" target="_blank" rel="noreferrer">ZMF Bokeh Open</a>, paired with the <a href="https://www.fiio.com/k11r2r" target="_blank" rel="noreferrer">FiiO K11 R2R</a>.</p>
+        <p>The <a href="https://us.sennheiser-hearing.com/products/hd-600" target="_blank" rel="noreferrer">HD600's</a> were my daily drivers for almost 6 years, but I wanted a warmer and more fun listening experience.</p>
+      </div>
+    </>
   )
 }
 
@@ -830,6 +1054,14 @@ function WritingPage({ setPage }) {
     return (
       <div key={activeNote.title} className="page-transition">
         <MusicPage note={activeNote} onBack={() => setActiveNote(null)} />
+      </div>
+    )
+  }
+
+  if (activeNote?.type === 'anime') {
+    return (
+      <div key={activeNote.title} className="page-transition">
+        <AnimePage note={activeNote} onBack={() => setActiveNote(null)} />
       </div>
     )
   }
@@ -865,6 +1097,11 @@ function WritingPage({ setPage }) {
 
 export default function App() {
   const [page, setPage] = useState('work')
+
+  useEffect(() => {
+    const titles = { work: 'Baltzelle', about: 'About', writing: 'Notes' }
+    document.title = titles[page] ?? 'Baltzelle'
+  }, [page])
 
   useEffect(() => {
     const handler = (e) => {
