@@ -131,7 +131,7 @@ const projects = [
     name: 'Ritual Dental',
     desc: 'Using AI to better inform patient oral health',
     year: '2024',
-    img: '/images/ritual-dental/cover.jpg',
+    img: '/images/ritual-dental/Perio 1.png',
     href: 'https://ritualdental.com',
     tagline: 'Personalized preventative oral care that sticks',
     role: 'Product Designer',
@@ -420,7 +420,7 @@ function WorkPage({ setPage }) {
             src={p.img}
             alt={p.name}
             className="project-preview"
-            style={{ opacity: hoveredProject?.name === p.name ? 1 : 0 }}
+            style={{ opacity: hoveredProject?.name === p.name ? 1 : 0, transform: hoveredProject?.name === p.name ? 'scale(1)' : 'scale(0.98)', transition: hoveredProject?.name === p.name ? 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)' : 'opacity 0.3s ease, transform 0.3s ease' }}
           />
         ))}
         <ShaderGradientCanvas style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
@@ -524,7 +524,7 @@ function AboutPage({ setPage }) {
           <p className="animate" style={{ animationDelay: '0.25s' }}>Currently I'm interested in code and glyph dithers. Outside of work I'm interested in baroque art, competitive CoD, and collecting niche fragrances.</p>
         </div>
         <div className="animate" style={{ animationDelay: '0.3s' }}>
-          <h2 className="page-heading" style={{ marginBottom: '12px' }}>Connect</h2>
+          <h2 className="page-heading" style={{ marginBottom: '16px' }}>Connect</h2>
           <div className="about-links">
             <a href="mailto:mabaltzelle@gmail.com">Email</a>
             <a href="http://www.linkedin.com/in/matthew-baltzelle" target="_blank" rel="noreferrer">LinkedIn</a>
