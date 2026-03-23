@@ -121,7 +121,7 @@ function playClick(intensity = 0.4) {
   src.start()
 }
 
-import { Post, ArrowDownLeft, NavArrowRight, Xmark } from 'iconoir-react'
+import { Post, ArrowDownLeft, NavArrowRight, Xmark, Plus } from 'iconoir-react'
 import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
 import { Agentation } from 'agentation'
 import './style.css'
@@ -260,8 +260,13 @@ function Nav({ page, setPage }) {
 }
 
 function ProjectDetailPage({ project, onBack }) {
+  const hasSections = project.sections?.length > 0
+  const [activeId, setActiveId] = useState('__intro')
+  const [crumbInView, setCrumbInView] = useState(true)
   const [sheetOpen, setSheetOpen] = useState(false)
   const containerRef = useRef(null)
+  const breadcrumbRef = useRef(null)
+  const scrollingRef = useRef(false)
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') setSheetOpen(false) }
@@ -269,20 +274,84 @@ function ProjectDetailPage({ project, onBack }) {
     return () => document.removeEventListener('keydown', onKey)
   }, [])
 
+  useEffect(() => {
+    if (!hasSections) return
+    const el = breadcrumbRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => setCrumbInView(entry.isIntersecting), { threshold: 0 })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [hasSections])
+
+  useEffect(() => {
+    if (!hasSections) return
+    const container = containerRef.current
+    if (!container) return
+    const scrollEl = container.closest('.page-transition') ?? window
+    const onScroll = () => {
+      if (scrollingRef.current) return
+      const scrollTop = scrollEl instanceof Element ? scrollEl.scrollTop : window.scrollY
+      if (scrollTop < 80) { setActiveId('__intro'); return }
+      const threshold = scrollTop + (scrollEl instanceof Element ? scrollEl.clientHeight : window.innerHeight) * 0.3
+      let active = '__intro'
+      for (const { id } of project.sections) {
+        const el = container.querySelector(`#${id}`)
+        if (el && el.offsetTop <= threshold) active = id
+      }
+      setActiveId(active)
+    }
+    scrollEl.addEventListener('scroll', onScroll)
+    return () => scrollEl.removeEventListener('scroll', onScroll)
+  }, [project, hasSections])
+
   return (
     <>
     <div className={"note-layout"} ref={containerRef}>
       <TopFade />
+      {hasSections && (
+        <aside className="note-sidebar">
+          <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
+            <button className="note-back" onClick={onBack}>Home</button>
+            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
+            <span className="note-breadcrumb-current" style={{ color: 'var(--light)' }}>{project.name}</span>
+          </div>
+          <nav className="note-toc">
+            <a
+              className={`note-toc-item${activeId === '__intro' ? ' active' : ''}`}
+              href="#"
+              onClick={e => {
+                e.preventDefault()
+                setActiveId('__intro')
+                scrollingRef.current = true
+                const scrollEl = containerRef.current?.closest('.page-transition') ?? window
+                scrollEl.scrollTo({ top: 0, behavior: 'smooth' })
+                setTimeout(() => { scrollingRef.current = false }, 1000)
+              }}
+            >Intro</a>
+            {project.sections.map(s => (
+              <a
+                key={s.id}
+                href={`#${s.id}`}
+                className={`note-toc-item${activeId === s.id ? ' active' : ''}`}
+                onClick={e => {
+                  e.preventDefault()
+                  setActiveId(s.id)
+                  scrollingRef.current = true
+                  containerRef.current?.querySelector(`#${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  setTimeout(() => { scrollingRef.current = false }, 1000)
+                }}
+              >{s.heading}</a>
+            ))}
+          </nav>
+        </aside>
+      )}
       <article className="note-article">
-        <div className="note-breadcrumb">
+        <div className="note-breadcrumb" ref={breadcrumbRef}>
           <div className="note-breadcrumb-left">
             <button className="note-back" onClick={onBack}>Home</button>
             <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <span className="note-breadcrumb-current">{project.name}</span>
           </div>
-          <button className="note-info-btn" aria-label="Info" onClick={() => setSheetOpen(true)}>
-            <Post width={16} height={16} strokeWidth={1.75} />
-          </button>
         </div>
         {project.content.map((section, si) => (
           <>
@@ -409,19 +478,21 @@ function WorkPage({ setPage }) {
             <h1 className="animate" style={{ animationDelay: '0.1s' }}>Matthew Baltzelle</h1>
             <p className="animate" style={{ animationDelay: '0.15s' }}>Designer crafting stories for early stage companies</p>
           </header>
-          <ul className="projects">
+          <ul className="projects no-bg-hover" style={{ width: '100%', padding: '0 76px' }}>
             {projects.map((p, i) => (
               <li
                 key={p.name}
-                className={`project animate${p.dim ? ' dim' : ''}`}
+                className={`project writing-item animate${p.dim ? ' dim' : ''}`}
                 style={{ animationDelay: `${0.3 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: p.sections ? 'pointer' : 'not-allowed' }}
                 onClick={() => { if (p.sections) { setHoveredProject(null); setActiveProject(p) } }}
                 onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
                 onMouseLeave={() => setHoveredProject(null)}
               >
-                <span className="project-name">{p.name}</span>
-                <span className="project-desc">{p.desc}</span>
-                <span className="project-year">{p.year}</span>
+                <div className="writing-item-main">
+                  <span className="project-name">{p.name}</span>
+                  <span className="writing-meta">{p.desc}</span>
+                </div>
+                <span className="writing-category">{p.year}</span>
               </li>
             ))}
           </ul>
@@ -705,9 +776,6 @@ function NoteDetailPage({ note, onBack }) {
             <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <span className="note-breadcrumb-current">{note.title}</span>
           </div>
-          <button className="note-info-btn" aria-label="Info" onClick={() => setSheetOpen(true)}>
-            <Post width={16} height={16} strokeWidth={1.75} />
-          </button>
         </div>
         {note.content.map((section, si) => (
           <>
@@ -777,10 +845,38 @@ function dedupeTracks(items) {
 
 const animeData = {
   watching: [
-    { title: 'Frieren: Beyond Journey\'s End', studio: 'Madhouse', episodes: 28, cover: 'https://image.tmdb.org/t/p/original/dqZENchTd7lp5zht7BdlqM7RBhD.jpg' },
-    { title: 'Vinland Saga', studio: 'MAPPA', episodes: 48, cover: 'https://image.tmdb.org/t/p/original/vUHlpA5c1NXkds59reY3HMb4Abs.jpg' },
-    { title: 'Dungeon Meshi', studio: 'Trigger', episodes: 24, cover: 'https://image.tmdb.org/t/p/original/9t3DYdGxK3i4WRzKvIZwJd4kBnr.jpg' },
-    { title: 'Jujutsu Kaisen Season 3', studio: 'MAPPA', episodes: 24, cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg' },
+    {
+      title: 'Frieren: Beyond Journey\'s End', studio: 'Madhouse', episodes: 28,
+      cover: 'https://image.tmdb.org/t/p/original/dqZENchTd7lp5zht7BdlqM7RBhD.jpg',
+      desc: [
+        'Frieren follows an elven mage who outlives the companions she adventured with, watching decades pass like seasons. The show is less about the journey than about what gets left behind.',
+        'It sits quietly with grief without ever naming it directly. The pacing is deliberate, and the world feels genuinely old in a way most fantasy does not bother with.',
+      ],
+    },
+    {
+      title: "Hell's Paradise", studio: 'MAPPA', episodes: 13,
+      cover: 'https://image.tmdb.org/t/p/original/1V9I7SvZbYoMbSvdtnlkkq9SB1k.jpg',
+      desc: [
+        "Hell's Paradise follows Gabimaru, a ninja condemned to death who is offered a pardon in exchange for retrieving the elixir of life from a mysterious island. The island is violent and strange in equal measure.",
+        'MAPPA gives it a restrained visual palette that suits the brutality well. The show is at its best when it treats the island as a philosophical problem as much as a physical one.',
+      ],
+    },
+    {
+      title: 'Fire Force', studio: 'David Production', episodes: 48,
+      cover: 'https://image.tmdb.org/t/p/original/sC4sTJnI0rLakinXMgBHv3Ynl9D.jpg',
+      desc: [
+        'Fire Force is set in a world where people spontaneously combust into living infernals, and follows Shinra Kusakabe as he joins a special brigade tasked with putting them to rest. The premise is more thoughtful than it first appears.',
+        'David Production brings a kinetic energy to the action sequences that holds up across 48 episodes. The religious mythology underpinning the world adds a layer worth paying attention to.',
+      ],
+    },
+    {
+      title: 'Sentenced to Be a Hero', studio: 'Studio Kai', episodes: 12,
+      cover: 'https://image.tmdb.org/t/p/original/kzyNxTZFcWjkYJU9T9aJ8vXTAFN.jpg',
+      desc: [
+        'Sentenced to Be a Hero follows Xylo Forbartz, a condemned knight assigned to Penal Hero Unit 9004, a squad of criminals forced to fight demons on behalf of a government that would rather see them dead. When killed, they are resurrected and sent back.',
+        'The setup uses the hero fantasy genre as a frame for something grimmer. The cycle of death and forced service gives the show a bleak momentum that separates it from most of what is airing alongside it.',
+      ],
+    },
   ],
   finished: [
     { title: 'Jujutsu Kaisen', studio: 'MAPPA', episodes: 47, year: 2025, cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg' },
@@ -791,56 +887,42 @@ const animeData = {
 }
 
 function AnimePage({ note, onBack }) {
-  const [sheetOpen, setSheetOpen] = useState(false)
-
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') setSheetOpen(false) }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [])
+  const [activeIdx, setActiveIdx] = useState(0)
 
   return (
     <>
-    <div className="music-page">
+    <div className="note-layout">
       <TopFade />
-      <div className="music-scroll-fade" />
-      <div className="music-col-headers">
-        <div className="music-inner">
-          <div className="music-breadcrumb">
-            <div className="note-breadcrumb-left">
-              <button className="music-back-arrow" onClick={onBack}>Notes</button>
-              <NavArrowRight className="music-breadcrumb-sep" width={12} height={12} />
-              <span className="music-breadcrumb-current">{note?.title}</span>
-            </div>
-            <button className="note-info-btn" aria-label="Info" onClick={() => setSheetOpen(true)}>
-              <Post width={16} height={16} strokeWidth={1.75} />
-            </button>
+      <article className="note-article" style={{ paddingBottom: '80px' }}>
+        <div className="note-breadcrumb">
+          <div className="note-breadcrumb-left">
+            <button className="note-back" onClick={onBack}>Notes</button>
+            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
+            <span className="note-breadcrumb-current">{note?.title}</span>
           </div>
         </div>
-      </div>
-      <div className="anime-stack-outer">
-        <Swiper
-          effect="cards"
-          grabCursor={true}
-          loop={true}
-          modules={[EffectCards]}
-          className="anime-swiper"
-        >
-          {animeData.watching.map((item, i) => (
-            <SwiperSlide key={i} className="anime-swiper-slide">
-              <img src={item.cover} alt={item.title} draggable={false} />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-    </div>
-    <div className={`sheet-backdrop note-backdrop${sheetOpen ? ' open' : ''}`} onClick={() => setSheetOpen(false)} />
-    <div className={`setup-modal${sheetOpen ? ' open' : ''}`}>
-      <p className="setup-modal-heading">About this list</p>
-      <button className="setup-modal-close" onClick={() => setSheetOpen(false)}>
-        <Xmark width={16} height={16} strokeWidth={1.75} />
-      </button>
-      <p>A running list of what I'm watching and what I've finished. No ranking, no scoring. Just a record.</p>
+        <div className="anime-col">
+          <div className="anime-body">
+            {animeData.watching[activeIdx % animeData.watching.length].desc.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+          <Swiper
+            effect="cards"
+            grabCursor={true}
+            loop={false}
+            modules={[EffectCards]}
+            className="anime-swiper"
+            onSlideChange={(swiper) => setActiveIdx(swiper.activeIndex)}
+          >
+            {animeData.watching.map((item, i) => (
+              <SwiperSlide key={i} className="anime-swiper-slide">
+                <img src={item.cover} alt={item.title} draggable={false} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      </article>
     </div>
     </>
   )

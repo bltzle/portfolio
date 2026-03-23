@@ -1,4 +1,10 @@
 @font-face {
+  font-family: 'Gambetta';
+  src: url('/fonts/Gambetta-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
   font-family: 'Matter';
   src: url('/fonts/MatterRegular.woff2') format('woff2');
   font-weight: 400;
@@ -303,18 +309,18 @@ html, body, #app {
 .writing-item-main {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   flex: 1;
 }
 
 .writing-meta {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--light);
 }
 
 .writing-category {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   color: var(--light);
   white-space: nowrap;
@@ -786,13 +792,7 @@ img.note-image-placeholder {
 
 .music-scroll {
   flex: 1;
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.music-scroll::-webkit-scrollbar {
-  display: none;
+  overflow: hidden;
 }
 
 .music-inner {
@@ -868,23 +868,51 @@ img.note-image-placeholder {
   align-items: center;
 }
 
-.anime-stack-outer {
+.anime-col {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+}
+
+.anime-body {
   width: 100%;
-  height: calc(100vh - 60px);
+  min-height: 160px;
+  margin-bottom: 80px;
+}
+
+.anime-body p {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--dark);
+  line-height: 1.75;
+  text-wrap: pretty;
+  margin-bottom: 12px;
+}
+
+.anime-body p:last-child {
+  margin-bottom: 0;
 }
 
 .anime-swiper {
   width: 300px;
   height: 450px;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .anime-swiper-slide {
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow-card);
+}
+
+.anime-swiper-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f4f2;
+  border: 1.5px dashed rgba(0, 0, 0, 0.15);
+  color: rgba(0, 0, 0, 0.25);
 }
 
 .anime-swiper-slide img {
