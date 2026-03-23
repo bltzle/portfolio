@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Fragment } from 'react'
+import { createPortal } from 'react-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCards } from 'swiper/modules'
 import 'swiper/css'
@@ -121,9 +122,8 @@ function playClick(intensity = 0.4) {
   src.start()
 }
 
-import { Post, ArrowDownLeft, NavArrowRight, Xmark, Plus } from 'iconoir-react'
+import { Post, ArrowDownLeft, NavArrowRight, Xmark, Plus, FilterList, Check } from 'iconoir-react'
 import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
-import { Agentation } from 'agentation'
 import './style.css'
 
 const projects = [
@@ -351,7 +351,7 @@ function ProjectDetailPage({ project, onBack }) {
           </div>
         </div>
         {project.content.map((section, si) => (
-          <>
+          <Fragment key={section.id}>
             {(section.heading || section.body) && (
               <section key={section.id} id={section.id} className={`note-section${section.sectionClass ? ` ${section.sectionClass}` : ''}`}>
                 {!section.noHeading && (section.heading || si === 0) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? project.name}</h2>}
@@ -368,7 +368,7 @@ function ProjectDetailPage({ project, onBack }) {
                 </div>
               </div>
             )}
-          </>
+          </Fragment>
         ))}
       </article>
     </div>
@@ -502,14 +502,6 @@ function WorkPage({ setPage }) {
 
 
 
-const albums = [
-  { title: 'Album 1', img: '/images/music/album1.jpg', fallback: 'https://picsum.photos/seed/a1/120/120', href: 'https://tidal.com/track/396213085/u' },
-  { title: 'Album 2', img: '/images/music/album2.jpg', fallback: 'https://picsum.photos/seed/a2/120/120', href: 'https://tidal.com/track/452623922/u' },
-  { title: 'Album 3', img: '/images/music/album3.jpg', fallback: 'https://picsum.photos/seed/a3/120/120', href: 'https://tidal.com/track/97458481/u'  },
-  { title: 'Album 4', img: '/images/music/album4.jpg', fallback: 'https://picsum.photos/seed/a4/120/120', href: 'https://tidal.com/track/474707709/u' },
-  { title: 'Album 5', img: '/images/music/album5.jpg', fallback: 'https://picsum.photos/seed/a5/120/120', href: 'https://tidal.com/track/314943653/u' },
-  { title: 'Album 6', img: '/images/music/album6.jpg', fallback: 'https://picsum.photos/seed/a6/120/120', href: 'https://tidal.com/track/304142580/u' },
-]
 
 
 function AboutPage({ setPage }) {
@@ -538,64 +530,6 @@ function AboutPage({ setPage }) {
 
 const writings = [
   {
-    title: 'The Animation Bar',
-    desc: 'On craft, borrowed from anime',
-    category: 'Writing',
-    year: '2026',
-    date: 'March 2026',
-    sections: [
-      { id: 'motion',    heading: 'Fluidity' },
-      { id: 'camera',    heading: 'Presence' },
-      { id: 'sound',     heading: 'Restraint' },
-      { id: 'weight',    heading: 'Emotion' },
-      { id: 'bar',       heading: 'Care' },
-    ],
-    content: [
-      {
-        id: 'intro',
-        body: `I draw a lot of inspiration from Japanese animation and manga. What makes it such a rich source is how many disciplines it holds at once: storytelling and pacing, music and sound, camera angles, fluid motion, color.\n\nWhat elevates the best of it is the commitment to craft, the willingness to build entire visual languages, mythologies, and atmospheres from scratch. That level of ambition is something I try to carry into everything I design. What follows are the things I notice when watching high-quality anime, and what I think makes them great.`,
-        noImageAfter: true,
-      },
-      {
-        id: 'motion',
-        heading: 'Fluidity',
-        body: `Jujutsu Kaisen is a good place to start. The animation is fluid in a way that's immediately noticeable. Movements carry through, cloth settles a beat late, impacts feel heavy. None of it is realistic, but it all reads as true.\n\nWhat makes it work is the attention underneath it. Anticipation before a movement, follow-through after. Small decisions that compound into something that feels genuinely alive.`,
-        captionPrefix: 'Maki and Mai Zenin, from ',
-        caption: 'Jujutsu Kaisen',
-        captionHref: 'https://en.wikipedia.org/wiki/Jujutsu_Kaisen',
-      },
-      {
-        id: 'camera',
-        heading: 'Presence',
-        body: `Frieren is different. Where most animation asks you to watch, Frieren asks you to feel. The story follows an elven mage long after the adventure is over. The hero has died, the party has scattered, the world has moved on. What's left is memory, time, and the quiet weight of outliving everyone you loved.\n\nLook at how she rests in the water. Her hair drifts with the current, the fabric of her dress responding to what's underneath her, light scattering through the foliage behind her. None of it announces itself, it's just physics rendered with enough care that she feels like she's genuinely inhabiting the world rather than sitting on top of it. That's what the polish is doing here, not impressing you but grounding you.`,
-        captionPrefix: 'Frieren, from ',
-        caption: 'Frieren: Beyond Journey\'s End',
-        captionHref: 'https://en.wikipedia.org/wiki/Frieren',
-      },
-      {
-        id: 'sound',
-        heading: 'Restraint',
-        body: `Vinland Saga knows when to be quiet. It's a show about war and revenge and the cost of violence, and yet some of its most powerful moments have nothing in them at all. Just a figure, a sky, and room to breathe. The clouds move slowly, the character sits small against all that open space, and nothing is asking for your attention.\n\nThat kind of restraint is a choice. Knowing what to take out is just as hard as knowing what to put in, maybe harder. The emptiness isn't absence, it's intention. And because nothing is competing, you give the moment everything you have. Simplicity isn't a lack of craft. It's often the hardest version of it.`,
-        captionPrefix: 'Thorfinn, from ',
-        caption: 'Vinland Saga',
-        captionHref: 'https://en.wikipedia.org/wiki/Vinland_Saga_(manga)',
-      },
-      {
-        id: 'weight',
-        heading: 'Emotion',
-        body: `Ranking of Kings looks like a children's story. Round designs, a soft storybook world. Within the first few episodes it becomes one of the most emotionally devastating things you'll watch.\n\nBojji is deaf. The animation speaks for him. A slump of the shoulders. The way he looks up at someone twice his size. You feel what he feels without being told to.\n\nYou can't instruct someone to feel something. You build something honest, get out of the way, and let the moment land.`,
-        captionPrefix: 'Bojji, from ',
-        caption: 'Ranking of Kings',
-        captionHref: 'https://en.wikipedia.org/wiki/Ranking_of_Kings',
-      },
-      {
-        id: 'bar',
-        heading: 'Care',
-        body: `High-craft anime sets a standard that's useful to borrow, not just aesthetically but as a way of thinking. The visual polish isn't decoration, it's the result of every element being considered. Nothing is there without a reason, and nothing looks the way it looks by accident.\n\nMost software doesn't reach that standard. Some of it is resources, some of it is habit, but a lot of it is just not caring enough. What separates the best anime is the people behind it. They have the craft and they genuinely care about the work they're producing. The same is true of great software. It usually comes down to the same thing: people who care enough to sweat the details.`,
-      },
-    ],
-  },
-  {
     title: 'Recent Listening',
     desc: 'A running list of what\'s been on',
     category: 'Music',
@@ -603,8 +537,8 @@ const writings = [
     type: 'music',
   },
   {
-    title: 'Anime I Recommend',
-    desc: 'Five shows worth your time',
+    title: 'Quotes Worth Keeping',
+    desc: 'Some of my favorites, so far',
     category: 'Anime',
     year: '2026',
     type: 'anime',
@@ -631,36 +565,17 @@ const writings = [
     ],
   },
   {
-    title: 'Building My Website',
-    desc: 'Turning the ideas in my head into things',
-    category: 'Writing',
+    title: 'Interaction Prototypes',
+    desc: 'Experiments with code and pixels',
+    category: 'Design',
     year: '2026',
-    date: 'March 2026',
-    sections: [
-      { id: 'control',   heading: 'Control' },
-      { id: 'craft',     heading: 'Craft' },
-      { id: 'permanence', heading: 'Permanence' },
-    ],
+    sections: [],
     content: [
       {
-        id: 'intro',
-        body: `Most designers have a Squarespace. A template, a grid, a set of constraints somebody else decided. That's fine. But at some point I wanted to know if I could build the thing myself — and what it would feel like if I did.`,
+        id: 'interaction-prototypes',
+        heading: 'Interaction Prototypes',
+        body: '',
         noImageAfter: true,
-      },
-      {
-        id: 'control',
-        heading: 'Control',
-        body: `A portfolio template is someone else's opinion about how a portfolio should look. It carries assumptions about hierarchy, about what matters, about what a designer is supposed to show. Building from scratch means every decision is yours. The spacing, the type, the way things move. You can't blame the theme.`,
-      },
-      {
-        id: 'craft',
-        heading: 'Craft',
-        body: `There's a version of this that's just ego — wanting to say you built it yourself. But the more honest reason is that I think the website is part of the work. How it feels to use says something about how you think. If I'm asking companies to trust me with their product, it helps to have made something I'm proud of on my own terms.`,
-      },
-      {
-        id: 'permanence',
-        heading: 'Permanence',
-        body: `Templates get discontinued. Platforms pivot. Hosted tools go away or change pricing. A site you built yourself lives as long as you want it to. That's worth something.`,
       },
     ],
   },
@@ -774,7 +689,7 @@ function NoteDetailPage({ note, onBack }) {
           </div>
         </div>
         {note.content.map((section, si) => (
-          <>
+          <Fragment key={section.id}>
             {(section.heading || section.body) && (
               <section key={section.id} id={section.id} className={`note-section${section.sectionClass ? ` ${section.sectionClass}` : ''}`}>
                 {!section.noHeading && (section.heading || (si === 0 && hasSections)) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? note.title}</h2>}
@@ -812,7 +727,7 @@ function NoteDetailPage({ note, onBack }) {
                 )}
               </div>
             )}
-          </>
+          </Fragment>
         ))}
       </article>
     </div>
@@ -858,12 +773,14 @@ const animeData = {
       quote: 'The greatest joy of magic lies in searching for it.',
     },
     {
-      title: 'Vinland Saga', studio: 'Wit Studio', episodes: 48,
-      cover: 'https://image.tmdb.org/t/p/original/vUHlpA5c1NXkds59reY3HMb4Abs.jpg',
+      title: 'Avatar: The Last Airbender', studio: 'Nickelodeon', episodes: 61,
+      cover: 'https://image.tmdb.org/t/p/original/9RQhVb3r3mCMqYVhLoCu4EvuipP.jpg',
+      quote: 'Sometimes life is like this tunnel. You can\'t always see the light at the end of the tunnel, but if you keep moving, you will come to a better place.',
+      quoteAttr: '—Iroh, "The Crossroads of Destiny"',
       desc: [
-        'Vinland Saga follows Thorfinn, the son of a great warrior, who grows up consumed by revenge after watching his father killed in front of him. The show takes that premise and slowly, carefully dismantles it.',
-        'It knows when to be quiet. Some of its most powerful moments have nothing in them at all — just a figure, a sky, and room to breathe. That restraint is a choice, and it earns everything the show asks of you.',
-        'The second season in particular is one of the finest things in anime. The violence of the first gives way to something more internal, and the result lands harder for it.',
+        'Avatar: The Last Airbender follows Aang, the last surviving Airbender, as he works to master all four elements and bring balance to a world at war. The show is deceptively layered — built for younger audiences but genuinely rich in its themes.',
+        'Uncle Iroh is the character that makes the show. His warmth, his stillness, the way he holds wisdom without ever making it feel like a lecture. The quote above is the one I keep coming back to.',
+        'Few shows carry this much heart without it ever feeling forced. It earns every emotional beat it lands.',
       ],
     },
     {
@@ -878,6 +795,7 @@ const animeData = {
     {
       title: 'Hunter x Hunter', studio: 'Madhouse', episodes: 148,
       cover: 'https://image.tmdb.org/t/p/original/i2EEr2uBvRlAwJ8d8zTG2Y19mIa.jpg',
+      quote: 'Gon, you are light. Sometimes you shine so brightly, I must look away. But even so, is it still okay if I stay by your side?',
       desc: [
         'Hunter x Hunter follows Gon Freecss, a boy who discovers his absent father is one of the world\'s greatest hunters, and sets out to find him. What begins as a straightforward adventure quickly becomes something far darker and more considered.',
         'The Chimera Ant arc is one of the most ambitious things in anime — a long, slow build that earns everything it asks of you. Madhouse gives it the visual weight it deserves.',
@@ -901,6 +819,7 @@ const animeData = {
     { title: 'Ping Pong the Animation', studio: 'Tatsunoko', episodes: 11, year: 2024, cover: 'https://image.tmdb.org/t/p/original/frgVn3ww547TVQH8vS2bWKZnEBu.jpg' },
   ],
 }
+
 
 function AnimePage({ note, onBack }) {
   const [activeIdx, setActiveIdx] = useState(0)
@@ -933,16 +852,19 @@ function AnimePage({ note, onBack }) {
         </div>
         <div className="anime-col">
           <div className="anime-body" style={{ opacity: fading ? 0 : 1, filter: fading ? 'blur(4px)' : 'blur(0px)', transition: fading ? 'opacity 0.15s ease, filter 0.15s ease' : 'opacity 0.5s ease, filter 0.5s ease' }}>
-            {animeData.watching[displayIdx % animeData.watching.length].desc.map((p, i) => (
-              <>
-                <p key={i}>{p}</p>
-                {i === 0 && animeData.watching[displayIdx % animeData.watching.length].quote && (
-                  <blockquote key="quote" style={{ fontStyle: 'italic', color: 'var(--light)', borderLeft: '2px solid rgba(0,0,0,0.1)', paddingLeft: '16px', margin: '0 0 12px' }}>
-                    {animeData.watching[displayIdx % animeData.watching.length].quote}
-                  </blockquote>
-                )}
-              </>
-            ))}
+            {(() => {
+              const current = animeData.watching[displayIdx % animeData.watching.length]
+              return current.desc.map((p, i) => (
+                <Fragment key={i}>
+                  <p>{p}</p>
+                  {i === 0 && current.quote && (
+                    <blockquote style={{ fontStyle: 'italic', color: 'var(--light)', borderLeft: '2px solid rgba(0,0,0,0.1)', paddingLeft: '16px', margin: '0 0 12px' }}>
+                      {current.quote}
+                    </blockquote>
+                  )}
+                </Fragment>
+              ))
+            })()}
           </div>
           <Swiper
             effect="cards"
@@ -1083,11 +1005,42 @@ function MusicPage({ note, onBack }) {
 
 function WritingPage({ setPage }) {
   const [activeNote, setActiveNote] = useState(null)
+  const [activeFilter, setActiveFilter] = useState(null)
+  const [filterOpen, setFilterOpen] = useState(false)
+  const [filterClosing, setFilterClosing] = useState(false)
+  const filterRef = useRef(null)
+  const btnRef = useRef(null)
+  const [animateList, setAnimateList] = useState(true)
+  useEffect(() => {
+    if (!animateList) return
+    const t = setTimeout(() => setAnimateList(false), 1200)
+    return () => clearTimeout(t)
+  }, [animateList])
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 })
+
+  const categories = [...new Set(writings.map(w => w.category).filter(Boolean))]
+  const filtered = activeFilter ? writings.filter(w => w.category === activeFilter) : writings
+
+  const closeFilter = () => {
+    setFilterClosing(true)
+    setTimeout(() => { setFilterOpen(false); setFilterClosing(false) }, 150)
+  }
+
+  useEffect(() => {
+    if (!filterOpen) return
+    const rect = btnRef.current?.getBoundingClientRect()
+    if (rect) setDropdownPos({ top: rect.bottom + 8, right: window.innerWidth - rect.right })
+    const handleClick = (e) => { if (filterRef.current && !filterRef.current.contains(e.target) && !btnRef.current.contains(e.target)) closeFilter() }
+    const handleKey = (e) => { if (e.key === 'Escape') closeFilter() }
+    document.addEventListener('mousedown', handleClick)
+    document.addEventListener('keydown', handleKey)
+    return () => { document.removeEventListener('mousedown', handleClick); document.removeEventListener('keydown', handleKey) }
+  }, [filterOpen, closeFilter])
 
   if (activeNote?.type === 'music') {
     return (
       <div key={activeNote.title} className="page-transition">
-        <MusicPage note={activeNote} onBack={() => setActiveNote(null)} />
+        <MusicPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
       </div>
     )
   }
@@ -1095,7 +1048,7 @@ function WritingPage({ setPage }) {
   if (activeNote?.type === 'anime') {
     return (
       <div key={activeNote.title} className="page-transition">
-        <AnimePage note={activeNote} onBack={() => setActiveNote(null)} />
+        <AnimePage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
       </div>
     )
   }
@@ -1103,29 +1056,50 @@ function WritingPage({ setPage }) {
   if (activeNote) {
     return (
       <div key={activeNote.title} className="page-transition">
-        <NoteDetailPage note={activeNote} onBack={() => setActiveNote(null)} />
+        <NoteDetailPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
       </div>
     )
   }
 
   return (
-    <div className="page">
-      <Nav page="writing" setPage={setPage} />
-      <div className="page-content">
-        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>A collection of thoughts, ideas, observations, and resources</h1>
-        <ul className="projects no-bg-hover" style={{ width: '100%' }}>
-          {writings.map((w, i) => (
-            <li key={w.title} className="project writing-item animate" style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
-              <div className="writing-item-main">
-                <span className="project-name">{w.title}</span>
-                <span className="writing-meta">{w.desc}</span>
-              </div>
-              {w.category && <span className="writing-category">{w.category}</span>}
-            </li>
-          ))}
-        </ul>
+    <>
+      <div className="page">
+        <Nav page="writing" setPage={setPage} />
+        <div className="page-content">
+          <div className="animate" style={{ animationDelay: '0.1s', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <h1 className="page-heading" style={{ margin: 0 }}>A collection of thoughts, ideas, observations, and resources</h1>
+            <button ref={btnRef} className="note-info-btn" onClick={() => filterOpen ? closeFilter() : setFilterOpen(true)} aria-label="Filter" style={{ flexShrink: 0, color: activeFilter ? 'var(--dark)' : '' }}>
+              <FilterList width={16} height={16} strokeWidth={1.75} />
+            </button>
+          </div>
+          <ul className="projects no-bg-hover" style={{ width: '100%' }}>
+            {filtered.map((w, i) => (
+              <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
+                <div className="writing-item-main">
+                  <span className="project-name">{w.title}</span>
+                  <span className="writing-meta">{w.desc}</span>
+                </div>
+                {w.category && <span className="writing-category">{w.category}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+      {filterOpen && createPortal(
+        <div ref={filterRef} className={filterClosing ? 'dropdown-exit' : 'dropdown-enter'} style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, backgroundColor: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '10px', boxShadow: '0 4px 20px rgba(0,0,0,0.12)', padding: '6px', minWidth: '140px', zIndex: 9999 }}>
+          {categories.map(cat => (
+            <button key={cat} onClick={() => { setActiveFilter(activeFilter === cat ? null : cat); closeFilter() }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '7px 10px', borderRadius: '6px', border: 'none', backgroundColor: 'transparent', fontSize: '13px', color: 'var(--dark)', cursor: 'pointer', textAlign: 'left' }}
+              onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.04)' }}
+              onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
+            >
+              {cat}
+              {activeFilter === cat && <Check width={14} height={14} strokeWidth={2} />}
+            </button>
+          ))}
+        </div>,
+        document.body
+      )}
+    </>
   )
 }
 
@@ -1167,7 +1141,6 @@ export default function App() {
       {page === 'work'         && <WorkPage         setPage={setPage} />}
       {page === 'about'        && <AboutPage        setPage={setPage} />}
       {page === 'writing'      && <WritingPage      setPage={setPage} />}
-      {/* <Agentation /> */}
     </div>
   )
 }

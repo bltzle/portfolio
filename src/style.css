@@ -69,6 +69,24 @@ html, body, #app {
   to   { opacity: var(--end-opacity, 1); filter: blur(0); transform: translateY(0); }
 }
 
+@keyframes dropdown-enter {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes dropdown-exit {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-4px) scale(0.98); }
+}
+
+.dropdown-enter {
+  animation: dropdown-enter 0.2s cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+.dropdown-exit {
+  animation: dropdown-exit 0.15s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
 .animate {
   opacity: 0;
   animation: itemIn 1s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
@@ -484,6 +502,7 @@ html, body, #app {
   background: none;
   border: none;
   padding: 6px;
+  margin-right: -6px;
   cursor: pointer;
   color: var(--light);
   display: flex;
@@ -833,6 +852,10 @@ img.note-image-placeholder {
   white-space: nowrap;
 }
 
+.music-row .music-song-name {
+  color: var(--dark);
+}
+
 .music-row .music-artist {
   color: var(--light);
 }
@@ -912,6 +935,7 @@ img.note-image-placeholder {
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow-card);
+  background: #e8e6e1;
 }
 
 .anime-swiper-add {
