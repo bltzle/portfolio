@@ -140,7 +140,6 @@ const projects = [
     overview: 'Ritual Dental is a next-generation dental practice using AI to form a comprehensive health perspective for prevention and early detection to boost patients quality of life.',
     timeline: 'May – June (2 months)',
     sections: [
-      { id: 'problem',    heading: 'Ritual Dental' },
       { id: 'gum',        heading: 'Gum Health' },
       { id: 'bacteria',   heading: 'Bacteria Table' },
       { id: 'abundance',  heading: 'Abundance levels' },
@@ -312,8 +311,6 @@ function ProjectDetailPage({ project, onBack }) {
         <aside className="note-sidebar">
           <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
             <button className="note-back" onClick={onBack}>Home</button>
-            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
-            <span className="note-breadcrumb-current" style={{ color: 'var(--light)' }}>{project.name}</span>
           </div>
           <nav className="note-toc">
             <a
@@ -327,7 +324,7 @@ function ProjectDetailPage({ project, onBack }) {
                 scrollEl.scrollTo({ top: 0, behavior: 'smooth' })
                 setTimeout(() => { scrollingRef.current = false }, 1000)
               }}
-            >Intro</a>
+            >{project.name}</a>
             {project.sections.map(s => (
               <a
                 key={s.id}
@@ -357,7 +354,7 @@ function ProjectDetailPage({ project, onBack }) {
           <>
             {(section.heading || section.body) && (
               <section key={section.id} id={section.id} className={`note-section${section.sectionClass ? ` ${section.sectionClass}` : ''}`}>
-                {!section.noHeading && (section.heading || si === 0) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? 'Intro'}</h2>}
+                {!section.noHeading && (section.heading || si === 0) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? project.name}</h2>}
                 {section.body && section.body.split('\n\n').map((p, i) => (
                   <p key={i} className={section.bodyClass ?? 'note-body'}>{p}</p>
                 ))}
@@ -606,8 +603,8 @@ const writings = [
     type: 'music',
   },
   {
-    title: 'Currently Watching',
-    desc: 'Anime, ongoing',
+    title: 'Anime I Recommend',
+    desc: 'Five shows worth your time',
     category: 'Anime',
     year: '2026',
     type: 'anime',
@@ -618,6 +615,7 @@ const writings = [
     category: 'Writing',
     year: '2025',
     date: '2025',
+    showTitle: true,
     sections: [],
     sheet: {
       body: `Matter is a grotesque sans-serif typeface designed by Martin Vácha and published by Displaay, an independent type foundry based in Prague. Displaay focuses on developing typefaces that feel distinctive without abandoning the principles of classical type design.`,
@@ -626,8 +624,8 @@ const writings = [
     content: [
       {
         id: 'type-essay',
-        noHeading: true,
-        body: `I have always been drawn to a certain kind of publication. Fashion magazines, architectural journals, the kind of carefully considered print where design is never an afterthought. In school I took a class called Letterforms and Typefaces, and something shifted in me. I learned that type is never neutral, that every choice carries weight, intention, and feeling.\n\nMy personal taste has always leaned toward the minimal and the timeless. Whether I'm looking at architecture, fashion, or even something as specific as a keyboard, I find myself drawn to things that don't need to announce themselves to be noticed.\n\nChoosing a typeface for my portfolio meant choosing something that genuinely resonated with who I am. I tried many, and most would have worked fine, but this was my space, my name. I am the creative director here, and that meant I had both the freedom and the responsibility to get it right.\n\nReadability and legibility were the first things I tested, setting real body copy on my own website and comparing it against the alternatives. Matter held up immediately. Beyond just being easy to read, there was something distinctive about the letterforms themselves. Each character felt considered, slightly unique without being eccentric, minimal but with a quiet visual polish that most typefaces simply don't have.\n\nMatter comes in a wide range of weights, but I found that regular and medium alone were enough to establish clear hierarchy and contrast without reaching for anything more. That restraint felt right to me. The personality of the typeface reflects the same values I try to bring to everything I design: simple, considered, and timeless.`,
+        heading: 'Purchasing a Typeface',
+        body: `Finding the right typeface was harder than I expected. This was my own site, so I wanted something that actually felt personal, not just something that worked. Most free options felt generic.\n\nMatter by the Display Foundry clicked in a way the others didn't. The letterforms have a quiet distinctiveness to them, considered without being showy.\n\nI use just the regular and medium weights. Two styles was enough, and that kind of restraint is something I look for in everything I'm drawn to.`,
         noImageAfter: true,
       },
     ],
@@ -736,8 +734,6 @@ function NoteDetailPage({ note, onBack }) {
         <aside className="note-sidebar">
           <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
             <button className="note-back" onClick={onBack}>Notes</button>
-            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
-            <span className="note-breadcrumb-current" style={{ color: 'var(--light)' }}>{note.title}</span>
           </div>
           <nav className="note-toc">
             <a
@@ -751,7 +747,7 @@ function NoteDetailPage({ note, onBack }) {
                 scrollEl.scrollTo({ top: 0, behavior: 'smooth' })
                 setTimeout(() => { scrollingRef.current = false }, 1000)
               }}
-            >Intro</a>
+            >{note.title}</a>
             {note.sections.map(s => (
               <a
                 key={s.id}
@@ -781,7 +777,7 @@ function NoteDetailPage({ note, onBack }) {
           <>
             {(section.heading || section.body) && (
               <section key={section.id} id={section.id} className={`note-section${section.sectionClass ? ` ${section.sectionClass}` : ''}`}>
-                {!section.noHeading && (section.heading || (si === 0 && hasSections)) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? 'Intro'}</h2>}
+                {!section.noHeading && (section.heading || (si === 0 && hasSections)) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? note.title}</h2>}
                 {section.body && section.body.split('\n\n').map((p, i) => (
                   <p key={i} className={section.bodyClass ?? 'note-body'}>{p}</p>
                 ))}
@@ -789,8 +785,14 @@ function NoteDetailPage({ note, onBack }) {
             )}
             {si < note.content.length - 1 && !section.noImageAfter && (
               <div key={`img-${section.id}`} className="note-image-wrap">
-                <div className="note-image-inner">
-                  {si === 1
+                <div className="note-image-inner" style={section.imgs ? { display: 'flex', gap: '8px' } : undefined}>
+                  {section.imgs
+                    ? section.imgs.map((src, i) => (
+                        <img key={i} src={src} alt="" style={{ flex: 1, minWidth: 0, height: 'auto', display: 'block', borderRadius: 'var(--radius)' }} />
+                      ))
+                    : section.img
+                    ? <img src={section.img} alt="" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 'var(--radius)', outline: '1px solid rgba(0,0,0,0.07)', outlineOffset: '-1px' }} />
+                    : si === 1
                     ? <img src="/tumblr_8b97eed4e22307c56b8c51612a492c87_8b2d8fbc_540.gif" alt="" className="note-image-placeholder" style={{ objectFit: 'cover' }} />
                     : si === 2
                     ? <img src="/frieren.gif" alt="" className="note-image-placeholder" style={{ objectFit: 'cover' }} />
@@ -799,7 +801,7 @@ function NoteDetailPage({ note, onBack }) {
                     : si === 4
                     ? <img src="/boji.gif" alt="" className="note-image-placeholder" style={{ objectFit: 'cover' }} />
                     : <div className="note-image-placeholder" />}
-                  <div className="grain-overlay" />
+                  {!section.img && !section.imgs && <div className="grain-overlay" />}
                 </div>
                 {section.caption && (
                   <p className="note-image-caption">
@@ -849,32 +851,46 @@ const animeData = {
       title: 'Frieren: Beyond Journey\'s End', studio: 'Madhouse', episodes: 28,
       cover: 'https://image.tmdb.org/t/p/original/dqZENchTd7lp5zht7BdlqM7RBhD.jpg',
       desc: [
-        'Frieren follows an elven mage who outlives the companions she adventured with, watching decades pass like seasons. The show is less about the journey than about what gets left behind.',
-        'It sits quietly with grief without ever naming it directly. The pacing is deliberate, and the world feels genuinely old in a way most fantasy does not bother with.',
+        'Frieren follows an elven mage who outlives the companions she adventured with, watching decades pass like seasons. The show is less about the journey than about what gets left behind. There\'s a line in the show that has stayed with me.',
+        'It\'s about magic, but it feels like it\'s really about life, about how the search itself is the thing, not what you find at the end of it. I think that\'s a beautiful way to move through the world, and something more people could stand to sit with.',
+        'The most recent season is fully living up to its reputation as one of the highest rated anime ever. I\'d highly recommend it to anyone who appreciates strong animation, thoughtful storytelling, a beautiful score, and something that actually lands emotionally.',
+      ],
+      quote: 'The greatest joy of magic lies in searching for it.',
+    },
+    {
+      title: 'Vinland Saga', studio: 'Wit Studio', episodes: 48,
+      cover: 'https://image.tmdb.org/t/p/original/vUHlpA5c1NXkds59reY3HMb4Abs.jpg',
+      desc: [
+        'Vinland Saga follows Thorfinn, the son of a great warrior, who grows up consumed by revenge after watching his father killed in front of him. The show takes that premise and slowly, carefully dismantles it.',
+        'It knows when to be quiet. Some of its most powerful moments have nothing in them at all — just a figure, a sky, and room to breathe. That restraint is a choice, and it earns everything the show asks of you.',
+        'The second season in particular is one of the finest things in anime. The violence of the first gives way to something more internal, and the result lands harder for it.',
       ],
     },
     {
-      title: "Hell's Paradise", studio: 'MAPPA', episodes: 13,
-      cover: 'https://image.tmdb.org/t/p/original/1V9I7SvZbYoMbSvdtnlkkq9SB1k.jpg',
+      title: 'Made in Abyss', studio: 'Kinema Citrus', episodes: 25,
+      cover: 'https://image.tmdb.org/t/p/original/f6U3odfIb3pCXMGKRTQGGF9o1Qg.jpg',
       desc: [
-        "Hell's Paradise follows Gabimaru, a ninja condemned to death who is offered a pardon in exchange for retrieving the elixir of life from a mysterious island. The island is violent and strange in equal measure.",
-        'MAPPA gives it a restrained visual palette that suits the brutality well. The show is at its best when it treats the island as a philosophical problem as much as a physical one.',
+        'Made in Abyss follows Riko, a young girl who descends into a vast and ancient chasm in search of her missing mother. The Abyss is beautiful and deeply hostile in equal measure.',
+        'The show has a deceptive quality to it — the art style reads as warm and childlike, and then uses that against you. The world-building is meticulous, and the deeper the story goes, the more it earns its darkness.',
+        'It is genuinely unlike anything else. The sense of descent, both physical and emotional, is sustained across the entire run.',
       ],
     },
     {
-      title: 'Fire Force', studio: 'David Production', episodes: 48,
-      cover: 'https://image.tmdb.org/t/p/original/sC4sTJnI0rLakinXMgBHv3Ynl9D.jpg',
+      title: 'Hunter x Hunter', studio: 'Madhouse', episodes: 148,
+      cover: 'https://image.tmdb.org/t/p/original/i2EEr2uBvRlAwJ8d8zTG2Y19mIa.jpg',
       desc: [
-        'Fire Force is set in a world where people spontaneously combust into living infernals, and follows Shinra Kusakabe as he joins a special brigade tasked with putting them to rest. The premise is more thoughtful than it first appears.',
-        'David Production brings a kinetic energy to the action sequences that holds up across 48 episodes. The religious mythology underpinning the world adds a layer worth paying attention to.',
+        'Hunter x Hunter follows Gon Freecss, a boy who discovers his absent father is one of the world\'s greatest hunters, and sets out to find him. What begins as a straightforward adventure quickly becomes something far darker and more considered.',
+        'The Chimera Ant arc is one of the most ambitious things in anime — a long, slow build that earns everything it asks of you. Madhouse gives it the visual weight it deserves.',
+        'At 148 episodes it\'s a commitment, but it never feels padded. Every arc shifts the tone and raises the stakes in ways that feel earned rather than escalated.',
       ],
     },
     {
-      title: 'Sentenced to Be a Hero', studio: 'Studio Kai', episodes: 12,
-      cover: 'https://image.tmdb.org/t/p/original/kzyNxTZFcWjkYJU9T9aJ8vXTAFN.jpg',
+      title: 'Jujutsu Kaisen', studio: 'MAPPA', episodes: 47,
+      cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg',
       desc: [
-        'Sentenced to Be a Hero follows Xylo Forbartz, a condemned knight assigned to Penal Hero Unit 9004, a squad of criminals forced to fight demons on behalf of a government that would rather see them dead. When killed, they are resurrected and sent back.',
-        'The setup uses the hero fantasy genre as a frame for something grimmer. The cycle of death and forced service gives the show a bleak momentum that separates it from most of what is airing alongside it.',
+        'Jujutsu Kaisen follows Yuji Itadori, a high schooler who swallows a cursed finger and gets pulled into a world of sorcerers and malevolent spirits. The premise moves fast and the show keeps pace with it.',
+        'MAPPA\'s animation is the obvious draw — fluid, kinetic, and technically impressive in a way that holds up across the entire run. The Shibuya arc in particular is some of the most sustained high-quality animation in recent memory.',
+        'Beneath the spectacle there is a show genuinely interested in what it costs to fight, and what you lose along the way. It earns the weight it eventually asks you to carry.',
       ],
     },
   ],
@@ -888,6 +904,20 @@ const animeData = {
 
 function AnimePage({ note, onBack }) {
   const [activeIdx, setActiveIdx] = useState(0)
+  const [displayIdx, setDisplayIdx] = useState(0)
+  const [fading, setFading] = useState(false)
+
+  const handleSlideChange = (swiper) => {
+    setFading(true)
+    setTimeout(() => {
+      setDisplayIdx(swiper.activeIndex)
+      setActiveIdx(swiper.activeIndex)
+    }, 150)
+  }
+
+  const handleTransitionEnd = () => {
+    setFading(false)
+  }
 
   return (
     <>
@@ -902,9 +932,16 @@ function AnimePage({ note, onBack }) {
           </div>
         </div>
         <div className="anime-col">
-          <div className="anime-body">
-            {animeData.watching[activeIdx % animeData.watching.length].desc.map((p, i) => (
-              <p key={i}>{p}</p>
+          <div className="anime-body" style={{ opacity: fading ? 0 : 1, filter: fading ? 'blur(4px)' : 'blur(0px)', transition: fading ? 'opacity 0.15s ease, filter 0.15s ease' : 'opacity 0.5s ease, filter 0.5s ease' }}>
+            {animeData.watching[displayIdx % animeData.watching.length].desc.map((p, i) => (
+              <>
+                <p key={i}>{p}</p>
+                {i === 0 && animeData.watching[displayIdx % animeData.watching.length].quote && (
+                  <blockquote key="quote" style={{ fontStyle: 'italic', color: 'var(--light)', borderLeft: '2px solid rgba(0,0,0,0.1)', paddingLeft: '16px', margin: '0 0 12px' }}>
+                    {animeData.watching[displayIdx % animeData.watching.length].quote}
+                  </blockquote>
+                )}
+              </>
             ))}
           </div>
           <Swiper
@@ -913,7 +950,8 @@ function AnimePage({ note, onBack }) {
             loop={false}
             modules={[EffectCards]}
             className="anime-swiper"
-            onSlideChange={(swiper) => setActiveIdx(swiper.activeIndex)}
+            onSlideChange={handleSlideChange}
+            onTransitionEnd={handleTransitionEnd}
           >
             {animeData.watching.map((item, i) => (
               <SwiperSlide key={i} className="anime-swiper-slide">
@@ -966,9 +1004,10 @@ function MusicPage({ note, onBack }) {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       const data = await res.json()
-      const unique = dedupeTracks(data.items ?? [])
-      localStorage.setItem('spotify_tracks', JSON.stringify(unique))
-      setTracks(unique)
+      const existing = JSON.parse(localStorage.getItem('spotify_tracks') || '[]')
+      const merged = dedupeTracks([...(data.items ?? []), ...existing])
+      localStorage.setItem('spotify_tracks', JSON.stringify(merged))
+      setTracks(merged)
       setLoading(false)
     }
     load().catch(() => setLoading(false))
