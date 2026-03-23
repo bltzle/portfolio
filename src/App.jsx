@@ -1,4 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { EffectCards } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/effect-cards'
 
 const SPOTIFY_CLIENT_ID = '5ee9147feda6434aa4414c48c2a472bd'
 const SPOTIFY_REDIRECT  = 'http://127.0.0.1:5173/callback'
@@ -256,20 +260,8 @@ function Nav({ page, setPage }) {
 }
 
 function ProjectDetailPage({ project, onBack }) {
-  const [activeId, setActiveId] = useState(project.sections[0]?.id)
   const [sheetOpen, setSheetOpen] = useState(false)
-  const [crumbInView, setCrumbInView] = useState(true)
   const containerRef = useRef(null)
-  const breadcrumbRef = useRef(null)
-  const scrollingRef = useRef(false)
-
-  useEffect(() => {
-    const el = breadcrumbRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(([entry]) => setCrumbInView(entry.isIntersecting), { threshold: 0 })
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') setSheetOpen(false) }
@@ -277,51 +269,12 @@ function ProjectDetailPage({ project, onBack }) {
     return () => document.removeEventListener('keydown', onKey)
   }, [])
 
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
-    const observers = project.sections.map(({ id }) => {
-      const el = container.querySelector(`#${id}`)
-      if (!el) return null
-      const observer = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting && !scrollingRef.current) setActiveId(id) },
-        { root: null, rootMargin: '-30% 0px -60% 0px', threshold: 0 }
-      )
-      observer.observe(el)
-      return observer
-    }).filter(Boolean)
-    return () => observers.forEach(o => o.disconnect())
-  }, [project])
-
   return (
     <>
     <div className={"note-layout"} ref={containerRef}>
       <TopFade />
-      <aside className="note-sidebar">
-        <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
-          <button className="note-back" onClick={onBack}>Home</button>
-          <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
-          <span className="note-breadcrumb-current" style={{ color: 'var(--light)' }}>{project.name}</span>
-        </div>
-        <nav className="note-toc">
-          {project.sections.map((s, si) => (
-            <a
-              key={s.id}
-              href={`#${s.id}`}
-              className={`note-toc-item${activeId === s.id ? ' active' : ''}`}
-              onClick={e => {
-                e.preventDefault()
-                setActiveId(s.id)
-                scrollingRef.current = true
-                containerRef.current?.querySelector(`#${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                setTimeout(() => { scrollingRef.current = false }, 1000)
-              }}
-            >{si === 0 ? 'Intro' : s.heading}</a>
-          ))}
-        </nav>
-      </aside>
       <article className="note-article">
-        <div className="note-breadcrumb" ref={breadcrumbRef}>
+        <div className="note-breadcrumb">
           <div className="note-breadcrumb-left">
             <button className="note-back" onClick={onBack}>Home</button>
             <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
@@ -335,7 +288,7 @@ function ProjectDetailPage({ project, onBack }) {
           <>
             {(section.heading || section.body) && (
               <section key={section.id} id={section.id} className={`note-section${section.sectionClass ? ` ${section.sectionClass}` : ''}`}>
-                {(section.heading || si === 0) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? 'Intro'}</h2>}
+                {!section.noHeading && (section.heading || si === 0) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? 'Intro'}</h2>}
                 {section.body && section.body.split('\n\n').map((p, i) => (
                   <p key={i} className={section.bodyClass ?? 'note-body'}>{p}</p>
                 ))}
@@ -594,43 +547,17 @@ const writings = [
     category: 'Writing',
     year: '2025',
     date: '2025',
-    sections: [
-      { id: 'first-impression', heading: 'Readability and legibility' },
-      { id: 'weight',           heading: 'Weight and contrast' },
-      { id: 'spacing',          heading: 'Spacing and rhythm' },
-      { id: 'voice',            heading: 'Hierarchy' },
-      { id: 'the-choice',       heading: 'Personality and tone' },
-    ],
+    sections: [],
+    sheet: {
+      body: `Matter is a grotesque sans-serif typeface designed by Martin Vácha and published by Displaay, an independent type foundry based in Prague. Displaay focuses on developing typefaces that feel distinctive without abandoning the principles of classical type design.`,
+      link: { href: 'https://displaay.net/typeface/matter/' },
+    },
     content: [
       {
-        id: 'type-intro',
-        body: `Matter is a grotesque sans-serif typeface designed by Martin Vácha and published by Displaay, an independent type foundry focused on developing distinctive typefaces that feel fresh without abandoning the classics.`,
+        id: 'type-essay',
+        noHeading: true,
+        body: `I have always been drawn to a certain kind of publication. Fashion magazines, architectural journals, the kind of carefully considered print where design is never an afterthought. In school I took a class called Letterforms and Typefaces, and something shifted in me. I learned that type is never neutral, that every choice carries weight, intention, and feeling.\n\nMy personal taste has always leaned toward the minimal and the timeless. Whether I'm looking at architecture, fashion, or even something as specific as a keyboard, I find myself drawn to things that don't need to announce themselves to be noticed.\n\nChoosing a typeface for my portfolio meant choosing something that genuinely resonated with who I am. I tried many, and most would have worked fine, but this was my space, my name. I am the creative director here, and that meant I had both the freedom and the responsibility to get it right.\n\nReadability and legibility were the first things I tested, setting real body copy on my own website and comparing it against the alternatives. Matter held up immediately. Beyond just being easy to read, there was something distinctive about the letterforms themselves. Each character felt considered, slightly unique without being eccentric, minimal but with a quiet visual polish that most typefaces simply don't have.\n\nMatter comes in a wide range of weights, but I found that regular and medium alone were enough to establish clear hierarchy and contrast without reaching for anything more. That restraint felt right to me. The personality of the typeface reflects the same values I try to bring to everything I design: simple, considered, and timeless.`,
         noImageAfter: true,
-      },
-      {
-        id: 'first-impression',
-        heading: 'Readability and legibility',
-        body: `Placeholder text for first impression section. Type hits you before you read it. The shape of a letterform carries tone, weight, and attitude before a single word has been processed.`,
-      },
-      {
-        id: 'weight',
-        heading: 'Weight and contrast',
-        body: `Placeholder text for weight and contrast section. The thickness of a stroke, the contrast between thick and thin — these are not aesthetic choices in isolation. They carry history and intention.`,
-      },
-      {
-        id: 'spacing',
-        heading: 'Spacing and rhythm',
-        body: `Placeholder text for spacing and rhythm section. How letters sit next to each other, how lines breathe. Rhythm in type is the same as rhythm in music — you feel it before you understand it.`,
-      },
-      {
-        id: 'voice',
-        heading: 'Hierarchy',
-        body: `Placeholder text for hierarchy section. Every typeface has a voice. Some are authoritative, some are warm, some are neutral by design. Choosing one is choosing what to say before the words say anything.`,
-      },
-      {
-        id: 'the-choice',
-        heading: 'Personality and tone',
-        body: `Placeholder text for personality and tone section. The typeface is never just a container for content. It is content. Getting it wrong doesn't make the words less readable — it makes them say something you didn't mean.`,
       },
     ],
   },
@@ -686,6 +613,7 @@ function TopFade() {
 }
 
 function NoteDetailPage({ note, onBack }) {
+  const hasSections = note.sections?.length > 0
   const [activeId, setActiveId] = useState('__intro')
   const [crumbInView, setCrumbInView] = useState(true)
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -700,14 +628,16 @@ function NoteDetailPage({ note, onBack }) {
   }, [])
 
   useEffect(() => {
+    if (!hasSections) return
     const el = breadcrumbRef.current
     if (!el) return
     const observer = new IntersectionObserver(([entry]) => setCrumbInView(entry.isIntersecting), { threshold: 0 })
     observer.observe(el)
     return () => observer.disconnect()
-  }, [])
+  }, [hasSections])
 
   useEffect(() => {
+    if (!hasSections) return
     const container = containerRef.current
     if (!container) return
     const scrollEl = container.closest('.page-transition') ?? window
@@ -725,48 +655,50 @@ function NoteDetailPage({ note, onBack }) {
     }
     scrollEl.addEventListener('scroll', onScroll)
     return () => scrollEl.removeEventListener('scroll', onScroll)
-  }, [note])
+  }, [note, hasSections])
 
   return (
     <>
     <div className={"note-layout"} ref={containerRef}>
       <TopFade />
-      <aside className="note-sidebar">
-        <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
-          <button className="note-back" onClick={onBack}>Notes</button>
-          <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
-          <span className="note-breadcrumb-current" style={{ color: 'var(--light)' }}>{note.title}</span>
-        </div>
-        <nav className="note-toc">
-          <a
-            className={`note-toc-item${activeId === '__intro' ? ' active' : ''}`}
-            href="#"
-            onClick={e => {
-              e.preventDefault()
-              setActiveId('__intro')
-              scrollingRef.current = true
-              const scrollEl = containerRef.current?.closest('.page-transition') ?? window
-              scrollEl.scrollTo({ top: 0, behavior: 'smooth' })
-              setTimeout(() => { scrollingRef.current = false }, 1000)
-            }}
-          >Intro</a>
-          {note.sections.map(s => (
+      {hasSections && (
+        <aside className="note-sidebar">
+          <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
+            <button className="note-back" onClick={onBack}>Notes</button>
+            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
+            <span className="note-breadcrumb-current" style={{ color: 'var(--light)' }}>{note.title}</span>
+          </div>
+          <nav className="note-toc">
             <a
-              key={s.id}
-              href={`#${s.id}`}
-              className={`note-toc-item${activeId === s.id ? ' active' : ''}`}
+              className={`note-toc-item${activeId === '__intro' ? ' active' : ''}`}
+              href="#"
               onClick={e => {
                 e.preventDefault()
-                setActiveId(s.id)
+                setActiveId('__intro')
                 scrollingRef.current = true
-                containerRef.current?.querySelector(`#${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                const scrollEl = containerRef.current?.closest('.page-transition') ?? window
+                scrollEl.scrollTo({ top: 0, behavior: 'smooth' })
                 setTimeout(() => { scrollingRef.current = false }, 1000)
               }}
-            >{s.heading}</a>
-          ))}
-        </nav>
-      </aside>
-      <article className="note-article">
+            >Intro</a>
+            {note.sections.map(s => (
+              <a
+                key={s.id}
+                href={`#${s.id}`}
+                className={`note-toc-item${activeId === s.id ? ' active' : ''}`}
+                onClick={e => {
+                  e.preventDefault()
+                  setActiveId(s.id)
+                  scrollingRef.current = true
+                  containerRef.current?.querySelector(`#${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  setTimeout(() => { scrollingRef.current = false }, 1000)
+                }}
+              >{s.heading}</a>
+            ))}
+          </nav>
+        </aside>
+      )}
+      <article className="note-article" style={!hasSections ? { paddingBottom: '80px' } : undefined}>
         <div className="note-breadcrumb" ref={breadcrumbRef}>
           <div className="note-breadcrumb-left">
             <button className="note-back" onClick={onBack}>Notes</button>
@@ -781,7 +713,7 @@ function NoteDetailPage({ note, onBack }) {
           <>
             {(section.heading || section.body) && (
               <section key={section.id} id={section.id} className={`note-section${section.sectionClass ? ` ${section.sectionClass}` : ''}`}>
-                {(section.heading || si === 0) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? 'Intro'}</h2>}
+                {!section.noHeading && (section.heading || (si === 0 && hasSections)) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? 'Intro'}</h2>}
                 {section.body && section.body.split('\n\n').map((p, i) => (
                   <p key={i} className={section.bodyClass ?? 'note-body'}>{p}</p>
                 ))}
@@ -820,7 +752,13 @@ function NoteDetailPage({ note, onBack }) {
       <button className="setup-modal-close" onClick={() => setSheetOpen(false)}>
         <Xmark width={16} height={16} strokeWidth={1.75} />
       </button>
-      <p>Placeholder text for {note.title}. Add context about this piece here — the thinking behind it, how it came together, or what it connects to.</p>
+      {note.sheet ? (
+        <>
+          <p>{note.sheet.link ? <><a href={note.sheet.link.href} target="_blank" rel="noreferrer">Matter</a>{note.sheet.body.slice('Matter'.length)}</> : note.sheet.body}</p>
+        </>
+      ) : (
+        <p>Placeholder text for {note.title}. Add context about this piece here.</p>
+      )}
     </div>
     </>
   )
@@ -842,6 +780,7 @@ const animeData = {
     { title: 'Frieren: Beyond Journey\'s End', studio: 'Madhouse', episodes: 28, cover: 'https://image.tmdb.org/t/p/original/dqZENchTd7lp5zht7BdlqM7RBhD.jpg' },
     { title: 'Vinland Saga', studio: 'MAPPA', episodes: 48, cover: 'https://image.tmdb.org/t/p/original/vUHlpA5c1NXkds59reY3HMb4Abs.jpg' },
     { title: 'Dungeon Meshi', studio: 'Trigger', episodes: 24, cover: 'https://image.tmdb.org/t/p/original/9t3DYdGxK3i4WRzKvIZwJd4kBnr.jpg' },
+    { title: 'Jujutsu Kaisen Season 3', studio: 'MAPPA', episodes: 24, cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg' },
   ],
   finished: [
     { title: 'Jujutsu Kaisen', studio: 'MAPPA', episodes: 47, year: 2025, cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg' },
@@ -859,13 +798,6 @@ function AnimePage({ note, onBack }) {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [])
-
-  const byYear = animeData.finished.reduce((acc, item) => {
-    acc[item.year] = acc[item.year] ?? []
-    acc[item.year].push(item)
-    return acc
-  }, {})
-  const years = Object.keys(byYear).sort((a, b) => b - a)
 
   return (
     <>
@@ -886,39 +818,20 @@ function AnimePage({ note, onBack }) {
           </div>
         </div>
       </div>
-      <div className="music-scroll">
-        <div className="music-inner">
-          <div className="anime-section">
-          <div className="anime-section-label">{new Date().getFullYear()}</div>
-          <div className="music-rows">
-            {animeData.watching.map((item) => (
-              <div key={item.title} className="music-row anime-row" onMouseEnter={() => playClick(0.4)}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  {item.cover && <img src={item.cover} alt="" style={{ width: 34, height: 34, borderRadius: 6, flexShrink: 0, objectFit: 'cover', border: '1px solid rgba(0,0,0,0.06)' }} />}
-                  <span className="music-song-name">{item.title}<span className="music-artist" style={{ marginLeft: 8 }}>{item.studio}</span></span>
-                </span>
-                <span className="music-col-date">{item.episodes} eps</span>
-              </div>
-            ))}
-          </div>
-          </div>
-          {years.map(year => (
-            <div key={year} className="anime-section">
-              <div className="anime-section-label">{year}</div>
-              <div className="music-rows">
-                {byYear[year].map(item => (
-                  <div key={item.title} className="music-row anime-row" onMouseEnter={() => playClick(0.4)}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      {item.cover && <img src={item.cover} alt="" style={{ width: 34, height: 34, borderRadius: 6, flexShrink: 0, objectFit: 'cover', border: '1px solid rgba(0,0,0,0.06)' }} />}
-                      <span className="music-song-name">{item.title}<span className="music-artist" style={{ marginLeft: 8 }}>{item.studio}</span></span>
-                    </span>
-                    <span className="music-col-date">{item.episodes} eps</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+      <div className="anime-stack-outer">
+        <Swiper
+          effect="cards"
+          grabCursor={true}
+          loop={true}
+          modules={[EffectCards]}
+          className="anime-swiper"
+        >
+          {animeData.watching.map((item, i) => (
+            <SwiperSlide key={i} className="anime-swiper-slide">
+              <img src={item.cover} alt={item.title} draggable={false} />
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
       </div>
     </div>
     <div className={`sheet-backdrop note-backdrop${sheetOpen ? ' open' : ''}`} onClick={() => setSheetOpen(false)} />
