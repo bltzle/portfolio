@@ -36,7 +36,7 @@
 ::-webkit-scrollbar-thumb { background: rgb(158 158 158 / 50%); border-radius: 16px; }
 ::-webkit-scrollbar-thumb:hover { background: rgb(158 158 158 / 100%); }
 
-::selection { background-color: #708238; color: #fff; }
+::selection { background-color: #7BA7D4; color: #fff; }
 
 html, body, #app {
   height: 100%;
@@ -165,8 +165,10 @@ html, body, #app {
 .work-links {
   display: flex;
   gap: 24px;
-  padding: 0 76px 48px;
-  margin-top: auto;
+  width: 100%;
+  max-width: 640px;
+  margin: auto auto 0;
+  padding: 0 0 48px;
   justify-content: space-between;
   position: relative;
 }
@@ -244,15 +246,32 @@ html, body, #app {
 /* Nav */
 .nav {
   display: flex;
-  gap: 24px;
-  padding: 48px 76px 0;
-  justify-content: flex-end;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 48px 0 0;
   flex-shrink: 0;
+}
+
+.nav-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
 }
 
 .nav a {
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--light);
   transition: color 0.15s ease;
 }
@@ -260,6 +279,7 @@ html, body, #app {
 .nav a.active {
   color: var(--dark);
 }
+
 
 .nav a:hover {
   color: var(--dark);
@@ -1006,7 +1026,7 @@ img.note-image-placeholder {
 }
 
 .note-backdrop {
-  background: rgba(255,255,255,0.7);
+  background: rgba(242,241,237,0.7);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s cubic-bezier(.23, 1, .32, 1);
@@ -1116,6 +1136,7 @@ img.note-image-placeholder {
   color: var(--dark);
   background: rgba(0,0,0,0.05);
 }
+
 
 .music-song-link {
   color: inherit;

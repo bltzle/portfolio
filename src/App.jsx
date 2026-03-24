@@ -267,9 +267,18 @@ function BackNav({ setPage }) {
 function Nav({ page, setPage }) {
   return (
     <nav className="nav">
-      <a href="#" className={page === 'work'  ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('work')  }}>Home</a>
-      <a href="#" className={page === 'about' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('about') }}>About</a>
-      <a href="#" className={page === 'writing' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('writing') }}>Notes</a>
+      <img
+        src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif"
+        alt=""
+        className="nav-logo"
+        onClick={() => setPage('work')}
+        style={{ cursor: 'pointer' }}
+      />
+      <div className="nav-links">
+        <a href="#" className={page === 'work' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('work') }}>Home</a>
+        <a href="#" className={page === 'about' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('about') }}>About</a>
+        <a href="#" className={page === 'writing' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('writing') }}>Notes</a>
+      </div>
     </nav>
   )
 }
@@ -490,34 +499,16 @@ function WorkPage({ setPage }) {
           <ProjectDetailPage project={activeProject} onBack={() => setActiveProject(null)} />
         </div>
       )}
-    <div className="split" style={{ visibility: activeProject ? 'hidden' : 'visible' }}>
-      <div className="left">
-        <GrainOverlay />
-        <span className="left-label animate" style={{ animationDelay: '0.1s', transition: 'opacity 0.3s ease', opacity: hoveredProject?.img ? 0 : 1 }}>Hover a project</span>
-        {projects.filter(p => p.img).map(p => (
-          <img
-            key={p.name}
-            src={p.img}
-            alt={p.name}
-            className="project-preview"
-            style={{ opacity: hoveredProject?.name === p.name ? 1 : 0, transform: hoveredProject?.name === p.name ? 'scale(1)' : 'scale(0.98)', transition: hoveredProject?.name === p.name ? 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)' : 'opacity 0.3s ease, transform 0.3s ease' }}
-          />
-        ))}
-        <WorkShader />
-      </div>
-      <div className="right">
+      <div className="page" style={{ visibility: activeProject ? 'hidden' : 'visible' }}>
         <Nav page="work" setPage={setPage} />
-        <div className="content">
-          <header className="header">
-            <h1 className="animate" style={{ animationDelay: '0.1s' }}>Baltzelle</h1>
-            <p className="animate" style={{ animationDelay: '0.15s', color: 'var(--light)' }}>Software Designer</p>
-          </header>
-          <ul className="projects" style={{ width: '100%' }}>
+        <div className="page-content">
+          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Baltzelle <span style={{ color: 'var(--light)' }}>— Software Designer</span></h1>
+          <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {projects.map((p, i) => (
               <li
                 key={p.name}
-                className={`project writing-item padded animate${p.dim ? ' dim' : ''}`}
-                style={{ animationDelay: `${0.3 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: p.sections ? 'pointer' : 'not-allowed' }}
+                className={`project writing-item animate${p.dim ? ' dim' : ''}`}
+                style={{ animationDelay: `${0.15 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: p.sections ? 'pointer' : 'not-allowed' }}
                 onClick={() => { if (p.sections) { setHoveredProject(null); setActiveProject(p) } }}
                 onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
                 onMouseLeave={() => setHoveredProject(null)}
@@ -533,7 +524,6 @@ function WorkPage({ setPage }) {
         </div>
         <WorkFooter color={footerColor} />
       </div>
-    </div>
     </>
   )
 }
@@ -547,7 +537,7 @@ function AboutPage({ setPage }) {
     <div className="page">
       <Nav page="about" setPage={setPage} />
       <div className="page-content">
-        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Baltzelle</h1>
+        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>About</h1>
         <div className="about-text">
           <p className="animate" style={{ animationDelay: '0.15s' }}>I am a designer currently helping craft software experiences for pre-seed and seed companies.</p>
           <p className="animate" style={{ animationDelay: '0.2s' }}>In middle school I began making designs for my online gaming profile. Eventually, this would lead me to design school, but I've really grown by building things and being exposed to others who are exceptional at their craft.</p>
@@ -1112,9 +1102,7 @@ function WritingPage({ setPage }) {
       <div className="page">
         <Nav page="writing" setPage={setPage} />
         <div className="page-content">
-          <div className="animate" style={{ animationDelay: '0.1s' }}>
-            <h1 className="page-heading">A collection of thoughts, ideas, observations, and resources</h1>
-          </div>
+          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Thoughts, Ideas and Resources</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {filtered.map((w, i) => (
               <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
