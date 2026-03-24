@@ -264,26 +264,21 @@ function BackNav({ setPage }) {
   )
 }
 
-function Nav({ page, setPage }) {
+function Nav({ setPage }) {
   return (
     <nav className="nav">
       <img
         src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif"
         alt=""
         className="nav-logo"
-        onClick={() => setPage('work')}
+        onClick={() => setPage('home')}
         style={{ cursor: 'pointer' }}
       />
-      <div className="nav-links">
-        <a href="#" className={page === 'work' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('work') }}>Home</a>
-        <a href="#" className={page === 'about' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('about') }}>About</a>
-        <a href="#" className={page === 'writing' ? 'active' : ''} onClick={e => { e.preventDefault(); setPage('writing') }}>Notes</a>
-      </div>
     </nav>
   )
 }
 
-function ProjectDetailPage({ project, onBack }) {
+function ProjectDetailPage({ project, onBack, setPage }) {
   const hasSections = project.sections?.length > 0
   const [activeId, setActiveId] = useState('__intro')
   const [crumbInView, setCrumbInView] = useState(true)
@@ -335,7 +330,7 @@ function ProjectDetailPage({ project, onBack }) {
       {hasSections && (
         <aside className="note-sidebar">
           <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
-            <button className="note-back" onClick={onBack}>Home</button>
+            <button className="note-back" onClick={onBack}>Work</button>
           </div>
           <nav className="note-toc">
             <a
@@ -370,7 +365,9 @@ function ProjectDetailPage({ project, onBack }) {
       <article className="note-article">
         <div className="note-breadcrumb" ref={breadcrumbRef}>
           <div className="note-breadcrumb-left">
-            <button className="note-back" onClick={onBack}>Home</button>
+            <button className="note-back" onClick={() => setPage('home')}>Home</button>
+            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
+            <button className="note-back" onClick={onBack}>Work</button>
             <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <span className="note-breadcrumb-current">{project.name}</span>
           </div>
@@ -483,26 +480,26 @@ const WorkShader = memo(() => (
   </ShaderGradientCanvas>
 ))
 
-function WorkPage({ setPage }) {
+function WorkPage({ setPage, active }) {
   const [activeProject, setActiveProject] = useState(null)
   const [hoveredProject, setHoveredProject] = useState(null)
-  const [footerColor, setFooterColor] = useState(() => getShaderColor())
+  const [contentKey, setContentKey] = useState(0)
+
   useEffect(() => {
-    const id = setInterval(() => setFooterColor(getShaderColor()), 500)
-    return () => clearInterval(id)
-  }, [])
+    if (active) setContentKey(k => k + 1)
+  }, [active])
 
   return (
     <>
       {activeProject && (
         <div key={activeProject.name} className="page-transition" style={{ position: 'absolute', inset: 0, zIndex: 10, background: 'var(--bg, #FAF8F4)' }}>
-          <ProjectDetailPage project={activeProject} onBack={() => setActiveProject(null)} />
+          <ProjectDetailPage project={activeProject} onBack={() => { setActiveProject(null); setContentKey(k => k + 1) }} setPage={setPage} />
         </div>
       )}
       <div className="page" style={{ visibility: activeProject ? 'hidden' : 'visible' }}>
-        <Nav page="work" setPage={setPage} />
-        <div className="page-content">
-          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Baltzelle <span style={{ color: 'var(--light)' }}>— Software Designer</span></h1>
+        <Nav setPage={setPage} />
+        <div key={contentKey} className="page-content">
+          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Work</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {projects.map((p, i) => (
               <li
@@ -522,7 +519,6 @@ function WorkPage({ setPage }) {
             ))}
           </ul>
         </div>
-        <WorkFooter color={footerColor} />
       </div>
     </>
   )
@@ -535,7 +531,7 @@ function WorkPage({ setPage }) {
 function AboutPage({ setPage }) {
   return (
     <div className="page">
-      <Nav page="about" setPage={setPage} />
+      <Nav setPage={setPage} />
       <div className="page-content">
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>About</h1>
         <div className="about-text">
@@ -592,21 +588,6 @@ const writings = [
       },
     ],
   },
-  {
-    title: 'Interaction Prototypes',
-    desc: 'Experiments with code and pixels',
-    category: 'Design',
-    year: '2026',
-    sections: [],
-    content: [
-      {
-        id: 'interaction-prototypes',
-        heading: 'Interaction Prototypes',
-        body: '',
-        noImageAfter: true,
-      },
-    ],
-  },
 ]
 
 function TopFade() {
@@ -624,7 +605,7 @@ function TopFade() {
   )
 }
 
-function NoteDetailPage({ note, onBack }) {
+function NoteDetailPage({ note, onBack, setPage }) {
   const hasSections = note.sections?.length > 0
   const [activeId, setActiveId] = useState('__intro')
   const [crumbInView, setCrumbInView] = useState(true)
@@ -711,6 +692,8 @@ function NoteDetailPage({ note, onBack }) {
       <article className="note-article" style={!hasSections ? { paddingBottom: '80px' } : undefined}>
         <div className="note-breadcrumb" ref={breadcrumbRef}>
           <div className="note-breadcrumb-left">
+            <button className="note-back" onClick={() => setPage('home')}>Home</button>
+            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <button className="note-back" onClick={onBack}>Notes</button>
             <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <span className="note-breadcrumb-current">{note.title}</span>
@@ -853,7 +836,7 @@ const animeData = {
 }
 
 
-function AnimePage({ note, onBack }) {
+function AnimePage({ note, onBack, setPage }) {
   const [activeIdx, setActiveIdx] = useState(0)
   const [displayIdx, setDisplayIdx] = useState(0)
   const [fading, setFading] = useState(false)
@@ -877,6 +860,8 @@ function AnimePage({ note, onBack }) {
       <article className="note-article" style={{ paddingBottom: '80px' }}>
         <div className="note-breadcrumb">
           <div className="note-breadcrumb-left">
+            <button className="note-back" onClick={() => setPage('home')}>Home</button>
+            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <button className="note-back" onClick={onBack}>Notes</button>
             <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <span className="note-breadcrumb-current">{note?.title}</span>
@@ -920,7 +905,7 @@ function AnimePage({ note, onBack }) {
   )
 }
 
-function MusicPage({ note, onBack }) {
+function MusicPage({ note, onBack, setPage }) {
   const cached = localStorage.getItem('spotify_tracks')
   const [tracks, setTracks] = useState(cached ? dedupeTracks(JSON.parse(cached)) : [])
   const [loading, setLoading] = useState(!cached)
@@ -976,6 +961,8 @@ setLoading(false)
         <div className="music-inner">
           <div className="music-breadcrumb">
             <div className="note-breadcrumb-left">
+              <button className="music-back-arrow" onClick={() => setPage('home')}>Home</button>
+              <NavArrowRight className="music-breadcrumb-sep" width={12} height={12} />
               <button className="music-back-arrow" onClick={onBack}>Notes</button>
               <NavArrowRight className="music-breadcrumb-sep" width={12} height={12} />
               <span className="music-breadcrumb-current">{note?.title}</span>
@@ -1076,7 +1063,7 @@ function WritingPage({ setPage }) {
   if (activeNote?.type === 'music') {
     return (
       <div key={activeNote.title} className="page-transition">
-        <MusicPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
+        <MusicPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} />
       </div>
     )
   }
@@ -1084,7 +1071,7 @@ function WritingPage({ setPage }) {
   if (activeNote?.type === 'anime') {
     return (
       <div key={activeNote.title} className="page-transition">
-        <AnimePage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
+        <AnimePage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} />
       </div>
     )
   }
@@ -1092,7 +1079,7 @@ function WritingPage({ setPage }) {
   if (activeNote) {
     return (
       <div key={activeNote.title} className="page-transition">
-        <NoteDetailPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
+        <NoteDetailPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} />
       </div>
     )
   }
@@ -1100,9 +1087,9 @@ function WritingPage({ setPage }) {
   return (
     <>
       <div className="page">
-        <Nav page="writing" setPage={setPage} />
+        <Nav setPage={setPage} />
         <div className="page-content">
-          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Thoughts, Ideas and Resources</h1>
+          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {filtered.map((w, i) => (
               <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
@@ -1134,11 +1121,56 @@ function WritingPage({ setPage }) {
   )
 }
 
+function HomePage({ setPage }) {
+  const [footerColor, setFooterColor] = useState(() => getShaderColor())
+  useEffect(() => {
+    const id = setInterval(() => setFooterColor(getShaderColor()), 500)
+    return () => clearInterval(id)
+  }, [])
+
+  const categories = [
+    { label: 'Work',                   desc: 'Product and software design',    page: 'work'       },
+    { label: 'Play', desc: 'Experiments with code and pixels', page: 'prototypes' },
+    { label: 'Notes',                  desc: 'Thoughts, ideas and resources',  page: 'writing'    },
+    { label: 'About',                  desc: 'Designer and creative',          page: 'about'      },
+  ]
+  return (
+    <div className="page">
+      <nav className="nav">
+        <img
+          src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif"
+          alt=""
+          className="nav-logo"
+          style={{ cursor: 'default' }}
+        />
+      </nav>
+      <div className="page-content">
+        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Baltzelle <span style={{ color: 'var(--light)' }}>— Software Designer</span></h1>
+        <ul className="category-list">
+          {categories.map((c, i) => (
+            <li
+              key={c.label}
+              className="category-item animate"
+              style={{ animationDelay: `${0.1 + i * 0.07}s` }}
+              onClick={() => setPage(c.page)}
+              onMouseEnter={() => playClick(0.4)}
+            >
+              <span className="category-label">{c.label}</span>
+              <span className="category-desc">{c.desc}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <WorkFooter color={footerColor} />
+    </div>
+  )
+}
+
 export default function App() {
-  const [page, setPage] = useState('work')
+  const [page, setPage] = useState('home')
 
   useEffect(() => {
-    const titles = { work: 'Baltzelle', about: 'About', writing: 'Notes' }
+    const titles = { home: 'Baltzelle', work: 'Work', about: 'About', writing: 'Notes' }
     document.title = titles[page] ?? 'Baltzelle'
   }, [page])
 
@@ -1169,8 +1201,9 @@ export default function App() {
 
   return (
     <div style={{ height: '100%' }}>
+      {page === 'home'    && <HomePage    setPage={setPage} />}
       <div style={{ height: '100%', display: page === 'work' ? 'block' : 'none' }}>
-        <WorkPage setPage={setPage} />
+        <WorkPage setPage={setPage} active={page === 'work'} />
       </div>
       {page === 'about'   && <AboutPage   setPage={setPage} />}
       {page === 'writing' && <WritingPage setPage={setPage} />}

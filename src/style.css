@@ -61,6 +61,7 @@ html, body, #app {
   to   { opacity: 1; }
 }
 
+
 @keyframes content-fade {
   from { opacity: 0; filter: blur(8px); }
   to   { opacity: 1; filter: blur(0px); }
@@ -263,11 +264,6 @@ html, body, #app {
   image-rendering: pixelated;
 }
 
-.nav-links {
-  display: flex;
-  flex-direction: row;
-  gap: 24px;
-}
 
 .nav a {
   text-decoration: none;
@@ -1137,6 +1133,43 @@ img.note-image-placeholder {
   background: rgba(0,0,0,0.05);
 }
 
+
+/* Category list (home page) */
+.category-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+}
+
+.page-content > .page-heading + .category-list {
+  margin-top: 48px;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.2s ease;
+}
+
+.category-list:has(.category-item:hover) .category-item:not(:hover) {
+  opacity: 0.2 !important;
+}
+
+.category-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark);
+}
+
+.category-desc {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--light);
+}
 
 .music-song-link {
   color: inherit;
