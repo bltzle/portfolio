@@ -13,6 +13,7 @@
     "vite": "^8.0.0"
   },
   "dependencies": {
+    "@paper-design/shaders-react": "^0.0.72",
     "@react-three/fiber": "^9.5.0",
     "@shadergradient/react": "^2.4.20",
     "agentation": "^2.3.3",
@@ -22,6 +23,7 @@
     "simple-icons": "^16.12.0",
     "swiper": "^12.1.2",
     "three": "^0.183.2",
-    "three-stdlib": "^2.36.1"
+    "three-stdlib": "^2.36.1",
+    "web-haptics": "^0.0.6"
   }
 }

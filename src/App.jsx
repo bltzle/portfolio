@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, Fragment } from 'react'
+import { useState, useEffect, useRef, Fragment, memo } from 'react'
+import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
 import { createPortal } from 'react-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCards } from 'swiper/modules'
@@ -123,7 +124,6 @@ function playClick(intensity = 0.4) {
 }
 
 import { Post, ArrowDownLeft, NavArrowRight, Xmark, Plus, FilterList, Check } from 'iconoir-react'
-import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
 import './style.css'
 
 const projects = [
@@ -214,13 +214,13 @@ function usePSTTime() {
   return time
 }
 
-function WorkFooter() {
+function WorkFooter({ color }) {
   const location = useVisitorLocation()
   const time = usePSTTime()
   return (
-    <div className="work-links">
+    <div className="work-links" style={{ color, transition: 'color 0.5s ease' }}>
       <span className="visitor-location">Last visitor from <span className="visitor-location-value">{location ?? '—'}</span></span>
-<span className="visitor-location">{time} PST</span>
+      <span className="visitor-location">{time} PST</span>
     </div>
   )
 }
@@ -252,7 +252,7 @@ function GrainOverlay() {
     raf = requestAnimationFrame(draw)
     return () => cancelAnimationFrame(raf)
   }, [])
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.06, pointerEvents: 'none', zIndex: 2, mixBlendMode: 'overlay' }} />
+  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.05, pointerEvents: 'none', zIndex: 2, mixBlendMode: 'overlay' }} />
 }
 
 function BackNav({ setPage }) {
@@ -413,20 +413,84 @@ function ProjectDetailPage({ project, onBack }) {
   )
 }
 
+const SHADER_START = Date.now()
+
+function getShaderColor() {
+  const t = (Date.now() - SHADER_START) / 1000 * 0.018
+  const ping = Math.abs(((t * 0.5) % 1) * 2 - 1)
+  const h = 0.228 + ping * 0.01
+  const s = 0.75, l = 0.45
+  const f = (o) => {
+    const c = Math.min(Math.max(Math.abs(((h * 6 + o) % 6) - 3) - 1, 0), 1)
+    return l + s * (c - 0.5) * (1 - Math.abs(2 * l - 1))
+  }
+  return `rgb(${Math.round(f(0)*255)},${Math.round(f(4)*255)},${Math.round(f(2)*255)})`
+}
+
+const WorkShader = memo(() => (
+  <ShaderGradientCanvas style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
+    <ShaderGradient
+      animate="on"
+      axesHelper="off"
+      brightness={1.2}
+      cAzimuthAngle={0}
+      cDistance={5.5}
+      cPolarAngle={90}
+      cameraZoom={1}
+      color1="#708238"
+      color2="#8A9A5B"
+      color3="#556B2F"
+      destination="onCanvas"
+      embedMode="off"
+      envPreset="city"
+      format="gif"
+      fov={40}
+      frameRate={10}
+      gizmoHelper="hide"
+      grain="off"
+      lightType="3d"
+      pixelDensity={1.2}
+      positionX={0}
+      positionY={0}
+      positionZ={0}
+      range="disabled"
+      rangeEnd={40}
+      rangeStart={0}
+      reflection={0.1}
+      rotationX={0}
+      rotationY={0}
+      rotationZ={0}
+      shader="defaults"
+      type="waterPlane"
+      uAmplitude={1}
+      uDensity={0.6}
+      uFrequency={5.5}
+      uSpeed={0.1}
+      uStrength={3.4}
+      uTime={0}
+      wireframe={false}
+      zoomOut={false}
+    />
+  </ShaderGradientCanvas>
+))
+
 function WorkPage({ setPage }) {
   const [activeProject, setActiveProject] = useState(null)
   const [hoveredProject, setHoveredProject] = useState(null)
-
-  if (activeProject) {
-    return (
-      <div key={activeProject.name} className="page-transition">
-        <ProjectDetailPage project={activeProject} onBack={() => setActiveProject(null)} />
-      </div>
-    )
-  }
+  const [footerColor, setFooterColor] = useState(() => getShaderColor())
+  useEffect(() => {
+    const id = setInterval(() => setFooterColor(getShaderColor()), 500)
+    return () => clearInterval(id)
+  }, [])
 
   return (
-    <div className="split">
+    <>
+      {activeProject && (
+        <div key={activeProject.name} className="page-transition" style={{ position: 'absolute', inset: 0, zIndex: 10, background: 'var(--bg, #FAF8F4)' }}>
+          <ProjectDetailPage project={activeProject} onBack={() => setActiveProject(null)} />
+        </div>
+      )}
+    <div className="split" style={{ visibility: activeProject ? 'hidden' : 'visible' }}>
       <div className="left">
         <GrainOverlay />
         <span className="left-label animate" style={{ animationDelay: '0.1s', transition: 'opacity 0.3s ease', opacity: hoveredProject?.img ? 0 : 1 }}>Hover a project</span>
@@ -439,50 +503,7 @@ function WorkPage({ setPage }) {
             style={{ opacity: hoveredProject?.name === p.name ? 1 : 0, transform: hoveredProject?.name === p.name ? 'scale(1)' : 'scale(0.98)', transition: hoveredProject?.name === p.name ? 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)' : 'opacity 0.3s ease, transform 0.3s ease' }}
           />
         ))}
-        <ShaderGradientCanvas style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
-          <ShaderGradient
-            animate="on"
-            axesHelper="off"
-            brightness={1.2}
-            cAzimuthAngle={0}
-            cDistance={5.5}
-            cPolarAngle={90}
-            cameraZoom={1}
-            color1="#708238"
-            color2="#8A9A5B"
-            color3="#556B2F"
-            destination="onCanvas"
-            embedMode="off"
-            envPreset="city"
-            format="gif"
-            fov={40}
-            frameRate={10}
-            gizmoHelper="hide"
-            grain="off"
-            lightType="3d"
-            pixelDensity={1.2}
-            positionX={0}
-            positionY={0}
-            positionZ={0}
-            range="disabled"
-            rangeEnd={40}
-            rangeStart={0}
-            reflection={0.1}
-            rotationX={0}
-            rotationY={0}
-            rotationZ={0}
-            shader="defaults"
-            type="waterPlane"
-            uAmplitude={1}
-            uDensity={0.6}
-            uFrequency={5.5}
-            uSpeed={0.1}
-            uStrength={3.4}
-            uTime={0}
-            wireframe={false}
-            zoomOut={false}
-          />
-        </ShaderGradientCanvas>
+        <WorkShader />
       </div>
       <div className="right">
         <Nav page="work" setPage={setPage} />
@@ -510,9 +531,10 @@ function WorkPage({ setPage }) {
             ))}
           </ul>
         </div>
-        <WorkFooter />
+        <WorkFooter color={footerColor} />
       </div>
     </div>
+    </>
   )
 }
 
@@ -546,7 +568,7 @@ function AboutPage({ setPage }) {
 
 const writings = [
   {
-    title: 'Recent Listening',
+    title: 'Currently Playing',
     desc: 'A running list of what\'s been on',
     category: 'Music',
     year: '2026',
@@ -845,8 +867,8 @@ function AnimePage({ note, onBack }) {
   const [activeIdx, setActiveIdx] = useState(0)
   const [displayIdx, setDisplayIdx] = useState(0)
   const [fading, setFading] = useState(false)
-
   const handleSlideChange = (swiper) => {
+    playClick(0.9)
     setFading(true)
     setTimeout(() => {
       setDisplayIdx(swiper.activeIndex)
@@ -950,7 +972,7 @@ function MusicPage({ note, onBack }) {
       const merged = dedupeTracks([...(data.items ?? []), ...existing])
       localStorage.setItem('spotify_tracks', JSON.stringify(merged))
       setTracks(merged)
-      setLoading(false)
+setLoading(false)
     }
     load().catch(() => setLoading(false))
   }, [authed])
@@ -993,7 +1015,7 @@ function MusicPage({ note, onBack }) {
             <div className="music-rows">
               {displayedTracks.map(({ track, played_at }, i) => (
                 <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
                     {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" style={{ width: 34, height: 34, borderRadius: 8, flexShrink: 0, border: '1px solid rgba(0,0,0,0.06)' }} />}
                     <span className="music-song-name">{cleanTitle(track.name)}</span>
                   </span>
@@ -1158,10 +1180,12 @@ export default function App() {
   }, [])
 
   return (
-    <div key={page} className="page-transition">
-      {page === 'work'         && <WorkPage         setPage={setPage} />}
-      {page === 'about'        && <AboutPage        setPage={setPage} />}
-      {page === 'writing'      && <WritingPage      setPage={setPage} />}
+    <div style={{ height: '100%' }}>
+      <div style={{ height: '100%', display: page === 'work' ? 'block' : 'none' }}>
+        <WorkPage setPage={setPage} />
+      </div>
+      {page === 'about'   && <AboutPage   setPage={setPage} />}
+      {page === 'writing' && <WritingPage setPage={setPage} />}
     </div>
   )
 }
