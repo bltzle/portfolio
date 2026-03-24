@@ -17,6 +17,18 @@
   font-display: swap;
 }
 
+@property --bg-hue {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --bg-hue {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
 :root {
   --dark: #333333;
   --light: #8C8C8C;
@@ -165,7 +177,8 @@ html, body, #app {
   gap: 24px;
   padding: 0 76px 48px;
   margin-top: auto;
-  justify-content: flex-start;
+  justify-content: space-between;
+  position: relative;
 }
 
 /* Music */
@@ -203,7 +216,7 @@ html, body, #app {
 }
 
 .visitor-location {
-  margin-left: auto;
+  margin-left: 0;
   font-size: 12px;
   font-weight: 400;
   color: var(--light);
@@ -235,6 +248,7 @@ html, body, #app {
 .work-links a:hover {
   color: var(--dark);
 }
+
 
 /* Nav */
 .nav {
@@ -324,6 +338,10 @@ html, body, #app {
   height: auto;
   gap: 0;
   padding: 14px 0 !important;
+}
+
+.writing-item.padded {
+  padding: 14px 76px !important;
 }
 
 .writing-item-main {

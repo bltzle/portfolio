@@ -183,7 +183,7 @@ const projects = [
     collaborators: ['Gabriel Valdivia'],
   },
   { name: 'Goodword',              desc: 'Maintain relationships in your professional network',         year: '2024' },
-  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024', img: '/images/workmate/cover.jpg' },
+  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024' },
   { name: 'Sensible',              desc: 'A high yield account for your crypto',                       year: '2024' },
   { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025' },
   { name: 'Underline',             desc: 'An investment platform for alternative assets',              year: '2023' },
@@ -200,11 +200,27 @@ function useVisitorLocation() {
   return location
 }
 
+function usePSTTime() {
+  const [time, setTime] = useState(() =>
+    new Date().toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour: 'numeric', minute: '2-digit', hour12: true })
+  )
+  useEffect(() => {
+    const tick = () => setTime(
+      new Date().toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour: 'numeric', minute: '2-digit', hour12: true })
+    )
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [])
+  return time
+}
+
 function WorkFooter() {
   const location = useVisitorLocation()
+  const time = usePSTTime()
   return (
     <div className="work-links">
-<span className="visitor-location">Last visitor from <span className="visitor-location-value">{location ?? '—'}</span></span>
+      <span className="visitor-location">Last visitor from <span className="visitor-location-value">{location ?? '—'}</span></span>
+<span className="visitor-location">{time} PST</span>
     </div>
   )
 }
@@ -472,14 +488,14 @@ function WorkPage({ setPage }) {
         <Nav page="work" setPage={setPage} />
         <div className="content">
           <header className="header">
-            <h1 className="animate" style={{ animationDelay: '0.1s' }}>Matthew Baltzelle</h1>
-            <p className="animate" style={{ animationDelay: '0.15s' }}>Designer crafting stories for early stage companies</p>
+            <h1 className="animate" style={{ animationDelay: '0.1s' }}>Baltzelle</h1>
+            <p className="animate" style={{ animationDelay: '0.15s', color: 'var(--light)' }}>Software Designer</p>
           </header>
-          <ul className="projects no-bg-hover" style={{ width: '100%', padding: '0 76px' }}>
+          <ul className="projects" style={{ width: '100%' }}>
             {projects.map((p, i) => (
               <li
                 key={p.name}
-                className={`project writing-item animate${p.dim ? ' dim' : ''}`}
+                className={`project writing-item padded animate${p.dim ? ' dim' : ''}`}
                 style={{ animationDelay: `${0.3 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: p.sections ? 'pointer' : 'not-allowed' }}
                 onClick={() => { if (p.sections) { setHoveredProject(null); setActiveProject(p) } }}
                 onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
@@ -786,6 +802,8 @@ const animeData = {
     {
       title: 'Made in Abyss', studio: 'Kinema Citrus', episodes: 25,
       cover: 'https://image.tmdb.org/t/p/original/f6U3odfIb3pCXMGKRTQGGF9o1Qg.jpg',
+      quote: 'I want to go. Even if it means I can never come back.',
+      quoteAttr: '—Riko',
       desc: [
         'Made in Abyss follows Riko, a young girl who descends into a vast and ancient chasm in search of her missing mother. The Abyss is beautiful and deeply hostile in equal measure.',
         'The show has a deceptive quality to it — the art style reads as warm and childlike, and then uses that against you. The world-building is meticulous, and the deeper the story goes, the more it earns its darkness.',
@@ -805,6 +823,8 @@ const animeData = {
     {
       title: 'Jujutsu Kaisen', studio: 'MAPPA', episodes: 47,
       cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg',
+      quote: 'No matter how many people you\'ve saved, you have no right to take a human life.',
+      quoteAttr: '—Nanami Kento',
       desc: [
         'Jujutsu Kaisen follows Yuji Itadori, a high schooler who swallows a cursed finger and gets pulled into a world of sorcerers and malevolent spirits. The premise moves fast and the show keeps pace with it.',
         'MAPPA\'s animation is the obvious draw — fluid, kinetic, and technically impressive in a way that holds up across the entire run. The Shibuya arc in particular is some of the most sustained high-quality animation in recent memory.',
@@ -858,7 +878,7 @@ function AnimePage({ note, onBack }) {
                 <Fragment key={i}>
                   <p>{p}</p>
                   {i === 0 && current.quote && (
-                    <blockquote style={{ fontStyle: 'italic', color: 'var(--light)', borderLeft: '2px solid rgba(0,0,0,0.1)', paddingLeft: '16px', margin: '0 0 12px' }}>
+                    <blockquote style={{ fontStyle: 'italic', color: 'var(--light)', borderLeft: '2px solid rgba(0,0,0,0.1)', paddingLeft: '16px', margin: '0 0 20px', lineHeight: '1.7' }}>
                       {current.quote}
                     </blockquote>
                   )}
@@ -1021,9 +1041,13 @@ function WritingPage({ setPage }) {
   const categories = [...new Set(writings.map(w => w.category).filter(Boolean))]
   const filtered = activeFilter ? writings.filter(w => w.category === activeFilter) : writings
 
-  const closeFilter = () => {
+  const closeFilter = (pendingFilter) => {
     setFilterClosing(true)
-    setTimeout(() => { setFilterOpen(false); setFilterClosing(false) }, 150)
+    setTimeout(() => {
+      setFilterOpen(false)
+      setFilterClosing(false)
+      if (pendingFilter !== undefined) setActiveFilter(pendingFilter)
+    }, 150)
   }
 
   useEffect(() => {
@@ -1066,11 +1090,8 @@ function WritingPage({ setPage }) {
       <div className="page">
         <Nav page="writing" setPage={setPage} />
         <div className="page-content">
-          <div className="animate" style={{ animationDelay: '0.1s', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-            <h1 className="page-heading" style={{ margin: 0 }}>A collection of thoughts, ideas, observations, and resources</h1>
-            <button ref={btnRef} className="note-info-btn" onClick={() => filterOpen ? closeFilter() : setFilterOpen(true)} aria-label="Filter" style={{ flexShrink: 0, color: activeFilter ? 'var(--dark)' : '' }}>
-              <FilterList width={16} height={16} strokeWidth={1.75} />
-            </button>
+          <div className="animate" style={{ animationDelay: '0.1s' }}>
+            <h1 className="page-heading">A collection of thoughts, ideas, observations, and resources</h1>
           </div>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {filtered.map((w, i) => (
@@ -1088,7 +1109,7 @@ function WritingPage({ setPage }) {
       {filterOpen && createPortal(
         <div ref={filterRef} className={filterClosing ? 'dropdown-exit' : 'dropdown-enter'} style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, backgroundColor: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '10px', boxShadow: '0 4px 20px rgba(0,0,0,0.12)', padding: '6px', minWidth: '140px', zIndex: 9999 }}>
           {categories.map(cat => (
-            <button key={cat} onClick={() => { setActiveFilter(activeFilter === cat ? null : cat); closeFilter() }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '7px 10px', borderRadius: '6px', border: 'none', backgroundColor: 'transparent', fontSize: '13px', color: 'var(--dark)', cursor: 'pointer', textAlign: 'left' }}
+            <button key={cat} onClick={() => closeFilter(activeFilter === cat ? null : cat)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '7px 10px', borderRadius: '6px', border: 'none', backgroundColor: 'transparent', fontSize: '13px', color: 'var(--dark)', cursor: 'pointer', textAlign: 'left' }}
               onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.04)' }}
               onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
             >
