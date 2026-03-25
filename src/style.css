@@ -1139,7 +1139,7 @@ img.note-image-placeholder {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 0;
   width: 100%;
 }
 
@@ -1152,6 +1152,7 @@ img.note-image-placeholder {
   flex-direction: column;
   gap: 4px;
   cursor: pointer;
+  padding: 12px 0;
   transition: background 0.15s ease, opacity 0.2s ease;
 }
 
