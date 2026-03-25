@@ -10,6 +10,36 @@ const SPOTIFY_CLIENT_ID = '5ee9147feda6434aa4414c48c2a472bd'
 const SPOTIFY_REDIRECT  = 'http://127.0.0.1:5173/callback'
 const SPOTIFY_SCOPES    = 'user-read-recently-played'
 
+function useMagnetRepel(radius = 80, strength = 0.4) {
+  const ref = useRef(null)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const onMove = (e) => {
+      const rect = el.getBoundingClientRect()
+      const cx = rect.left + rect.width / 2
+      const cy = rect.top + rect.height / 2
+      const dx = cx - e.clientX
+      const dy = cy - e.clientY
+      const dist = Math.sqrt(dx * dx + dy * dy)
+      if (dist < radius) {
+        const force = (1 - dist / radius) * strength
+        el.style.transform = `translate(${dx * force}px, ${dy * force}px)`
+      } else {
+        el.style.transform = ''
+      }
+    }
+    const onLeave = () => { el.style.transform = '' }
+    window.addEventListener('mousemove', onMove)
+    el.closest('.nav')?.addEventListener('mouseleave', onLeave)
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      el.closest('.nav')?.removeEventListener('mouseleave', onLeave)
+    }
+  }, [radius, strength])
+  return ref
+}
+
 function formatDate(str) {
   const diff = Date.now() - new Date(str).getTime()
   const mins = Math.floor(diff / 60000)
@@ -200,15 +230,11 @@ function useVisitorLocation() {
   return location
 }
 
-function usePSTTime() {
-  const [time, setTime] = useState(() =>
-    new Date().toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour: 'numeric', minute: '2-digit', hour12: true })
-  )
+function useLocalTime() {
+  const fmt = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+  const [time, setTime] = useState(fmt)
   useEffect(() => {
-    const tick = () => setTime(
-      new Date().toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles', hour: 'numeric', minute: '2-digit', hour12: true })
-    )
-    const id = setInterval(tick, 1000)
+    const id = setInterval(() => setTime(fmt()), 1000)
     return () => clearInterval(id)
   }, [])
   return time
@@ -216,11 +242,11 @@ function usePSTTime() {
 
 function WorkFooter({ color }) {
   const location = useVisitorLocation()
-  const time = usePSTTime()
+  const time = useLocalTime()
   return (
     <div className="work-links" style={{ color, transition: 'color 0.5s ease' }}>
       <span className="visitor-location">Last visitor from <span className="visitor-location-value">{location ?? '—'}</span></span>
-      <span className="visitor-location">{time} PST</span>
+      <span className="visitor-location visitor-time">{time}</span>
     </div>
   )
 }
@@ -265,9 +291,11 @@ function BackNav({ setPage }) {
 }
 
 function Nav({ setPage }) {
+  const logoRef = useMagnetRepel()
   return (
     <nav className="nav">
       <img
+        ref={logoRef}
         src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif"
         alt=""
         className="nav-logo"
@@ -527,6 +555,20 @@ function WorkPage({ setPage, active }) {
 
 
 
+
+function ColophonPage({ setPage }) {
+  return (
+    <div className="page">
+      <Nav setPage={setPage} />
+      <div className="page-content">
+        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Colophon</h1>
+        <div className="about-text">
+          <p className="animate" style={{ animationDelay: '0.15s' }}>Details about how this site was made will go here.</p>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function AboutPage({ setPage }) {
   return (
@@ -1014,9 +1056,9 @@ setLoading(false)
         <button className="setup-modal-close" onClick={() => setSheetOpen(false)}>
           <Xmark width={16} height={16} strokeWidth={1.75} />
         </button>
-        <p>Good sound changes how music feels. That's really all there is to it.</p>
-        <p>I am almost always listening to music. Currently alternating between the <a href="https://mezeaudio.com/products/109-pro" target="_blank" rel="noreferrer">Meze 109 Pro</a> and <a href="https://shop.zmfheadphones.com/collections/stock-headphones/products/bokeh-open-copy" target="_blank" rel="noreferrer">ZMF Bokeh Open</a>, paired with the <a href="https://www.fiio.com/k11r2r" target="_blank" rel="noreferrer">FiiO K11 R2R</a>.</p>
-        <p>The <a href="https://us.sennheiser-hearing.com/products/hd-600" target="_blank" rel="noreferrer">HD600's</a> were my daily drivers for almost 6 years, but I wanted a warmer and more fun listening experience.</p>
+        <p>I love music. I'm not too concerned with critical listening, but good sound changes how music&nbsp;feels.</p>
+        <p>Currently alternating between the <a href="https://mezeaudio.com/products/109-pro" target="_blank" rel="noreferrer">Meze 109 Pro</a> and <a href="https://shop.zmfheadphones.com/collections/stock-headphones/products/bokeh-open-copy" target="_blank" rel="noreferrer">ZMF Bokeh Open</a>, paired with the <a href="https://www.fiio.com/k11r2r" target="_blank" rel="noreferrer">FiiO K11&nbsp;R2R</a>.</p>
+        <p>The <a href="https://us.sennheiser-hearing.com/products/hd-600" target="_blank" rel="noreferrer">HD600's</a> were my daily drivers for almost 6 years, but I wanted a warmer and more fun listening&nbsp;experience.</p>
       </div>
     </>
   )
@@ -1123,6 +1165,7 @@ function WritingPage({ setPage }) {
 
 function HomePage({ setPage }) {
   const [footerColor, setFooterColor] = useState(() => getShaderColor())
+  const logoRef = useMagnetRepel()
   useEffect(() => {
     const id = setInterval(() => setFooterColor(getShaderColor()), 500)
     return () => clearInterval(id)
@@ -1133,11 +1176,13 @@ function HomePage({ setPage }) {
     { label: 'Play', desc: 'Experiments with code and pixels', page: 'prototypes' },
     { label: 'Notes',                  desc: 'Thoughts, ideas and resources',  page: 'writing'    },
     { label: 'About',                  desc: 'Designer and creative',          page: 'about'      },
+    { label: 'Colophon',               desc: 'How this site was made',          page: 'colophon'   },
   ]
   return (
     <div className="page">
       <nav className="nav">
         <img
+          ref={logoRef}
           src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif"
           alt=""
           className="nav-logo"
@@ -1145,7 +1190,7 @@ function HomePage({ setPage }) {
         />
       </nav>
       <div className="page-content">
-        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Baltzelle <span style={{ color: 'var(--light)' }}>— Software Designer</span></h1>
+        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Baltzelle<br /><span style={{ color: 'var(--light)' }}>Designer</span></h1>
         <ul className="category-list">
           {categories.map((c, i) => (
             <li
@@ -1170,7 +1215,7 @@ export default function App() {
   const [page, setPage] = useState('home')
 
   useEffect(() => {
-    const titles = { home: 'Baltzelle', work: 'Work', about: 'About', writing: 'Notes' }
+    const titles = { home: 'Baltzelle', work: 'Work', about: 'About', colophon: 'Colophon', writing: 'Notes' }
     document.title = titles[page] ?? 'Baltzelle'
   }, [page])
 
@@ -1205,8 +1250,9 @@ export default function App() {
       <div style={{ height: '100%', display: page === 'work' ? 'block' : 'none' }}>
         <WorkPage setPage={setPage} active={page === 'work'} />
       </div>
-      {page === 'about'   && <AboutPage   setPage={setPage} />}
-      {page === 'writing' && <WritingPage setPage={setPage} />}
+      {page === 'about'    && <AboutPage    setPage={setPage} />}
+      {page === 'colophon' && <ColophonPage setPage={setPage} />}
+      {page === 'writing'  && <WritingPage  setPage={setPage} />}
     </div>
   )
 }
