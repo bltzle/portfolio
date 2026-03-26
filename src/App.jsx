@@ -7,7 +7,7 @@ import 'swiper/css'
 import 'swiper/css/effect-cards'
 
 const SPOTIFY_CLIENT_ID = '5ee9147feda6434aa4414c48c2a472bd'
-const SPOTIFY_REDIRECT  = 'http://127.0.0.1:5173/callback'
+const SPOTIFY_REDIRECT  = `${window.location.origin}/callback`
 const SPOTIFY_SCOPES    = 'user-read-recently-played'
 
 function useMagnetRepel(radius = 80, strength = 0.4) {
@@ -119,7 +119,7 @@ async function getValidToken() {
   if (!stored) return null
   if (Date.now() < stored.expires_at) return stored.access_token
   const data = await refreshToken(stored.refresh_token)
-  if (!data.access_token) return null
+  if (!data.access_token) { localStorage.removeItem('spotify_tokens'); return null }
   const tokens = {
     access_token: data.access_token,
     refresh_token: data.refresh_token ?? stored.refresh_token,
@@ -291,11 +291,9 @@ function BackNav({ setPage }) {
 }
 
 function Nav({ setPage }) {
-  const logoRef = useMagnetRepel()
   return (
     <nav className="nav">
       <img
-        ref={logoRef}
         src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif"
         alt=""
         className="nav-logo"
@@ -357,6 +355,7 @@ function ProjectDetailPage({ project, onBack, setPage }) {
       <TopFade />
       {hasSections && (
         <aside className="note-sidebar">
+          <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif" alt="" className="nav-logo" onClick={() => setPage('home')} style={{ position: 'absolute', top: '48px', left: '140px', cursor: 'pointer' }} />
           <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
             <button className="note-back" onClick={onBack}>Work</button>
           </div>
@@ -393,8 +392,6 @@ function ProjectDetailPage({ project, onBack, setPage }) {
       <article className="note-article">
         <div className="note-breadcrumb" ref={breadcrumbRef}>
           <div className="note-breadcrumb-left">
-            <button className="note-back" onClick={() => setPage('home')}>Home</button>
-            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <button className="note-back" onClick={onBack}>Work</button>
             <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <span className="note-breadcrumb-current">{project.name}</span>
@@ -596,39 +593,14 @@ function AboutPage({ setPage }) {
 
 const writings = [
   {
-    title: 'Currently Playing',
-    desc: 'A running list of what\'s been on',
-    category: 'Music',
-    year: '2026',
+    title: 'Music I\'m listening to',
+    date: '2026-03-12',
     type: 'music',
   },
   {
-    title: 'Quotes Worth Keeping',
-    desc: 'Some of my favorites, so far',
-    category: 'Anime',
-    year: '2026',
+    title: 'Quotes from animations',
+    date: '2026-02-18',
     type: 'anime',
-  },
-  {
-    title: 'Purchasing a Typeface',
-    desc: 'What makes type worth it',
-    category: 'Writing',
-    year: '2025',
-    date: '2025',
-    showTitle: true,
-    sections: [],
-    sheet: {
-      body: `Matter is a grotesque sans-serif typeface designed by Martin Vácha and published by Displaay, an independent type foundry based in Prague. Displaay focuses on developing typefaces that feel distinctive without abandoning the principles of classical type design.`,
-      link: { href: 'https://displaay.net/typeface/matter/' },
-    },
-    content: [
-      {
-        id: 'type-essay',
-        heading: 'Purchasing a Typeface',
-        body: `Finding the right typeface was harder than I expected. This was my own site, so I wanted something that actually felt personal, not just something that worked. Most free options felt generic.\n\nMatter by the Display Foundry clicked in a way the others didn't. The letterforms have a quiet distinctiveness to them, considered without being showy.\n\nI use just the regular and medium weights. Two styles was enough, and that kind of restraint is something I look for in everything I'm drawn to.`,
-        noImageAfter: true,
-      },
-    ],
   },
 ]
 
@@ -641,7 +613,7 @@ function TopFade() {
       right: 8,
       height: '120px',
       pointerEvents: 'none',
-      zIndex: 10,
+      zIndex: 5,
       background: 'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 40%, rgba(255,255,255,0) 100%)',
     }} />
   )
@@ -734,8 +706,6 @@ function NoteDetailPage({ note, onBack, setPage }) {
       <article className="note-article" style={!hasSections ? { paddingBottom: '80px' } : undefined}>
         <div className="note-breadcrumb" ref={breadcrumbRef}>
           <div className="note-breadcrumb-left">
-            <button className="note-back" onClick={() => setPage('home')}>Home</button>
-            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <button className="note-back" onClick={onBack}>Notes</button>
             <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <span className="note-breadcrumb-current">{note.title}</span>
@@ -824,12 +794,17 @@ const animeData = {
         'The most recent season is fully living up to its reputation as one of the highest rated anime ever. I\'d highly recommend it to anyone who appreciates strong animation, thoughtful storytelling, a beautiful score, and something that actually lands emotionally.',
       ],
       quote: 'The greatest joy of magic lies in searching for it.',
+      quoteAttr: 'Flamme',
+      quoteSource: 'Frieren: Beyond Journey\'s End',
+      quoteHref: 'https://en.wikipedia.org/wiki/Frieren',
     },
     {
       title: 'Avatar: The Last Airbender', studio: 'Nickelodeon', episodes: 61,
       cover: 'https://image.tmdb.org/t/p/original/9RQhVb3r3mCMqYVhLoCu4EvuipP.jpg',
       quote: 'Sometimes life is like this tunnel. You can\'t always see the light at the end of the tunnel, but if you keep moving, you will come to a better place.',
-      quoteAttr: '—Iroh, "The Crossroads of Destiny"',
+      quoteAttr: 'Iroh',
+      quoteSource: 'Avatar: The Last Airbender',
+      quoteHref: 'https://en.wikipedia.org/wiki/Avatar:_The_Last_Airbender',
       desc: [
         'Avatar: The Last Airbender follows Aang, the last surviving Airbender, as he works to master all four elements and bring balance to a world at war. The show is deceptively layered — built for younger audiences but genuinely rich in its themes.',
         'Uncle Iroh is the character that makes the show. His warmth, his stillness, the way he holds wisdom without ever making it feel like a lecture. The quote above is the one I keep coming back to.',
@@ -840,7 +815,9 @@ const animeData = {
       title: 'Made in Abyss', studio: 'Kinema Citrus', episodes: 25,
       cover: 'https://image.tmdb.org/t/p/original/f6U3odfIb3pCXMGKRTQGGF9o1Qg.jpg',
       quote: 'I want to go. Even if it means I can never come back.',
-      quoteAttr: '—Riko',
+      quoteAttr: 'Riko',
+      quoteSource: 'Made in Abyss',
+      quoteHref: 'https://en.wikipedia.org/wiki/Made_in_Abyss',
       desc: [
         'Made in Abyss follows Riko, a young girl who descends into a vast and ancient chasm in search of her missing mother. The Abyss is beautiful and deeply hostile in equal measure.',
         'The show has a deceptive quality to it — the art style reads as warm and childlike, and then uses that against you. The world-building is meticulous, and the deeper the story goes, the more it earns its darkness.',
@@ -851,6 +828,9 @@ const animeData = {
       title: 'Hunter x Hunter', studio: 'Madhouse', episodes: 148,
       cover: 'https://image.tmdb.org/t/p/original/i2EEr2uBvRlAwJ8d8zTG2Y19mIa.jpg',
       quote: 'Gon, you are light. Sometimes you shine so brightly, I must look away. But even so, is it still okay if I stay by your side?',
+      quoteAttr: 'Killua Zoldyck',
+      quoteSource: 'Hunter x Hunter',
+      quoteHref: 'https://en.wikipedia.org/wiki/Hunter_%C3%97_Hunter',
       desc: [
         'Hunter x Hunter follows Gon Freecss, a boy who discovers his absent father is one of the world\'s greatest hunters, and sets out to find him. What begins as a straightforward adventure quickly becomes something far darker and more considered.',
         'The Chimera Ant arc is one of the most ambitious things in anime — a long, slow build that earns everything it asks of you. Madhouse gives it the visual weight it deserves.',
@@ -861,7 +841,9 @@ const animeData = {
       title: 'Jujutsu Kaisen', studio: 'MAPPA', episodes: 47,
       cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg',
       quote: 'No matter how many people you\'ve saved, you have no right to take a human life.',
-      quoteAttr: '—Nanami Kento',
+      quoteAttr: 'Nanami Kento',
+      quoteSource: 'Jujutsu Kaisen',
+      quoteHref: 'https://en.wikipedia.org/wiki/Jujutsu_Kaisen',
       desc: [
         'Jujutsu Kaisen follows Yuji Itadori, a high schooler who swallows a cursed finger and gets pulled into a world of sorcerers and malevolent spirits. The premise moves fast and the show keeps pace with it.',
         'MAPPA\'s animation is the obvious draw — fluid, kinetic, and technically impressive in a way that holds up across the entire run. The Shibuya arc in particular is some of the most sustained high-quality animation in recent memory.',
@@ -879,71 +861,25 @@ const animeData = {
 
 
 function AnimePage({ note, onBack, setPage }) {
-  const [activeIdx, setActiveIdx] = useState(0)
-  const [displayIdx, setDisplayIdx] = useState(0)
-  const [fading, setFading] = useState(false)
-  const handleSlideChange = (swiper) => {
-    playClick(0.9)
-    setFading(true)
-    setTimeout(() => {
-      setDisplayIdx(swiper.activeIndex)
-      setActiveIdx(swiper.activeIndex)
-    }, 150)
-  }
-
-  const handleTransitionEnd = () => {
-    setFading(false)
-  }
-
   return (
-    <>
-    <div className="note-layout">
-      <TopFade />
-      <article className="note-article" style={{ paddingBottom: '80px' }}>
-        <div className="note-breadcrumb">
-          <div className="note-breadcrumb-left">
-            <button className="note-back" onClick={() => setPage('home')}>Home</button>
-            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
-            <button className="note-back" onClick={onBack}>Notes</button>
-            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
-            <span className="note-breadcrumb-current">{note?.title}</span>
-          </div>
+    <div className="page">
+      <Nav setPage={setPage} />
+      <div className="page-content">
+        <div className="note-breadcrumb-left">
+          <button className="note-back" onClick={onBack}>Notes</button>
+          <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
+          <span className="note-breadcrumb-current">{note?.title}</span>
         </div>
-        <div className="anime-col">
-          <div className="anime-body" style={{ opacity: fading ? 0 : 1, filter: fading ? 'blur(4px)' : 'blur(0px)', transition: fading ? 'opacity 0.15s ease, filter 0.15s ease' : 'opacity 0.5s ease, filter 0.5s ease' }}>
-            {(() => {
-              const current = animeData.watching[displayIdx % animeData.watching.length]
-              return current.desc.map((p, i) => (
-                <Fragment key={i}>
-                  <p>{p}</p>
-                  {i === 0 && current.quote && (
-                    <blockquote style={{ fontStyle: 'italic', color: 'var(--light)', borderLeft: '2px solid rgba(0,0,0,0.1)', paddingLeft: '16px', margin: '0 0 20px', lineHeight: '1.7' }}>
-                      {current.quote}
-                    </blockquote>
-                  )}
-                </Fragment>
-              ))
-            })()}
-          </div>
-          <Swiper
-            effect="cards"
-            grabCursor={true}
-            loop={false}
-            modules={[EffectCards]}
-            className="anime-swiper"
-            onSlideChange={handleSlideChange}
-            onTransitionEnd={handleTransitionEnd}
-          >
-            {animeData.watching.map((item, i) => (
-              <SwiperSlide key={i} className="anime-swiper-slide">
-                <img src={item.cover} alt={item.title} draggable={false} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+          {animeData.watching.filter(item => item.quote).map((item, i) => (
+            <div key={i}>
+              <p style={{ fontFamily: "'Gambetta', serif", fontSize: '16px', fontStyle: 'italic', color: 'var(--dark)', lineHeight: 1.75, textAlign: 'justify', textWrap: 'pretty' }}>{item.quote}</p>
+              <p style={{ fontSize: '13px', color: 'var(--light)', marginTop: '10px' }}>— {item.quoteAttr ?? item.title}{item.quoteSource && <>, <a href={item.quoteHref} target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'rgba(0,0,0,0.1)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'rgba(0,0,0,0.1)' }}>{item.quoteSource}</a></>}</p>
+            </div>
+          ))}
         </div>
-      </article>
+      </div>
     </div>
-    </>
   )
 }
 
@@ -999,12 +935,13 @@ setLoading(false)
     <div className="music-page">
       <TopFade />
       <div className="music-scroll-fade" />
+      <div style={{ maxWidth: '860px', width: '100%', margin: '0 auto', padding: '48px 48px 100px', position: 'relative', zIndex: 11 }}>
+        <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif" alt="" className="nav-logo" onClick={() => setPage('home')} style={{ cursor: 'pointer' }} />
+      </div>
       <div className="music-col-headers">
         <div className="music-inner">
           <div className="music-breadcrumb">
             <div className="note-breadcrumb-left">
-              <button className="music-back-arrow" onClick={() => setPage('home')}>Home</button>
-              <NavArrowRight className="music-breadcrumb-sep" width={12} height={12} />
               <button className="music-back-arrow" onClick={onBack}>Notes</button>
               <NavArrowRight className="music-breadcrumb-sep" width={12} height={12} />
               <span className="music-breadcrumb-current">{note?.title}</span>
@@ -1057,50 +994,20 @@ setLoading(false)
           <Xmark width={16} height={16} strokeWidth={1.75} />
         </button>
         <p>I love music. I'm not too concerned with critical listening, but good sound changes how music&nbsp;feels.</p>
-        <p>Currently alternating between the <a href="https://mezeaudio.com/products/109-pro" target="_blank" rel="noreferrer">Meze 109 Pro</a> and <a href="https://shop.zmfheadphones.com/collections/stock-headphones/products/bokeh-open-copy" target="_blank" rel="noreferrer">ZMF Bokeh Open</a>, paired with the <a href="https://www.fiio.com/k11r2r" target="_blank" rel="noreferrer">FiiO K11&nbsp;R2R</a>.</p>
-        <p>The <a href="https://us.sennheiser-hearing.com/products/hd-600" target="_blank" rel="noreferrer">HD600's</a> were my daily drivers for almost 6 years, but I wanted a warmer and more fun listening&nbsp;experience.</p>
+        <p>Currently alternating between the <a href="https://mezeaudio.com/products/109-pro" target="_blank" rel="noreferrer">Meze 109 Pro</a> and <a href="https://shop.zmfheadphones.com/collections/stock-headphones/products/bokeh-open-copy" target="_blank" rel="noreferrer">ZMF Bokeh Open</a>, paired with the <a href="https://www.fiio.com/k11r2r" target="_blank" rel="noreferrer">FiiO K11&nbsp;R2R</a>. I strongly encourage you to try listening to music with some nice wired gear if you ever get the&nbsp;opportunity.</p>
       </div>
     </>
   )
 }
 
-function WritingPage({ setPage }) {
-  const [activeNote, setActiveNote] = useState(null)
-  const [activeFilter, setActiveFilter] = useState(null)
-  const [filterOpen, setFilterOpen] = useState(false)
-  const [filterClosing, setFilterClosing] = useState(false)
-  const filterRef = useRef(null)
-  const btnRef = useRef(null)
+function WritingPage({ setPage, initialNote }) {
+  const [activeNote, setActiveNote] = useState(() => initialNote ? writings.find(w => w.type === initialNote) ?? null : null)
   const [animateList, setAnimateList] = useState(true)
   useEffect(() => {
     if (!animateList) return
     const t = setTimeout(() => setAnimateList(false), 1200)
     return () => clearTimeout(t)
   }, [animateList])
-  const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 })
-
-  const categories = [...new Set(writings.map(w => w.category).filter(Boolean))]
-  const filtered = activeFilter ? writings.filter(w => w.category === activeFilter) : writings
-
-  const closeFilter = (pendingFilter) => {
-    setFilterClosing(true)
-    setTimeout(() => {
-      setFilterOpen(false)
-      setFilterClosing(false)
-      if (pendingFilter !== undefined) setActiveFilter(pendingFilter)
-    }, 150)
-  }
-
-  useEffect(() => {
-    if (!filterOpen) return
-    const rect = btnRef.current?.getBoundingClientRect()
-    if (rect) setDropdownPos({ top: rect.bottom + 8, right: window.innerWidth - rect.right })
-    const handleClick = (e) => { if (filterRef.current && !filterRef.current.contains(e.target) && !btnRef.current.contains(e.target)) closeFilter() }
-    const handleKey = (e) => { if (e.key === 'Escape') closeFilter() }
-    document.addEventListener('mousedown', handleClick)
-    document.addEventListener('keydown', handleKey)
-    return () => { document.removeEventListener('mousedown', handleClick); document.removeEventListener('keydown', handleKey) }
-  }, [filterOpen, closeFilter])
 
   if (activeNote?.type === 'music') {
     return (
@@ -1133,32 +1040,15 @@ function WritingPage({ setPage }) {
         <div className="page-content">
           <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
-            {filtered.map((w, i) => (
+            {writings.map((w, i) => (
               <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
-                <div className="writing-item-main">
-                  <span className="project-name">{w.title}</span>
-                  <span className="writing-meta">{w.desc}</span>
-                </div>
-                {w.category && <span className="writing-category">{w.category}</span>}
+                <span className="project-name">{w.title}</span>
+                {w.date && <span className="writing-category">{`${new Date(w.date + 'T00:00').getMonth() + 1}.${new Date(w.date + 'T00:00').getDate()}.${new Date(w.date + 'T00:00').getFullYear()}`}</span>}
               </li>
             ))}
           </ul>
         </div>
       </div>
-      {filterOpen && createPortal(
-        <div ref={filterRef} className={filterClosing ? 'dropdown-exit' : 'dropdown-enter'} style={{ position: 'fixed', top: dropdownPos.top, right: dropdownPos.right, backgroundColor: '#ffffff', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '10px', boxShadow: '0 4px 20px rgba(0,0,0,0.12)', padding: '6px', minWidth: '140px', zIndex: 9999 }}>
-          {categories.map(cat => (
-            <button key={cat} onClick={() => closeFilter(activeFilter === cat ? null : cat)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '7px 10px', borderRadius: '6px', border: 'none', backgroundColor: 'transparent', fontSize: '13px', color: 'var(--dark)', cursor: 'pointer', textAlign: 'left' }}
-              onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.04)' }}
-              onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent' }}
-            >
-              {cat}
-              {activeFilter === cat && <Check width={14} height={14} strokeWidth={2} />}
-            </button>
-          ))}
-        </div>,
-        document.body
-      )}
     </>
   )
 }
@@ -1190,7 +1080,7 @@ function HomePage({ setPage }) {
         />
       </nav>
       <div className="page-content">
-        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Baltzelle<br /><span style={{ color: 'var(--light)' }}>Designer</span></h1>
+        <h1 className="page-heading animate" style={{ animationDelay: '0.1s', display: 'flex', flexDirection: 'column', gap: '6px' }}><span>Baltzelle</span><span style={{ color: 'var(--light)', fontWeight: 400, lineHeight: 1.6 }}>Software Designer. I'm just trying to figure stuff out, without losing myself in the process. I like minimal. I like timeless. Currently crafting stories for early-stage companies.</span></h1>
         <ul className="category-list">
           {categories.map((c, i) => (
             <li
@@ -1215,7 +1105,7 @@ export default function App() {
   const [page, setPage] = useState('home')
 
   useEffect(() => {
-    const titles = { home: 'Baltzelle', work: 'Work', about: 'About', colophon: 'Colophon', writing: 'Notes' }
+    const titles = { home: 'Baltzelle', work: 'Work', about: 'About', colophon: 'Colophon', writing: 'Notes', 'writing-music': 'Notes' }
     document.title = titles[page] ?? 'Baltzelle'
   }, [page])
 
@@ -1240,7 +1130,7 @@ export default function App() {
         }))
       }
       window.history.replaceState({}, '', '/')
-      setPage('writing')
+      setPage('writing-music')
     })
   }, [])
 
@@ -1252,7 +1142,7 @@ export default function App() {
       </div>
       {page === 'about'    && <AboutPage    setPage={setPage} />}
       {page === 'colophon' && <ColophonPage setPage={setPage} />}
-      {page === 'writing'  && <WritingPage  setPage={setPage} />}
+      {(page === 'writing' || page === 'writing-music') && <WritingPage setPage={setPage} initialNote={page === 'writing-music' ? 'music' : null} />}
     </div>
   )
 }

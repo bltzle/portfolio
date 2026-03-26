@@ -347,8 +347,8 @@ html, body, #app {
 .writing-item {
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   height: auto;
-  gap: 0;
   padding: 14px 0 !important;
 }
 
@@ -422,12 +422,6 @@ html, body, #app {
   max-width: 640px;
   margin: 0 auto;
   padding: 100px 0 80px;
-  animation: pointerBlock 0s 1.2s forwards;
-  pointer-events: none;
-}
-
-@keyframes pointerBlock {
-  to { pointer-events: auto; }
 }
 
 .page-heading {
@@ -514,9 +508,9 @@ html, body, #app {
   position: fixed;
   top: 0;
   left: 0;
-  width: 200px;
+  width: 300px;
   height: 100vh;
-  padding: 140px 32px 48px 140px;
+  padding: 204px 32px 48px 140px;
   z-index: 20;
   display: flex;
   flex-direction: column;
@@ -594,7 +588,8 @@ html, body, #app {
   flex-direction: row;
   align-items: center;
   gap: 6px;
-  margin-bottom: 36px;
+  margin-top: -36px;
+  margin-bottom: 16px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s ease;
@@ -638,6 +633,7 @@ html, body, #app {
   flex-direction: column;
   gap: 40px;
 }
+
 
 .note-header {
   display: flex;
@@ -774,7 +770,6 @@ img.note-image-placeholder {
   flex-shrink: 0;
   background: #FAF8F4;
   z-index: 10;
-  padding-top: 140px;
 }
 
 .music-breadcrumb {
