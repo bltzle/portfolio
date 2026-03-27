@@ -15,6 +15,28 @@ function useMagnetRepel(radius = 80, strength = 0.4) {
   useEffect(() => {
     const el = ref.current
     if (!el) return
+    el.style.willChange = 'transform'
+    let targetX = 0, targetY = 0, currentX = 0, currentY = 0
+    let raf = null
+    const lerp = 0.12
+
+    const tick = () => {
+      currentX += (targetX - currentX) * lerp
+      currentY += (targetY - currentY) * lerp
+      if (Math.abs(currentX - targetX) < 0.1 && Math.abs(currentY - targetY) < 0.1) {
+        currentX = targetX
+        currentY = targetY
+      }
+      el.style.transform = currentX === 0 && currentY === 0 ? '' : `translate(${currentX}px, ${currentY}px)`
+      if (currentX !== 0 || currentY !== 0 || targetX !== 0 || targetY !== 0) {
+        raf = requestAnimationFrame(tick)
+      } else {
+        raf = null
+      }
+    }
+
+    const startLoop = () => { if (!raf) raf = requestAnimationFrame(tick) }
+
     const onMove = (e) => {
       const rect = el.getBoundingClientRect()
       const cx = rect.left + rect.width / 2
@@ -23,18 +45,24 @@ function useMagnetRepel(radius = 80, strength = 0.4) {
       const dy = cy - e.clientY
       const dist = Math.sqrt(dx * dx + dy * dy)
       if (dist < radius) {
-        const force = (1 - dist / radius) * strength
-        el.style.transform = `translate(${dx * force}px, ${dy * force}px)`
+        const t = 1 - dist / radius
+        const force = t * t * strength
+        targetX = dx * force
+        targetY = dy * force
       } else {
-        el.style.transform = ''
+        targetX = 0
+        targetY = 0
       }
+      startLoop()
     }
-    const onLeave = () => { el.style.transform = '' }
+    const onLeave = () => { targetX = 0; targetY = 0; startLoop() }
     window.addEventListener('mousemove', onMove)
     el.closest('.nav')?.addEventListener('mouseleave', onLeave)
     return () => {
       window.removeEventListener('mousemove', onMove)
       el.closest('.nav')?.removeEventListener('mouseleave', onLeave)
+      if (raf) cancelAnimationFrame(raf)
+      el.style.willChange = ''
     }
   }, [radius, strength])
   return ref
@@ -290,7 +318,7 @@ function BackNav({ setPage }) {
   )
 }
 
-function Nav({ setPage }) {
+function Nav({ setPage, hueDeg = 0 }) {
   return (
     <nav className="nav">
       <img
@@ -298,13 +326,13 @@ function Nav({ setPage }) {
         alt=""
         className="nav-logo"
         onClick={() => setPage('home')}
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: 'pointer', filter: `hue-rotate(${hueDeg}deg)`, transition: 'filter 0.3s ease' }}
       />
     </nav>
   )
 }
 
-function ProjectDetailPage({ project, onBack, setPage }) {
+function ProjectDetailPage({ project, onBack, setPage, hueDeg = 0 }) {
   const hasSections = project.sections?.length > 0
   const [activeId, setActiveId] = useState('__intro')
   const [crumbInView, setCrumbInView] = useState(true)
@@ -355,7 +383,7 @@ function ProjectDetailPage({ project, onBack, setPage }) {
       <TopFade />
       {hasSections && (
         <aside className="note-sidebar">
-          <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif" alt="" className="nav-logo" onClick={() => setPage('home')} style={{ position: 'absolute', top: '48px', left: '140px', cursor: 'pointer' }} />
+          <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif" alt="" className="nav-logo" onClick={onBack} style={{ position: 'absolute', top: '48px', left: '140px', cursor: 'pointer', filter: `hue-rotate(${hueDeg}deg)`, transition: 'filter 0.3s ease' }} />
           <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
             <button className="note-back" onClick={onBack}>Work</button>
           </div>
@@ -505,7 +533,7 @@ const WorkShader = memo(() => (
   </ShaderGradientCanvas>
 ))
 
-function WorkPage({ setPage, active }) {
+function WorkPage({ setPage, active, hueDeg = 0 }) {
   const [activeProject, setActiveProject] = useState(null)
   const [hoveredProject, setHoveredProject] = useState(null)
   const [contentKey, setContentKey] = useState(0)
@@ -518,11 +546,11 @@ function WorkPage({ setPage, active }) {
     <>
       {activeProject && (
         <div key={activeProject.name} className="page-transition" style={{ position: 'absolute', inset: 0, zIndex: 10, background: 'var(--bg, #FAF8F4)' }}>
-          <ProjectDetailPage project={activeProject} onBack={() => { setActiveProject(null); setContentKey(k => k + 1) }} setPage={setPage} />
+          <ProjectDetailPage project={activeProject} onBack={() => { setActiveProject(null); setContentKey(k => k + 1) }} setPage={setPage} hueDeg={hueDeg} />
         </div>
       )}
       <div className="page" style={{ visibility: activeProject ? 'hidden' : 'visible' }}>
-        <Nav setPage={setPage} />
+        <Nav setPage={setPage} hueDeg={hueDeg} />
         <div key={contentKey} className="page-content">
           <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Work</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
@@ -553,24 +581,35 @@ function WorkPage({ setPage, active }) {
 
 
 
-function ColophonPage({ setPage }) {
+function ColophonPage({ setPage, hueDeg = 0 }) {
   return (
     <div className="page">
-      <Nav setPage={setPage} />
+      <Nav setPage={setPage} hueDeg={hueDeg} />
       <div className="page-content">
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Colophon</h1>
         <div className="about-text">
-          <p className="animate" style={{ animationDelay: '0.15s' }}>Details about how this site was made will go here.</p>
+          <p className="animate" style={{ animationDelay: '0.15s' }}>A colophon is a tradition from print publishing — a behind-the-scenes look at how something was made. This is mine.</p>
+          <h2 className="page-heading animate" style={{ animationDelay: '0.2s', marginTop: '48px' }}>Philosophy</h2>
+          <p className="animate" style={{ animationDelay: '0.25s' }}>I'm deeply guided by things that have high craft, precision, and restraint. That's just my personal style. I tend to gravitate towards design that emulates these principles.</p>
+          <p className="animate" style={{ animationDelay: '0.28s' }}>All of the writing on this site was done by myself so the writing quality itself might be cooked. It's not meant to be perfect, it's meant to be my true authentic self.</p>
+          <h2 className="page-heading animate" style={{ animationDelay: '0.3s', marginTop: '48px' }}>Typography</h2>
+          <p className="animate" style={{ animationDelay: '0.35s' }}>I had never even considered purchasing a typeface before because there are plenty of great open source alternatives. The issue was that every time I tried one out and set the copy it just didn't sit right with me so I set out to find one I liked.</p>
+          <p className="animate" style={{ animationDelay: '0.4s' }}><a href="https://displaay.net/typeface/matter/" target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'rgba(0,0,0,0.1)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'rgba(0,0,0,0.1)' }}>Matter by Displaay Type Foundry</a> is the typeface I chose to license for this site. I chose to purchase the regular and medium weights which were sufficient for me. It still remains restrained, but with a bit of personality to the characters.</p>
+          <p className="animate" style={{ animationDelay: '0.45s' }}>I studied typography in design school and took a class on letter forms and type. This was probably the single most enjoyable and valuable class for me. So when it came time to build this site I wanted something a bit more unique. I'm the creative director here so I want every aspect to be true to me and Matter felt like the one.</p>
+          <h2 className="page-heading animate" style={{ animationDelay: '0.5s', marginTop: '48px' }}>Construction</h2>
+          <p className="animate" style={{ animationDelay: '0.55s' }}>My previous site was built using Framer and I think it's still a great product, but not the best choice for me moving forward. With the advent of powerful tools like Cursor and Claude, I can go beyond the boundaries of what Framer allows, implement my ideas much quicker, and move away from another subscription. This transition has given me immense freedom.</p>
+          <h2 className="page-heading animate" style={{ animationDelay: '0.6s', marginTop: '48px' }}>Domain</h2>
+          <p className="animate" style={{ animationDelay: '0.65s' }}>I initially used my entire name as my domain, but that felt a bit too long. Only using my last name felt right. It's short, simple, personal, and memorable even if people can never figure out how to properly pronounce it initially. That's alright with me though, I think it feels like a gamer tag.</p>
         </div>
       </div>
     </div>
   )
 }
 
-function AboutPage({ setPage }) {
+function AboutPage({ setPage, hueDeg = 0 }) {
   return (
     <div className="page">
-      <Nav setPage={setPage} />
+      <Nav setPage={setPage} hueDeg={hueDeg} />
       <div className="page-content">
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>About</h1>
         <div className="about-text">
@@ -619,7 +658,7 @@ function TopFade() {
   )
 }
 
-function NoteDetailPage({ note, onBack, setPage }) {
+function NoteDetailPage({ note, onBack, setPage, hueDeg = 0 }) {
   const hasSections = note.sections?.length > 0
   const [activeId, setActiveId] = useState('__intro')
   const [crumbInView, setCrumbInView] = useState(true)
@@ -794,7 +833,7 @@ const animeData = {
         'The most recent season is fully living up to its reputation as one of the highest rated anime ever. I\'d highly recommend it to anyone who appreciates strong animation, thoughtful storytelling, a beautiful score, and something that actually lands emotionally.',
       ],
       quote: 'The greatest joy of magic lies in searching for it.',
-      quoteAttr: 'Flamme',
+      quoteAttr: 'Frieren',
       quoteSource: 'Frieren: Beyond Journey\'s End',
       quoteHref: 'https://en.wikipedia.org/wiki/Frieren',
     },
@@ -860,10 +899,10 @@ const animeData = {
 }
 
 
-function AnimePage({ note, onBack, setPage }) {
+function AnimePage({ note, onBack, setPage, hueDeg = 0 }) {
   return (
     <div className="page">
-      <Nav setPage={setPage} />
+      <Nav setPage={setPage} hueDeg={hueDeg} />
       <div className="page-content">
         <div className="note-breadcrumb-left">
           <button className="note-back" onClick={onBack}>Notes</button>
@@ -883,7 +922,7 @@ function AnimePage({ note, onBack, setPage }) {
   )
 }
 
-function MusicPage({ note, onBack, setPage }) {
+function MusicPage({ note, onBack, setPage, hueDeg = 0 }) {
   const cached = localStorage.getItem('spotify_tracks')
   const [tracks, setTracks] = useState(cached ? dedupeTracks(JSON.parse(cached)) : [])
   const [loading, setLoading] = useState(!cached)
@@ -936,7 +975,7 @@ setLoading(false)
       <TopFade />
       <div className="music-scroll-fade" />
       <div style={{ maxWidth: '860px', width: '100%', margin: '0 auto', padding: '48px 48px 100px', position: 'relative', zIndex: 11 }}>
-        <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif" alt="" className="nav-logo" onClick={() => setPage('home')} style={{ cursor: 'pointer' }} />
+        <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif" alt="" className="nav-logo" onClick={() => setPage('home')} style={{ cursor: 'pointer', filter: `hue-rotate(${hueDeg}deg)`, transition: 'filter 0.3s ease' }} />
       </div>
       <div className="music-col-headers">
         <div className="music-inner">
@@ -1000,9 +1039,10 @@ setLoading(false)
   )
 }
 
-function WritingPage({ setPage, initialNote }) {
+function WritingPage({ setPage, initialNote, hueDeg = 0 }) {
   const [activeNote, setActiveNote] = useState(() => initialNote ? writings.find(w => w.type === initialNote) ?? null : null)
   const [animateList, setAnimateList] = useState(true)
+  const [easterEgg, setEasterEgg] = useState(false)
   useEffect(() => {
     if (!animateList) return
     const t = setTimeout(() => setAnimateList(false), 1200)
@@ -1012,7 +1052,7 @@ function WritingPage({ setPage, initialNote }) {
   if (activeNote?.type === 'music') {
     return (
       <div key={activeNote.title} className="page-transition">
-        <MusicPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} />
+        <MusicPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} hueDeg={hueDeg} />
       </div>
     )
   }
@@ -1020,7 +1060,7 @@ function WritingPage({ setPage, initialNote }) {
   if (activeNote?.type === 'anime') {
     return (
       <div key={activeNote.title} className="page-transition">
-        <AnimePage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} />
+        <AnimePage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} hueDeg={hueDeg} />
       </div>
     )
   }
@@ -1028,7 +1068,7 @@ function WritingPage({ setPage, initialNote }) {
   if (activeNote) {
     return (
       <div key={activeNote.title} className="page-transition">
-        <NoteDetailPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} />
+        <NoteDetailPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} hueDeg={hueDeg} />
       </div>
     )
   }
@@ -1036,9 +1076,9 @@ function WritingPage({ setPage, initialNote }) {
   return (
     <>
       <div className="page">
-        <Nav setPage={setPage} />
+        <Nav setPage={setPage} hueDeg={hueDeg} />
         <div className="page-content">
-          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
+          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes<span style={{ color: 'rgba(0,0,0,0.06)', cursor: 'pointer' }} onClick={() => setEasterEgg(e => !e)}>{easterEgg ? <span style={{ color: 'var(--light)', fontWeight: 400 }}> — do people actually read these?</span> : ' ...'}</span></h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {writings.map((w, i) => (
               <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
@@ -1053,21 +1093,34 @@ function WritingPage({ setPage, initialNote }) {
   )
 }
 
-function HomePage({ setPage }) {
+const HUE_STEP = 36
+
+function HomePage({ setPage, hueDeg = 0, setHueDeg }) {
   const [footerColor, setFooterColor] = useState(() => getShaderColor())
+  const [activeProject, setActiveProject] = useState(null)
   const logoRef = useMagnetRepel()
   useEffect(() => {
     const id = setInterval(() => setFooterColor(getShaderColor()), 500)
     return () => clearInterval(id)
   }, [])
 
+  const hue = hueDeg
+
   const categories = [
-    { label: 'Work',                   desc: 'Product and software design',    page: 'work'       },
-    { label: 'Play', desc: 'Experiments with code and pixels', page: 'prototypes' },
-    { label: 'Notes',                  desc: 'Thoughts, ideas and resources',  page: 'writing'    },
-    { label: 'About',                  desc: 'Designer and creative',          page: 'about'      },
-    { label: 'Colophon',               desc: 'How this site was made',          page: 'colophon'   },
+    { label: 'About',                  desc: 'Me',          page: 'about'      },
+    { label: 'Notes',                  desc: 'Resources',  page: 'writing'    },
+    { label: 'Play', desc: 'Experiments', page: 'prototypes' },
+    { label: 'Colophon',               desc: 'Details',              page: 'colophon'   },
   ]
+
+  if (activeProject) {
+    return (
+      <div className="page-transition" style={{ height: '100%' }}>
+        <ProjectDetailPage project={activeProject} onBack={() => setActiveProject(null)} setPage={setPage} hueDeg={hueDeg} />
+      </div>
+    )
+  }
+
   return (
     <div className="page">
       <nav className="nav">
@@ -1076,25 +1129,40 @@ function HomePage({ setPage }) {
           src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif"
           alt=""
           className="nav-logo"
-          style={{ cursor: 'default' }}
+          style={{ cursor: 'pointer', filter: `hue-rotate(${hue}deg)`, transition: 'filter 0.3s ease' }}
+          onClick={() => setHueDeg(d => d + HUE_STEP)}
         />
       </nav>
       <div className="page-content">
-        <h1 className="page-heading animate" style={{ animationDelay: '0.1s', display: 'flex', flexDirection: 'column', gap: '6px' }}><span>Baltzelle</span><span style={{ color: 'var(--light)', fontWeight: 400, lineHeight: 1.6 }}>Software Designer. I'm just trying to figure stuff out, without losing myself in the process. I like minimal. I like timeless. Currently crafting stories for early-stage companies.</span></h1>
-        <ul className="category-list">
-          {categories.map((c, i) => (
+        <h1 className="page-heading animate" style={{ animationDelay: '0.1s', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <span>Baltzelle</span>
+          <span style={{ color: 'var(--light)', fontWeight: 400, lineHeight: 1.6 }}>Software Designer crafting stories for early-stage companies</span>
+        </h1>
+        <h2 className="page-heading animate" style={{ animationDelay: '0.12s', marginTop: '24px' }}>Projects</h2>
+        <hr className="animate" style={{ animationDelay: '0.14s', border: 'none', borderTop: '1px solid rgba(0,0,0,0.06)', width: '100%', marginTop: '-24px' }} />
+        <ul className="projects no-bg-hover" style={{ width: '100%', marginTop: '-32px' }}>
+          {projects.map((p, i) => (
             <li
-              key={c.label}
-              className="category-item animate"
-              style={{ animationDelay: `${0.1 + i * 0.07}s` }}
-              onClick={() => setPage(c.page)}
+              key={p.name}
+              className={`project animate${p.dim ? ' dim' : ''}`}
+              style={{ animationDelay: `${0.15 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: p.sections ? 'pointer' : 'not-allowed' }}
+              onClick={() => { if (p.sections) setActiveProject(p) }}
               onMouseEnter={() => playClick(0.4)}
             >
-              <span className="category-label">{c.label}</span>
-              <span className="category-desc">{c.desc}</span>
+              <span className="project-name">{p.name}</span>
+              <span className="project-desc">{p.desc}</span>
+              <span className="project-year">{p.year}</span>
             </li>
           ))}
         </ul>
+        <div className="nav-cards animate" style={{ animationDelay: '0.5s' }}>
+          {categories.map((c) => (
+            <div key={c.label} className="nav-card" onClick={() => setPage(c.page)} onMouseEnter={() => playClick(0.4)}>
+              <span className="nav-card-label">{c.label}</span>
+              <span className="nav-card-desc">{c.desc}</span>
+            </div>
+          ))}
+        </div>
       </div>
       <WorkFooter color={footerColor} />
     </div>
@@ -1103,9 +1171,10 @@ function HomePage({ setPage }) {
 
 export default function App() {
   const [page, setPage] = useState('home')
+  const [hueDeg, setHueDeg] = useState(0)
 
   useEffect(() => {
-    const titles = { home: 'Baltzelle', work: 'Work', about: 'About', colophon: 'Colophon', writing: 'Notes', 'writing-music': 'Notes' }
+    const titles = { home: 'Baltzelle', about: 'About', colophon: 'Colophon', writing: 'Notes', 'writing-music': 'Notes' }
     document.title = titles[page] ?? 'Baltzelle'
   }, [page])
 
@@ -1136,13 +1205,10 @@ export default function App() {
 
   return (
     <div style={{ height: '100%' }}>
-      {page === 'home'    && <HomePage    setPage={setPage} />}
-      <div style={{ height: '100%', display: page === 'work' ? 'block' : 'none' }}>
-        <WorkPage setPage={setPage} active={page === 'work'} />
-      </div>
-      {page === 'about'    && <AboutPage    setPage={setPage} />}
-      {page === 'colophon' && <ColophonPage setPage={setPage} />}
-      {(page === 'writing' || page === 'writing-music') && <WritingPage setPage={setPage} initialNote={page === 'writing-music' ? 'music' : null} />}
+      {page === 'home'    && <HomePage    setPage={setPage} hueDeg={hueDeg} setHueDeg={setHueDeg} />}
+      {page === 'about'    && <AboutPage    setPage={setPage} hueDeg={hueDeg} />}
+      {page === 'colophon' && <ColophonPage setPage={setPage} hueDeg={hueDeg} />}
+      {(page === 'writing' || page === 'writing-music') && <WritingPage setPage={setPage} initialNote={page === 'writing-music' ? 'music' : null} hueDeg={hueDeg} />}
     </div>
   )
 }

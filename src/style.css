@@ -20,7 +20,7 @@
 
 :root {
   --dark: #333333;
-  --light: #8C8C8C;
+  --light: #8c8c8c;
   --light-2: #b3b9b9;
   --caption: #C4C4C4;
   --radius: 12px;
@@ -36,7 +36,7 @@
 ::-webkit-scrollbar-thumb { background: rgb(158 158 158 / 50%); border-radius: 16px; }
 ::-webkit-scrollbar-thumb:hover { background: rgb(158 158 158 / 100%); }
 
-::selection { background-color: #7BA7D4; color: #fff; }
+::selection { background-color: #e8e8e8; color: inherit; }
 
 html, body, #app {
   height: 100%;
@@ -337,11 +337,14 @@ html, body, #app {
 }
 
 .no-bg-hover .project:hover {
-  background: none;
+  background: rgba(0,0,0,0.03);
 }
 
 .no-bg-hover .project {
-  padding: 0;
+  padding: 12px 16px;
+  margin: 0 -16px;
+  height: auto;
+  border-radius: 12px;
 }
 
 .writing-item {
@@ -349,7 +352,9 @@ html, body, #app {
   align-items: center;
   justify-content: space-between;
   height: auto;
-  padding: 14px 0 !important;
+  padding: 14px 16px !important;
+  margin: 0 -16px;
+  border-radius: 12px;
 }
 
 .writing-item.padded {
@@ -421,7 +426,7 @@ html, body, #app {
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
-  padding: 100px 0 80px;
+  padding: 100px 0 160px;
 }
 
 .page-heading {
@@ -866,8 +871,15 @@ img.note-image-placeholder {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr;
   align-items: center;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease, background 0.15s ease;
   cursor: pointer;
+  padding: 0 8px;
+  margin: 0 -8px;
+  border-radius: 16px;
+}
+
+.music-row:hover {
+  background: rgba(0,0,0,0.03);
 }
 
 .music-rows:has(.music-row:hover) .music-row:not(:hover) {
@@ -1169,7 +1181,7 @@ img.note-image-placeholder {
 
 .category-label {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--dark);
 }
 
@@ -1178,6 +1190,60 @@ img.note-image-placeholder {
   font-weight: 400;
   color: var(--light);
 }
+
+.category-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.category-link {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--light);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.category-link:hover {
+  color: var(--dark);
+}
+
+.nav-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  width: calc(100% + 32px);
+  margin: 0 -16px;
+}
+
+.nav-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  cursor: pointer;
+  border-radius: 12px;
+  transition: background 0.15s ease;
+}
+
+.nav-card:hover {
+  background: rgba(0,0,0,0.03);
+}
+
+.nav-card-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark);
+}
+
+.nav-card-desc {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--light);
+}
+
 
 .music-song-link {
   color: inherit;
