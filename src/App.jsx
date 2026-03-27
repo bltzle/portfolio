@@ -1146,7 +1146,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg }) {
             </div>
           ))}
         </div>
-        <h2 className="page-heading animate" style={{ animationDelay: '0.2s', marginTop: '24px', fontWeight: 400 }}>Projects</h2>
+        <h2 className="page-heading animate" style={{ animationDelay: '0.2s', marginTop: '24px' }}>Projects</h2>
         <hr className="animate" style={{ animationDelay: '0.22s', border: 'none', borderTop: '1px solid rgba(0,0,0,0.06)', width: '100%', marginTop: '-24px' }} />
         <ul className="projects no-bg-hover" style={{ width: '100%', marginTop: '-32px' }}>
           {projects.map((p, i) => (
