@@ -1225,16 +1225,20 @@ img.note-image-placeholder {
   padding: 16px;
   cursor: pointer;
   border-radius: 12px;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, opacity 0.2s ease;
 }
 
 .nav-card:hover {
   background: rgba(0,0,0,0.03);
 }
 
+.nav-cards:has(.nav-card:hover) .nav-card:not(:hover) {
+  opacity: 0.2;
+}
+
 .nav-card-label {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--dark);
 }
 

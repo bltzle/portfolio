@@ -242,8 +242,8 @@ const projects = [
   },
   { name: 'Goodword',              desc: 'Maintain relationships in your professional network',         year: '2024' },
   { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024' },
-  { name: 'Sensible',              desc: 'A high yield account for your crypto',                       year: '2024' },
-  { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025' },
+  { name: 'Sensible',              desc: 'A high yield account for your crypto',                       year: '2024', href: 'https://www.coinbase.com/en-gb/blog/Coinbase-acquires-team-to-accelerate-onchain-consumer-roadmap' },
+  { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025', href: 'https://www.dex.camera/' },
   { name: 'Underline',             desc: 'An investment platform for alternative assets',              year: '2023' },
 ]
 
@@ -1107,10 +1107,10 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg }) {
   const hue = hueDeg
 
   const categories = [
-    { label: 'About',                  desc: 'Me',          page: 'about'      },
-    { label: 'Notes',                  desc: 'Resources',  page: 'writing'    },
-    { label: 'Play', desc: 'Experiments', page: 'prototypes' },
-    { label: 'Colophon',               desc: 'Details',              page: 'colophon'   },
+    { label: 'About',                  desc: 'Little ol\' me',          page: 'about'      },
+    { label: 'Notes',                  desc: 'What\'s on my mind',  page: 'writing'    },
+    { label: 'Play', desc: 'Visual experiments', page: 'prototypes' },
+    { label: 'Colophon',               desc: 'Site details',              page: 'colophon'   },
   ]
 
   if (activeProject) {
@@ -1138,15 +1138,23 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg }) {
           <span>Baltzelle</span>
           <span style={{ color: 'var(--light)', fontWeight: 400, lineHeight: 1.6 }}>Software Designer crafting stories for early-stage companies</span>
         </h1>
-        <h2 className="page-heading animate" style={{ animationDelay: '0.12s', marginTop: '24px' }}>Projects</h2>
-        <hr className="animate" style={{ animationDelay: '0.14s', border: 'none', borderTop: '1px solid rgba(0,0,0,0.06)', width: '100%', marginTop: '-24px' }} />
+        <div className="nav-cards animate" style={{ animationDelay: '0.12s', marginTop: '24px' }}>
+          {categories.map((c) => (
+            <div key={c.label} className="nav-card" onClick={() => setPage(c.page)} onMouseEnter={() => playClick(0.4)}>
+              <span className="nav-card-label">{c.label}</span>
+              <span className="nav-card-desc">{c.desc}</span>
+            </div>
+          ))}
+        </div>
+        <h2 className="page-heading animate" style={{ animationDelay: '0.2s', marginTop: '24px', fontWeight: 400 }}>Projects</h2>
+        <hr className="animate" style={{ animationDelay: '0.22s', border: 'none', borderTop: '1px solid rgba(0,0,0,0.06)', width: '100%', marginTop: '-24px' }} />
         <ul className="projects no-bg-hover" style={{ width: '100%', marginTop: '-32px' }}>
           {projects.map((p, i) => (
             <li
               key={p.name}
               className={`project animate${p.dim ? ' dim' : ''}`}
-              style={{ animationDelay: `${0.15 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: p.sections ? 'pointer' : 'not-allowed' }}
-              onClick={() => { if (p.sections) setActiveProject(p) }}
+              style={{ animationDelay: `${0.25 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed' }}
+              onClick={() => { if (p.sections) setActiveProject(p); else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
               onMouseEnter={() => playClick(0.4)}
             >
               <span className="project-name">{p.name}</span>
@@ -1155,14 +1163,6 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg }) {
             </li>
           ))}
         </ul>
-        <div className="nav-cards animate" style={{ animationDelay: '0.5s' }}>
-          {categories.map((c) => (
-            <div key={c.label} className="nav-card" onClick={() => setPage(c.page)} onMouseEnter={() => playClick(0.4)}>
-              <span className="nav-card-label">{c.label}</span>
-              <span className="nav-card-desc">{c.desc}</span>
-            </div>
-          ))}
-        </div>
       </div>
       <WorkFooter color={footerColor} />
     </div>
