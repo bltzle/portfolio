@@ -15,7 +15,6 @@ function useMagnetRepel(radius = 80, strength = 0.4) {
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    el.style.willChange = 'transform'
     let targetX = 0, targetY = 0, currentX = 0, currentY = 0
     let raf = null
     const lerp = 0.12
@@ -32,10 +31,11 @@ function useMagnetRepel(radius = 80, strength = 0.4) {
         raf = requestAnimationFrame(tick)
       } else {
         raf = null
+        el.style.willChange = ''
       }
     }
 
-    const startLoop = () => { if (!raf) raf = requestAnimationFrame(tick) }
+    const startLoop = () => { if (!raf) { el.style.willChange = 'transform'; raf = requestAnimationFrame(tick) } }
 
     const onMove = (e) => {
       const rect = el.getBoundingClientRect()
@@ -268,14 +268,18 @@ function useLocalTime() {
   return time
 }
 
-function WorkFooter({ color }) {
-  const location = useVisitorLocation()
+function WorkFooter({ color, setPage, theme = 'Light', onCycleTheme }) {
   const time = useLocalTime()
   return (
-    <div className="work-links" style={{ color, transition: 'color 0.5s ease' }}>
-      <span className="visitor-location">Last visitor from <span className="visitor-location-value">{location ?? '—'}</span></span>
-      <span className="visitor-location visitor-time">{time}</span>
-    </div>
+    <footer className="work-links animate" style={{ color, transition: 'color 0.5s ease', animationDelay: '0.5s' }}>
+      <span className="footer-item">San Francisco, California</span>
+      <span className="footer-sep">|</span>
+      <span className="footer-item visitor-time">{time}</span>
+      <span className="footer-sep">|</span>
+      <a onClick={(e) => { e.preventDefault(); setPage('colophon') }} className="footer-item footer-link" href="#colophon">Colophon</a>
+      <span className="footer-sep">|</span>
+      <button className="footer-item footer-link" type="button" onClick={onCycleTheme}>{theme}</button>
+    </footer>
   )
 }
 
@@ -306,7 +310,7 @@ function GrainOverlay() {
     raf = requestAnimationFrame(draw)
     return () => cancelAnimationFrame(raf)
   }, [])
-  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.05, pointerEvents: 'none', zIndex: 2, mixBlendMode: 'overlay' }} />
+  return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.05, pointerEvents: 'none', zIndex: 'var(--z-content)', mixBlendMode: 'overlay' }} />
 }
 
 function BackNav({ setPage }) {
@@ -318,11 +322,11 @@ function BackNav({ setPage }) {
   )
 }
 
-function Nav({ setPage, hueDeg = 0 }) {
+function Nav({ setPage, hueDeg = 0, theme = 'Light' }) {
   return (
     <nav className="nav">
       <img
-        src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif"
+        src={theme === 'Dark' ? SPRITE_DARK : SPRITE_LIGHT}
         alt=""
         className="nav-logo"
         onClick={() => setPage('home')}
@@ -332,7 +336,7 @@ function Nav({ setPage, hueDeg = 0 }) {
   )
 }
 
-function ProjectDetailPage({ project, onBack, setPage, hueDeg = 0 }) {
+function ProjectDetailPage({ project, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   const hasSections = project.sections?.length > 0
   const [activeId, setActiveId] = useState('__intro')
   const [crumbInView, setCrumbInView] = useState(true)
@@ -383,7 +387,7 @@ function ProjectDetailPage({ project, onBack, setPage, hueDeg = 0 }) {
       <TopFade />
       {hasSections && (
         <aside className="note-sidebar">
-          <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif" alt="" className="nav-logo" onClick={onBack} style={{ position: 'absolute', top: '48px', left: '140px', cursor: 'pointer', filter: `hue-rotate(${hueDeg}deg)`, transition: 'filter 0.3s ease' }} />
+          <img src={theme === 'Dark' ? SPRITE_DARK : SPRITE_LIGHT} alt="" className="nav-logo" onClick={onBack} style={{ position: 'absolute', top: '48px', left: '140px', cursor: 'pointer', filter: `hue-rotate(${hueDeg}deg)`, transition: 'filter 0.3s ease' }} />
           <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
             <button className="note-back" onClick={onBack}>Work</button>
           </div>
@@ -545,12 +549,12 @@ function WorkPage({ setPage, active, hueDeg = 0 }) {
   return (
     <>
       {activeProject && (
-        <div key={activeProject.name} className="page-transition" style={{ position: 'absolute', inset: 0, zIndex: 10, background: 'var(--bg, #FAF8F4)' }}>
-          <ProjectDetailPage project={activeProject} onBack={() => { setActiveProject(null); setContentKey(k => k + 1) }} setPage={setPage} hueDeg={hueDeg} />
+        <div key={activeProject.name} className="page-transition" style={{ position: 'absolute', inset: 0, zIndex: 'var(--z-overlay)', background: 'var(--bg, #FAF8F4)' }}>
+          <ProjectDetailPage project={activeProject} onBack={() => { setActiveProject(null); setContentKey(k => k + 1) }} setPage={setPage} hueDeg={hueDeg} theme={theme} />
         </div>
       )}
       <div className="page" style={{ visibility: activeProject ? 'hidden' : 'visible' }}>
-        <Nav setPage={setPage} hueDeg={hueDeg} />
+        <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
         <div key={contentKey} className="page-content">
           <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Work</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
@@ -581,10 +585,10 @@ function WorkPage({ setPage, active, hueDeg = 0 }) {
 
 
 
-function ColophonPage({ setPage, hueDeg = 0 }) {
+function ColophonPage({ setPage, hueDeg = 0, theme = 'Light' }) {
   return (
     <div className="page">
-      <Nav setPage={setPage} hueDeg={hueDeg} />
+      <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
       <div className="page-content">
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Colophon</h1>
         <div className="about-text">
@@ -594,7 +598,7 @@ function ColophonPage({ setPage, hueDeg = 0 }) {
           <p className="animate" style={{ animationDelay: '0.28s' }}>All of the writing on this site was done by myself so the writing quality itself might be cooked. It's not meant to be perfect, it's meant to be my true authentic self.</p>
           <h2 className="page-heading animate" style={{ animationDelay: '0.3s', marginTop: '48px' }}>Typography</h2>
           <p className="animate" style={{ animationDelay: '0.35s' }}>I had never even considered purchasing a typeface before because there are plenty of great open source alternatives. The issue was that every time I tried one out and set the copy it just didn't sit right with me so I set out to find one I liked.</p>
-          <p className="animate" style={{ animationDelay: '0.4s' }}><a href="https://displaay.net/typeface/matter/" target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'rgba(0,0,0,0.1)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'rgba(0,0,0,0.1)' }}>Matter by Displaay Type Foundry</a> is the typeface I chose to license for this site. I chose to purchase the regular and medium weights which were sufficient for me. It still remains restrained, but with a bit of personality to the characters.</p>
+          <p className="animate" style={{ animationDelay: '0.4s' }}><a href="https://displaay.net/typeface/matter/" target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>Matter by Displaay Type Foundry</a> is the typeface I chose to license for this site. I chose to purchase the regular and medium weights which were sufficient for me. It still remains restrained, but with a bit of personality to the characters.</p>
           <p className="animate" style={{ animationDelay: '0.45s' }}>I studied typography in design school and took a class on letter forms and type. This was probably the single most enjoyable and valuable class for me. So when it came time to build this site I wanted something a bit more unique. I'm the creative director here so I want every aspect to be true to me and Matter felt like the one.</p>
           <h2 className="page-heading animate" style={{ animationDelay: '0.5s', marginTop: '48px' }}>Construction</h2>
           <p className="animate" style={{ animationDelay: '0.55s' }}>My previous site was built using Framer and I think it's still a great product, but not the best choice for me moving forward. With the advent of powerful tools like Cursor and Claude, I can go beyond the boundaries of what Framer allows, implement my ideas much quicker, and move away from another subscription. This transition has given me immense freedom.</p>
@@ -606,10 +610,10 @@ function ColophonPage({ setPage, hueDeg = 0 }) {
   )
 }
 
-function AboutPage({ setPage, hueDeg = 0 }) {
+function AboutPage({ setPage, hueDeg = 0, theme = 'Light' }) {
   return (
     <div className="page">
-      <Nav setPage={setPage} hueDeg={hueDeg} />
+      <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
       <div className="page-content">
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>About</h1>
         <div className="about-text">
@@ -644,21 +648,10 @@ const writings = [
 ]
 
 function TopFade() {
-  return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 8,
-      height: '120px',
-      pointerEvents: 'none',
-      zIndex: 5,
-      background: 'linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 40%, rgba(255,255,255,0) 100%)',
-    }} />
-  )
+  return <div className="top-fade" />
 }
 
-function NoteDetailPage({ note, onBack, setPage, hueDeg = 0 }) {
+function NoteDetailPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   const hasSections = note.sections?.length > 0
   const [activeId, setActiveId] = useState('__intro')
   const [crumbInView, setCrumbInView] = useState(true)
@@ -899,10 +892,10 @@ const animeData = {
 }
 
 
-function AnimePage({ note, onBack, setPage, hueDeg = 0 }) {
+function AnimePage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   return (
     <div className="page">
-      <Nav setPage={setPage} hueDeg={hueDeg} />
+      <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
       <div className="page-content">
         <div className="note-breadcrumb-left">
           <button className="note-back" onClick={onBack}>Notes</button>
@@ -913,7 +906,7 @@ function AnimePage({ note, onBack, setPage, hueDeg = 0 }) {
           {animeData.watching.filter(item => item.quote).map((item, i) => (
             <div key={i}>
               <p style={{ fontFamily: "'Gambetta', serif", fontSize: '16px', fontStyle: 'italic', color: 'var(--dark)', lineHeight: 1.75, textAlign: 'justify', textWrap: 'pretty' }}>{item.quote}</p>
-              <p style={{ fontSize: '13px', color: 'var(--light)', marginTop: '10px' }}>— {item.quoteAttr ?? item.title}{item.quoteSource && <>, <a href={item.quoteHref} target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'rgba(0,0,0,0.1)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'rgba(0,0,0,0.1)' }}>{item.quoteSource}</a></>}</p>
+              <p style={{ fontSize: '13px', color: 'var(--light)', marginTop: '10px' }}>— {item.quoteAttr ?? item.title}{item.quoteSource && <>, <a href={item.quoteHref} target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>{item.quoteSource}</a></>}</p>
             </div>
           ))}
         </div>
@@ -922,7 +915,7 @@ function AnimePage({ note, onBack, setPage, hueDeg = 0 }) {
   )
 }
 
-function MusicPage({ note, onBack, setPage, hueDeg = 0 }) {
+function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   const cached = localStorage.getItem('spotify_tracks')
   const [tracks, setTracks] = useState(cached ? dedupeTracks(JSON.parse(cached)) : [])
   const [loading, setLoading] = useState(!cached)
@@ -974,8 +967,8 @@ setLoading(false)
     <div className="music-page">
       <TopFade />
       <div className="music-scroll-fade" />
-      <div style={{ maxWidth: '860px', width: '100%', margin: '0 auto', padding: '48px 48px 100px', position: 'relative', zIndex: 11 }}>
-        <img src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif" alt="" className="nav-logo" onClick={() => setPage('home')} style={{ cursor: 'pointer', filter: `hue-rotate(${hueDeg}deg)`, transition: 'filter 0.3s ease' }} />
+      <div style={{ maxWidth: '860px', width: '100%', margin: '0 auto', padding: '48px 48px 100px', position: 'relative', zIndex: 'var(--z-nav)' }}>
+        <img src={theme === 'Dark' ? SPRITE_DARK : SPRITE_LIGHT} alt="" className="nav-logo" onClick={() => setPage('home')} style={{ cursor: 'pointer', filter: `hue-rotate(${hueDeg}deg)`, transition: 'filter 0.3s ease' }} />
       </div>
       <div className="music-col-headers">
         <div className="music-inner">
@@ -1011,7 +1004,7 @@ setLoading(false)
               {displayedTracks.map(({ track, played_at }, i) => (
                 <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
-                    {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" style={{ width: 34, height: 34, borderRadius: 8, flexShrink: 0, border: '1px solid rgba(0,0,0,0.06)' }} />}
+                    {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" style={{ width: 34, height: 34, borderRadius: 8, flexShrink: 0, border: '1px solid var(--border-light)' }} />}
                     <span className="music-song-name">{cleanTitle(track.name)}</span>
                   </span>
                   <span className="music-artist">{track.artists.map(a => a.name).join(', ')}</span>
@@ -1039,7 +1032,7 @@ setLoading(false)
   )
 }
 
-function WritingPage({ setPage, initialNote, hueDeg = 0 }) {
+function WritingPage({ setPage, initialNote, hueDeg = 0, theme = 'Light' }) {
   const [activeNote, setActiveNote] = useState(() => initialNote ? writings.find(w => w.type === initialNote) ?? null : null)
   const [animateList, setAnimateList] = useState(true)
   const [easterEgg, setEasterEgg] = useState(false)
@@ -1052,7 +1045,7 @@ function WritingPage({ setPage, initialNote, hueDeg = 0 }) {
   if (activeNote?.type === 'music') {
     return (
       <div key={activeNote.title} className="page-transition">
-        <MusicPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} hueDeg={hueDeg} />
+        <MusicPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} hueDeg={hueDeg} theme={theme} />
       </div>
     )
   }
@@ -1060,7 +1053,7 @@ function WritingPage({ setPage, initialNote, hueDeg = 0 }) {
   if (activeNote?.type === 'anime') {
     return (
       <div key={activeNote.title} className="page-transition">
-        <AnimePage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} hueDeg={hueDeg} />
+        <AnimePage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} hueDeg={hueDeg} theme={theme} />
       </div>
     )
   }
@@ -1068,7 +1061,7 @@ function WritingPage({ setPage, initialNote, hueDeg = 0 }) {
   if (activeNote) {
     return (
       <div key={activeNote.title} className="page-transition">
-        <NoteDetailPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} hueDeg={hueDeg} />
+        <NoteDetailPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} hueDeg={hueDeg} theme={theme} />
       </div>
     )
   }
@@ -1076,9 +1069,9 @@ function WritingPage({ setPage, initialNote, hueDeg = 0 }) {
   return (
     <>
       <div className="page">
-        <Nav setPage={setPage} hueDeg={hueDeg} />
+        <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
         <div className="page-content">
-          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes<span style={{ color: 'rgba(0,0,0,0.06)', cursor: 'pointer' }} onClick={() => setEasterEgg(e => !e)}>{easterEgg ? <span style={{ color: 'var(--light)', fontWeight: 400 }}> — do people actually read these?</span> : ' ...'}</span></h1>
+          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes<span style={{ color: 'var(--border-light)', cursor: 'pointer' }} onClick={() => setEasterEgg(e => !e)}>{easterEgg ? <span style={{ color: 'var(--light)', fontWeight: 400 }}> — do people actually read these?</span> : ' ...'}</span></h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {writings.map((w, i) => (
               <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
@@ -1094,8 +1087,10 @@ function WritingPage({ setPage, initialNote, hueDeg = 0 }) {
 }
 
 const HUE_STEP = 36
+const SPRITE_LIGHT = 'https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif'
+const SPRITE_DARK = 'https://img.pokemondb.net/sprites/black-white/anim/normal/darkrai.gif'
 
-function HomePage({ setPage, hueDeg = 0, setHueDeg }) {
+function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
   const [footerColor, setFooterColor] = useState(() => getShaderColor())
   const [activeProject, setActiveProject] = useState(null)
   const logoRef = useMagnetRepel()
@@ -1110,13 +1105,12 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg }) {
     { label: 'About',                  desc: 'Little ol\' me',          page: 'about'      },
     { label: 'Notes',                  desc: 'What\'s on my mind',  page: 'writing'    },
     { label: 'Play', desc: 'Visual experiments', page: 'prototypes' },
-    { label: 'Colophon',               desc: 'Site details',              page: 'colophon'   },
   ]
 
   if (activeProject) {
     return (
       <div className="page-transition" style={{ height: '100%' }}>
-        <ProjectDetailPage project={activeProject} onBack={() => setActiveProject(null)} setPage={setPage} hueDeg={hueDeg} />
+        <ProjectDetailPage project={activeProject} onBack={() => setActiveProject(null)} setPage={setPage} hueDeg={hueDeg} theme={theme} />
       </div>
     )
   }
@@ -1126,7 +1120,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg }) {
       <nav className="nav">
         <img
           ref={logoRef}
-          src="https://img.pokemondb.net/sprites/black-white/anim/normal/lugia.gif"
+          src={theme === 'Dark' ? SPRITE_DARK : SPRITE_LIGHT}
           alt=""
           className="nav-logo"
           style={{ cursor: 'pointer', filter: `hue-rotate(${hue}deg)`, transition: 'filter 0.3s ease' }}
@@ -1147,7 +1141,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg }) {
           ))}
         </div>
         <h2 className="page-heading animate" style={{ animationDelay: '0.2s', marginTop: '24px' }}>Projects</h2>
-        <hr className="animate" style={{ animationDelay: '0.22s', border: 'none', borderTop: '1px solid rgba(0,0,0,0.06)', width: '100%', marginTop: '-24px' }} />
+        <hr className="animate" style={{ animationDelay: '0.22s', border: 'none', borderTop: '1px solid var(--border-light)', width: '100%', marginTop: '-24px' }} />
         <ul className="projects no-bg-hover" style={{ width: '100%', marginTop: '-32px' }}>
           {projects.map((p, i) => (
             <li
@@ -1164,14 +1158,22 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg }) {
           ))}
         </ul>
       </div>
-      <WorkFooter color={footerColor} />
+      <WorkFooter color={footerColor} setPage={setPage} theme={theme} onCycleTheme={onCycleTheme} />
     </div>
   )
 }
 
+const THEMES = ['Light', 'Dark']
+
 export default function App() {
   const [page, setPage] = useState('home')
   const [hueDeg, setHueDeg] = useState(0)
+  const [themeIndex, setThemeIndex] = useState(0)
+  const theme = THEMES[themeIndex]
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme.toLowerCase())
+  }, [theme])
 
   useEffect(() => {
     const titles = { home: 'Baltzelle', about: 'About', colophon: 'Colophon', writing: 'Notes', 'writing-music': 'Notes' }
@@ -1205,10 +1207,10 @@ export default function App() {
 
   return (
     <div style={{ height: '100%' }}>
-      {page === 'home'    && <HomePage    setPage={setPage} hueDeg={hueDeg} setHueDeg={setHueDeg} />}
-      {page === 'about'    && <AboutPage    setPage={setPage} hueDeg={hueDeg} />}
-      {page === 'colophon' && <ColophonPage setPage={setPage} hueDeg={hueDeg} />}
-      {(page === 'writing' || page === 'writing-music') && <WritingPage setPage={setPage} initialNote={page === 'writing-music' ? 'music' : null} hueDeg={hueDeg} />}
+      {page === 'home'    && <HomePage    setPage={setPage} hueDeg={hueDeg} setHueDeg={setHueDeg} theme={theme} onCycleTheme={() => setThemeIndex(i => (i + 1) % THEMES.length)} />}
+      {page === 'about'    && <AboutPage    setPage={setPage} hueDeg={hueDeg} theme={theme} />}
+      {page === 'colophon' && <ColophonPage setPage={setPage} hueDeg={hueDeg} theme={theme} />}
+      {(page === 'writing' || page === 'writing-music') && <WritingPage setPage={setPage} initialNote={page === 'writing-music' ? 'music' : null} hueDeg={hueDeg} theme={theme} />}
     </div>
   )
 }
