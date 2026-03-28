@@ -182,6 +182,7 @@ function playClick(intensity = 0.4) {
 }
 
 import { Post, ArrowDownLeft, NavArrowRight, Xmark, Plus, FilterList, Check } from 'iconoir-react'
+import { motion, AnimatePresence } from 'motion/react'
 import './style.css'
 
 const projects = [
@@ -343,6 +344,11 @@ function ProjectDetailPage({ project, onBack, setPage, hueDeg = 0, theme = 'Ligh
   const containerRef = useRef(null)
   const breadcrumbRef = useRef(null)
   const scrollingRef = useRef(false)
+
+  useEffect(() => {
+    const el = containerRef.current?.closest('.page-transition')
+    if (el) el.scrollTop = 0
+  }, [project])
 
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') setSheetOpen(false) }
@@ -631,6 +637,18 @@ function AboutPage({ setPage, hueDeg = 0, theme = 'Light' }) {
   )
 }
 
+const mangaCovers = [
+  { title: 'Hell\'s Paradise: Jigokuraku', volume: 'Vol. 06', src: '/images/manga/hells-paradise-06.jpg', body: 'Set in the Edo period of Japan, the series follows the journey of ninja Gabimaru and executioner Yamada Asaemon Sagiri as they search for the elixir of immortality. Multiple pairs of people with unaligned interests are thrown into an enclosed space, forced to work together.' },
+  { title: 'Chainsaw Man', volume: 'Vol. 12', src: '/images/manga/chainsaw-man-12.jpg', body: 'Chainsaw Man follows the story of Denji, an impoverished teenager who makes a contract that fuses his body with that of Pochita, the dog-like Chainsaw Devil, granting him the ability to transform parts of his body into chainsaws. Denji eventually joins the Public Safety Devil Hunters, a government agency focused on combating Devils whenever they become a threat to Japan.' },
+  { title: 'The Apothecary Diaries', volume: 'Vol. 10', src: '/images/manga/apothecary-diaries-10.jpg', body: 'Set in a fictional country inspired by China in the Tang Dynasty, the series follows Maomao, a girl trained in medicine by her apothecary father. After being sold as a servant to the emperor\'s palace, she secretly uses her skills to solve mysteries and help others.' },
+  { title: 'Gachiakuta', volume: 'Vol. 08', src: '/images/manga/gachiakuta-08.jpg', body: 'A young teenage boy named Rudo lives in the slums of a wealthy society among the "tribesfolk", a population descended from criminals and exiled by society. Falsely charged with the murder of his foster father, Rudo is dumped into "the Pit," an endless landscape of trash below the floating city.' },
+  { title: 'Jujutsu Kaisen', volume: 'Vol. 00', src: '/images/manga/jujutsu-kaisen-00.jpg', body: 'The series follows Yuta Okkotsu, a young student who becomes a sorcerer and seeks to control the Cursed Spirit of his childhood friend Rika Orimoto.' },
+  { title: 'After the Rain', volume: 'Vol. 05', src: '/images/manga/after-the-rain-05.jpg', body: 'After the Rain tells the story of Akira Tachibana, a high school student working part-time at a family restaurant, who starts falling in love with the manager, Masami Kondo, a forty-five-year-old divorcee with a young son.' },
+  { title: 'Fly Me to the Moon', volume: 'Vol. 13', src: '/images/manga/fly-me-to-the-moon-13.jpg', body: 'The story centers around the teenage genius Nasa Yuzaki and his developing relationship with his new wife, Tsukasa, who saves him from a traffic accident during the beginning of the story.' },
+  { title: 'Frieren: Beyond Journey\'s End', volume: 'Vol. 07', src: '/images/manga/frieren-07.jpg', body: 'The series takes place in a fantasy world and follows Frieren, an elven mage on a journey to the resting place of souls to reunite with her former comrade Himmel, whose Hero Party slew the Demon King.' },
+  { title: 'My Hero Academia', volume: 'Vol. 29', src: '/images/manga/my-hero-academia-29.jpg', body: 'Set in a world where superpowers called "Quirks" have become commonplace, the story follows Izuku Midoriya, a boy who was born without a Quirk but still dreams of becoming a superhero. He is scouted by the world\'s greatest hero, All Might, who bestows his Quirk to Midoriya after recognizing his potential, and helps to enroll him in a prestigious high school for superheroes in training.' },
+]
+
 const writings = [
   {
     title: 'Music I\'m listening to',
@@ -641,6 +659,11 @@ const writings = [
     title: 'Quotes from animations',
     date: '2026-02-18',
     type: 'anime',
+  },
+  {
+    title: 'My favorite manga cover art',
+    date: '2026-03-28',
+    type: 'manga',
   },
 ]
 
@@ -928,6 +951,98 @@ function AnimePage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   )
 }
 
+function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
+  const [openIdx, setOpenIdx] = useState(null)
+  const activeCover = openIdx !== null ? mangaCovers[openIdx] : null
+  const isOpen = openIdx !== null
+
+  useEffect(() => {
+    if (!isOpen) return
+    const onKey = (e) => { if (e.key === 'Escape') setOpenIdx(null) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [isOpen])
+
+  return (
+    <div className="page">
+      <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
+      <div className="page-content">
+        <div className="note-breadcrumb-left">
+          <button className="note-back" onClick={onBack}>Notes</button>
+          <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
+          <span className="note-breadcrumb-current">{note?.title}</span>
+        </div>
+        <div className="manga-grid">
+          {mangaCovers.map((cover, i) => (
+            <div key={i} className="manga-item">
+              <button className="manga-trigger" onClick={() => setOpenIdx(i)}>
+                <img src={cover.src} alt={`${cover.title} ${cover.volume}`} className="manga-cover" draggable="false" />
+              </button>
+              <div className="manga-info">
+                <span className="manga-title">{cover.title}</span>
+                <span className="manga-volume">{cover.volume}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div
+              className="manga-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: [0.19, 1, 0.22, 1] }}
+              onClick={() => setOpenIdx(null)}
+            />
+            <motion.aside
+              className="manga-panel"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+            >
+              <div className="manga-panel-header">
+                <button className="manga-panel-close" aria-label="Close panel" onClick={() => setOpenIdx(null)}>
+                  <Xmark width={18} height={18} strokeWidth={1.75} />
+                </button>
+              </div>
+              {activeCover && (
+                <>
+                  <img src={activeCover.src} alt={`${activeCover.title} ${activeCover.volume}`} className="manga-panel-cover" draggable="false" />
+                  <div className="manga-panel-info">
+                    <span className="manga-panel-title">{activeCover.title}</span>
+                    <span className="manga-panel-volume">{activeCover.volume}</span>
+                  </div>
+                  {activeCover.body && (
+                    <p className="manga-panel-body">{activeCover.body}</p>
+                  )}
+                  <div className="manga-panel-nav">
+                    {openIdx > 0 ? (
+                      <button className="manga-panel-nav-btn" onClick={() => setOpenIdx(openIdx - 1)}>
+                        <span className="manga-panel-label">Previous</span>
+                        <span className="manga-panel-nav-title">{mangaCovers[openIdx - 1].title}</span>
+                      </button>
+                    ) : <span />}
+                    {openIdx < mangaCovers.length - 1 ? (
+                      <button className="manga-panel-nav-btn manga-panel-nav-next" onClick={() => setOpenIdx(openIdx + 1)}>
+                        <span className="manga-panel-label">Next</span>
+                        <span className="manga-panel-nav-title">{mangaCovers[openIdx + 1].title}</span>
+                      </button>
+                    ) : <span />}
+                  </div>
+                </>
+              )}
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
 function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   const cached = localStorage.getItem('spotify_tracks')
   const [tracks, setTracks] = useState(cached ? dedupeTracks(JSON.parse(cached)) : [])
@@ -1067,6 +1182,14 @@ function WritingPage({ setPage, initialNote, hueDeg = 0, theme = 'Light' }) {
     return (
       <div key={activeNote.title} className="page-transition">
         <AnimePage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} hueDeg={hueDeg} theme={theme} />
+      </div>
+    )
+  }
+
+  if (activeNote?.type === 'manga') {
+    return (
+      <div key={activeNote.title} className="page-transition">
+        <MangaPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} hueDeg={hueDeg} theme={theme} />
       </div>
     )
   }
