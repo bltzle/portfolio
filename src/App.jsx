@@ -240,8 +240,8 @@ const projects = [
     modalContent: `Special thanks to`,
     collaborators: ['Gabriel Valdivia'],
   },
-  { name: 'Goodword',              desc: 'Maintain relationships in your professional network',         year: '2024' },
-  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024' },
+  { name: 'Goodword',              desc: 'Maintain relationships in your professional network',         year: '2024', href: 'https://www.goodword.com/' },
+  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024', href: 'https://www.workmate.com/' },
   { name: 'Sensible',              desc: 'A high yield account for your crypto',                       year: '2024', href: 'https://www.coinbase.com/en-gb/blog/Coinbase-acquires-team-to-accelerate-onchain-consumer-roadmap' },
   { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025', href: 'https://www.dex.camera/' },
   { name: 'Underline',             desc: 'An investment platform for alternative assets',              year: '2023' },
@@ -268,16 +268,15 @@ function useLocalTime() {
   return time
 }
 
-function WorkFooter({ color, setPage, theme = 'Light', onCycleTheme }) {
+function WorkFooter({ color, theme = 'Light', onCycleTheme }) {
   const time = useLocalTime()
   return (
     <footer className="work-links animate" style={{ color, transition: 'color 0.5s ease', animationDelay: '0.5s' }}>
-      <span className="footer-item">San Francisco, California</span>
-      <span className="footer-sep">|</span>
-      <span className="footer-item visitor-time">{time}</span>
-      <span className="footer-sep">|</span>
-      <a onClick={(e) => { e.preventDefault(); setPage('colophon') }} className="footer-item footer-link" href="#colophon">Colophon</a>
-      <span className="footer-sep">|</span>
+      <div className="footer-left">
+        <span className="footer-item">San Francisco, California</span>
+        <span className="footer-sep">|</span>
+        <span className="footer-item visitor-time">{time}</span>
+      </div>
       <button className="footer-item footer-link" type="button" onClick={onCycleTheme}>{theme}</button>
     </footer>
   )
@@ -597,9 +596,7 @@ function ColophonPage({ setPage, hueDeg = 0, theme = 'Light' }) {
           <p className="animate" style={{ animationDelay: '0.25s' }}>I'm deeply guided by things that have high craft, precision, and restraint. That's just my personal style. I tend to gravitate towards design that emulates these principles.</p>
           <p className="animate" style={{ animationDelay: '0.28s' }}>All of the writing on this site was done by myself so the writing quality itself might be cooked. It's not meant to be perfect, it's meant to be my true authentic self.</p>
           <h2 className="page-heading animate" style={{ animationDelay: '0.3s', marginTop: '48px' }}>Typography</h2>
-          <p className="animate" style={{ animationDelay: '0.35s' }}>I had never even considered purchasing a typeface before because there are plenty of great open source alternatives. The issue was that every time I tried one out and set the copy it just didn't sit right with me so I set out to find one I liked.</p>
-          <p className="animate" style={{ animationDelay: '0.4s' }}><a href="https://displaay.net/typeface/matter/" target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>Matter by Displaay Type Foundry</a> is the typeface I chose to license for this site. I chose to purchase the regular and medium weights which were sufficient for me. It still remains restrained, but with a bit of personality to the characters.</p>
-          <p className="animate" style={{ animationDelay: '0.45s' }}>I studied typography in design school and took a class on letter forms and type. This was probably the single most enjoyable and valuable class for me. So when it came time to build this site I wanted something a bit more unique. I'm the creative director here so I want every aspect to be true to me and Matter felt like the one.</p>
+          <p className="animate" style={{ animationDelay: '0.35s' }}><a href="https://displaay.net/typeface/matter/" target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>Matter by Displaay Type Foundry</a> — restrained but with enough personality in the characters to feel like mine. I studied letterforms in design school, so when it came time to build this I wanted something unique to me rather than another open-source default.</p>
           <h2 className="page-heading animate" style={{ animationDelay: '0.5s', marginTop: '48px' }}>Construction</h2>
           <p className="animate" style={{ animationDelay: '0.55s' }}>My previous site was built using Framer and I think it's still a great product, but not the best choice for me moving forward. With the advent of powerful tools like Cursor and Claude, I can go beyond the boundaries of what Framer allows, implement my ideas much quicker, and move away from another subscription. This transition has given me immense freedom.</p>
           <h2 className="page-heading animate" style={{ animationDelay: '0.6s', marginTop: '48px' }}>Domain</h2>
@@ -882,6 +879,22 @@ const animeData = {
         'Beneath the spectacle there is a show genuinely interested in what it costs to fight, and what you lose along the way. It earns the weight it eventually asks you to carry.',
       ],
     },
+    {
+      title: 'My Hero Academia', studio: 'Bones', episodes: 138,
+      cover: 'https://image.tmdb.org/t/p/original/ivOLM47yJt90P19RH1NvJrAJz9F.jpg',
+      quote: 'Who protects the heroes when they are hurting?',
+      quoteAttr: 'Uraraka',
+      quoteSource: 'My Hero Academia',
+      quoteHref: 'https://en.wikipedia.org/wiki/My_Hero_Academia',
+    },
+    {
+      title: 'Ranking of Kings', studio: 'Wit Studio', episodes: 23,
+      cover: 'https://image.tmdb.org/t/p/original/ujMjMUi6z02uOfQEerEDC4rH6aG.jpg',
+      quote: 'Because of what you are missing, you have experienced many things that an ordinary person never would. While they may be painful, they will surely help you to clear your own path. So love everything about yourself.',
+      quoteAttr: 'Despa',
+      quoteSource: 'Ranking of Kings',
+      quoteHref: 'https://en.wikipedia.org/wiki/Ranking_of_Kings',
+    },
   ],
   finished: [
     { title: 'Jujutsu Kaisen', studio: 'MAPPA', episodes: 47, year: 2025, cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg' },
@@ -1158,7 +1171,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
           ))}
         </ul>
       </div>
-      <WorkFooter color={footerColor} setPage={setPage} theme={theme} onCycleTheme={onCycleTheme} />
+      <WorkFooter color={footerColor} theme={theme} onCycleTheme={onCycleTheme} />
     </div>
   )
 }
@@ -1168,17 +1181,19 @@ const THEMES = ['Light', 'Dark']
 export default function App() {
   const [page, setPage] = useState('home')
   const [hueDeg, setHueDeg] = useState(0)
-  const [themeIndex, setThemeIndex] = useState(0)
+  const [themeIndex, setThemeIndex] = useState(() =>
+    window.matchMedia('(prefers-color-scheme: dark)').matches ? 1 : 0
+  )
   const theme = THEMES[themeIndex]
-
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme.toLowerCase())
   }, [theme])
 
   useEffect(() => {
-    const titles = { home: 'Baltzelle', about: 'About', colophon: 'Colophon', writing: 'Notes', 'writing-music': 'Notes' }
+    const titles = { home: 'Baltzelle', about: 'About', writing: 'Notes', 'writing-music': 'Notes' }
     document.title = titles[page] ?? 'Baltzelle'
   }, [page])
+
 
   useEffect(() => {
     const handler = (e) => {
@@ -1209,8 +1224,7 @@ export default function App() {
     <div style={{ height: '100%' }}>
       {page === 'home'    && <HomePage    setPage={setPage} hueDeg={hueDeg} setHueDeg={setHueDeg} theme={theme} onCycleTheme={() => setThemeIndex(i => (i + 1) % THEMES.length)} />}
       {page === 'about'    && <AboutPage    setPage={setPage} hueDeg={hueDeg} theme={theme} />}
-      {page === 'colophon' && <ColophonPage setPage={setPage} hueDeg={hueDeg} theme={theme} />}
-      {(page === 'writing' || page === 'writing-music') && <WritingPage setPage={setPage} initialNote={page === 'writing-music' ? 'music' : null} hueDeg={hueDeg} theme={theme} />}
+{(page === 'writing' || page === 'writing-music') && <WritingPage setPage={setPage} initialNote={page === 'writing-music' ? 'music' : null} hueDeg={hueDeg} theme={theme} />}
     </div>
   )
 }
