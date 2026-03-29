@@ -192,6 +192,7 @@ const projects = [
     year: '2024',
     img: '/images/ritual-dental/Perio 1.png',
     href: 'https://ritualdental.com',
+    linkOnly: true,
     tagline: 'Personalized preventative oral care that sticks',
     role: 'Product Designer',
     tools: 'Figma',
@@ -567,8 +568,8 @@ function WorkPage({ setPage, active, hueDeg = 0 }) {
               <li
                 key={p.name}
                 className={`project writing-item animate${p.dim ? ' dim' : ''}`}
-                style={{ animationDelay: `${0.15 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: p.sections ? 'pointer' : 'not-allowed' }}
-                onClick={() => { if (p.sections) { setHoveredProject(null); setActiveProject(p) } }}
+                style={{ animationDelay: `${0.15 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed' }}
+                onClick={() => { if (p.sections && !p.linkOnly) { setHoveredProject(null); setActiveProject(p) } else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
                 onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
                 onMouseLeave={() => setHoveredProject(null)}
               >
@@ -647,21 +648,22 @@ const mangaCovers = [
   { title: 'Fly Me to the Moon', volume: 'Vol. 13', src: '/images/manga/fly-me-to-the-moon-13.jpg', body: 'The story centers around the teenage genius Nasa Yuzaki and his developing relationship with his new wife, Tsukasa, who saves him from a traffic accident during the beginning of the story.' },
   { title: 'Frieren: Beyond Journey\'s End', volume: 'Vol. 07', src: '/images/manga/frieren-07.jpg', body: 'The series takes place in a fantasy world and follows Frieren, an elven mage on a journey to the resting place of souls to reunite with her former comrade Himmel, whose Hero Party slew the Demon King.' },
   { title: 'My Hero Academia', volume: 'Vol. 29', src: '/images/manga/my-hero-academia-29.jpg', body: 'Set in a world where superpowers called "Quirks" have become commonplace, the story follows Izuku Midoriya, a boy who was born without a Quirk but still dreams of becoming a superhero. He is scouted by the world\'s greatest hero, All Might, who bestows his Quirk to Midoriya after recognizing his potential, and helps to enroll him in a prestigious high school for superheroes in training.' },
+  { title: 'Golden Kamuy', volume: 'Vol. 02', src: '/images/manga/golden-kamuy.jpg', body: 'Set in the early twentieth century, Golden Kamuy follows Saichi Sugimoto, a veteran of the Russo-Japanese War, as he searches for a hidden cache of Ainu gold in the wilderness of Hokkaido alongside a young Ainu girl named Asirpa.' },
+  { title: 'Kagurabachi', volume: 'Vol. 03', src: '/images/manga/kagurabachi.jpg', body: 'Kagurabachi follows Chihiro Rokuhira, a young swordsmith whose father is murdered by a criminal organization seeking enchanted blades. Armed with one of his father\'s legendary swords, Chihiro sets out for revenge.' },
+  { title: 'Fire Force', volume: 'Vol. 30', src: '/images/manga/fire-force.jpg', body: 'Set in a world where people spontaneously combust into flame-wreathed monsters called Infernals, Fire Force follows Shinra Kusakabe, a third-generation pyrokinetic who joins Special Fire Force Company 8 to uncover the truth behind the phenomenon.' },
+  { title: 'That Time I Got Reincarnated as a Slime', volume: 'Vol. 19', src: '/images/manga/slime.jpg', body: 'After being killed in a random street attack, thirty-seven-year-old Satoru Mikami is reincarnated in a fantasy world as a slime with unique abilities, eventually building a nation of monsters and forging alliances with humans and demons alike.' },
+  { title: 'Classroom of the Elite', volume: 'Vol. 09', src: '/images/manga/classroom-of-the-elite.jpg', body: 'Set in a prestigious high school where students are secretly ranked by ability, Classroom of the Elite follows Kiyotaka Ayanokoji, a seemingly indifferent student in the lowest-ranked class who harbors exceptional intelligence and quietly manipulates events around him.' },
+  { title: 'Overlord', volume: 'Vol. 03', src: '/images/manga/overlord.jpg', body: 'When a popular fantasy game shuts down, the player Momonga finds himself trapped inside as his skeletal undead avatar. Rather than panic, he assumes the name Ainz Ooal Gown and sets out to explore this new world, accompanied by the now-sentient NPCs of his former guild.' },
 ]
 
 const writings = [
-  {
-    title: 'Music I\'m listening to',
-    date: '2026-03-12',
-    type: 'music',
-  },
   {
     title: 'Quotes from animations',
     date: '2026-02-18',
     type: 'anime',
   },
   {
-    title: 'My favorite manga cover art',
+    title: 'Collection of my favorite manga covers',
     date: '2026-03-28',
     type: 'manga',
   },
@@ -958,7 +960,11 @@ function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
 
   useEffect(() => {
     if (!isOpen) return
-    const onKey = (e) => { if (e.key === 'Escape') setOpenIdx(null) }
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpenIdx(null)
+      if (e.key === 'ArrowLeft')  setOpenIdx(i => Math.max(0, i - 1))
+      if (e.key === 'ArrowRight') setOpenIdx(i => Math.min(mangaCovers.length - 1, i + 1))
+    }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [isOpen])
@@ -1100,16 +1106,6 @@ setLoading(false)
       </div>
       <div className="music-col-headers">
         <div className="music-inner">
-          <div className="music-breadcrumb">
-            <div className="note-breadcrumb-left">
-              <button className="music-back-arrow" onClick={onBack}>Notes</button>
-              <NavArrowRight className="music-breadcrumb-sep" width={12} height={12} />
-              <span className="music-breadcrumb-current">{note?.title}</span>
-            </div>
-            <button className="note-info-btn" aria-label="Setup" onClick={() => setSheetOpen(true)}>
-              <Post width={16} height={16} strokeWidth={1.75} />
-            </button>
-          </div>
           {!loading && authed && (
             <div className="music-col-headers-row">
               {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
@@ -1117,6 +1113,9 @@ setLoading(false)
                   {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
                 </span>
               ))}
+              <button className="note-info-btn" aria-label="Setup" onClick={() => setSheetOpen(true)}>
+                <Post width={16} height={16} strokeWidth={1.75} />
+              </button>
             </div>
           )}
         </div>
@@ -1238,8 +1237,9 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
   const hue = hueDeg
 
   const categories = [
-    { label: 'About',                  desc: 'Little ol\' me',          page: 'about'      },
-    { label: 'Notes',                  desc: 'What\'s on my mind',  page: 'writing'    },
+    { label: 'About',                  desc: 'Little ol\' me',          page: 'about'         },
+    { label: 'Notes',                  desc: 'What\'s on my mind',      page: 'writing'       },
+    { label: 'Music',                  desc: 'What I\'ve been hearing',  page: 'music'         },
     { label: 'Play', desc: 'Visual experiments', page: 'prototypes' },
   ]
 
@@ -1272,7 +1272,6 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
           {categories.map((c) => (
             <div key={c.label} className="nav-card" onClick={() => setPage(c.page)} onMouseEnter={() => playClick(0.4)}>
               <span className="nav-card-label">{c.label}</span>
-              <span className="nav-card-desc">{c.desc}</span>
             </div>
           ))}
         </div>
@@ -1284,7 +1283,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
               key={p.name}
               className={`project animate${p.dim ? ' dim' : ''}`}
               style={{ animationDelay: `${0.25 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed' }}
-              onClick={() => { if (p.sections) setActiveProject(p); else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
+              onClick={() => { if (p.sections && !p.linkOnly) setActiveProject(p); else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
               onMouseEnter={() => playClick(0.4)}
             >
               <span className="project-name">{p.name}</span>
@@ -1346,8 +1345,9 @@ export default function App() {
   return (
     <div style={{ height: '100%' }}>
       {page === 'home'    && <HomePage    setPage={setPage} hueDeg={hueDeg} setHueDeg={setHueDeg} theme={theme} onCycleTheme={() => setThemeIndex(i => (i + 1) % THEMES.length)} />}
-      {page === 'about'    && <AboutPage    setPage={setPage} hueDeg={hueDeg} theme={theme} />}
-{(page === 'writing' || page === 'writing-music') && <WritingPage setPage={setPage} initialNote={page === 'writing-music' ? 'music' : null} hueDeg={hueDeg} theme={theme} />}
+      {page === 'about'   && <AboutPage    setPage={setPage} hueDeg={hueDeg} theme={theme} />}
+      {page === 'writing' && <WritingPage  setPage={setPage} hueDeg={hueDeg} theme={theme} />}
+      {page === 'music'   && <MusicPage    onBack={() => setPage('home')} setPage={setPage} hueDeg={hueDeg} theme={theme} />}
     </div>
   )
 }

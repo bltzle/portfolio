@@ -19,8 +19,8 @@
 
 
 :root {
-  --dark: #333333;
-  --light: #8c8c8c;
+  --dark: #404040;
+  --light: #737373;
   --light-2: #b3b9b9;
   --caption: #C4C4C4;
   --radius: 12px;
@@ -1066,7 +1066,8 @@ img.note-image-placeholder {
 
 .music-col-headers-row {
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr auto;
+  align-items: center;
   padding: 0 0 16px;
   border-bottom: 1px solid var(--border-light);
   font-size: 12px;
@@ -1447,7 +1448,7 @@ img.note-image-placeholder {
 
 .nav-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0;
   width: calc(100% + 32px);
   margin: 0 -16px;
