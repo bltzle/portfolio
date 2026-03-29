@@ -182,7 +182,7 @@ function playClick(intensity = 0.4) {
 }
 
 import { Post, ArrowDownLeft, NavArrowRight, Xmark, Plus, FilterList, Check } from 'iconoir-react'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence, useDragControls } from 'motion/react'
 import './style.css'
 
 const projects = [
@@ -957,6 +957,8 @@ function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   const [openIdx, setOpenIdx] = useState(null)
   const activeCover = openIdx !== null ? mangaCovers[openIdx] : null
   const isOpen = openIdx !== null
+  const isMobile = window.matchMedia('(max-width: 768px)').matches
+  const dragControls = useDragControls()
 
   useEffect(() => {
     if (!isOpen) return
@@ -1004,19 +1006,35 @@ function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
               onClick={() => setOpenIdx(null)}
             />
             <motion.aside
-              className="manga-panel"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
+              className={isMobile ? 'manga-panel manga-panel--bottom' : 'manga-panel'}
+              initial={isMobile ? { y: '100%' } : { x: '100%' }}
+              animate={isMobile ? { y: 0 } : { x: 0 }}
+              exit={isMobile ? { y: '100%' } : { x: '100%' }}
               transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+              {...(isMobile ? {
+                drag: 'y',
+                dragControls,
+                dragListener: false,
+                dragConstraints: { top: 0, bottom: 0 },
+                dragElastic: { top: 0, bottom: 0.6 },
+                onDragEnd: (_, info) => {
+                  if (info.offset.y > 100 || info.velocity.y > 300) setOpenIdx(null)
+                }
+              } : {})}
             >
-              <div className="manga-panel-header">
-                <button className="manga-panel-close" aria-label="Close panel" onClick={() => setOpenIdx(null)}>
-                  <Xmark width={18} height={18} strokeWidth={1.75} />
-                </button>
+              <div
+                className="manga-panel-header"
+                onPointerDown={isMobile ? (e) => dragControls.start(e) : undefined}
+              >
+                {isMobile
+                  ? <div className="manga-panel-grabber" />
+                  : <button className="manga-panel-close" aria-label="Close panel" onClick={() => setOpenIdx(null)}>
+                      <Xmark width={18} height={18} strokeWidth={1.75} />
+                    </button>
+                }
               </div>
               {activeCover && (
-                <>
+                <div className="manga-panel-content">
                   <img src={activeCover.src} alt={`${activeCover.title} ${activeCover.volume}`} className="manga-panel-cover" draggable="false" />
                   <div className="manga-panel-info">
                     <span className="manga-panel-title">{activeCover.title}</span>
@@ -1039,7 +1057,7 @@ function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
                       </button>
                     ) : <span />}
                   </div>
-                </>
+                </div>
               )}
             </motion.aside>
           </>
@@ -1101,7 +1119,7 @@ setLoading(false)
     <div className="music-page">
       <TopFade />
       <div className="music-scroll-fade" />
-      <div style={{ maxWidth: '860px', width: '100%', margin: '0 auto', padding: '48px 48px 100px', position: 'relative', zIndex: 'var(--z-nav)' }}>
+      <div className="music-nav-wrap">
         <img src={theme === 'Dark' ? SPRITE_DARK : SPRITE_LIGHT} alt="" className="nav-logo" onClick={() => setPage('home')} style={{ cursor: 'pointer', filter: `hue-rotate(${hueDeg}deg)`, transition: 'filter 0.3s ease' }} />
       </div>
       <div className="music-col-headers">
@@ -1240,7 +1258,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
     { label: 'About',                  desc: 'Little ol\' me',          page: 'about'         },
     { label: 'Notes',                  desc: 'What\'s on my mind',      page: 'writing'       },
     { label: 'Music',                  desc: 'What I\'ve been hearing',  page: 'music'         },
-    { label: 'Play', desc: 'Visual experiments', page: 'prototypes' },
+    { label: 'Play', desc: 'Visual experiments', page: 'prototypes', disabled: true },
   ]
 
   if (activeProject) {
@@ -1270,19 +1288,19 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
         </h1>
         <div className="nav-cards animate" style={{ animationDelay: '0.12s', marginTop: '24px' }}>
           {categories.map((c) => (
-            <div key={c.label} className="nav-card" onClick={() => setPage(c.page)} onMouseEnter={() => playClick(0.4)}>
+            <div key={c.label} className={`nav-card${c.disabled ? ' disabled' : ''}`} onClick={() => { if (!c.disabled) setPage(c.page) }} onMouseEnter={() => { if (!c.disabled) playClick(0.4) }} style={c.disabled ? { cursor: 'not-allowed', opacity: 0.4 } : undefined}>
               <span className="nav-card-label">{c.label}</span>
             </div>
           ))}
         </div>
-        <h2 className="page-heading animate" style={{ animationDelay: '0.2s', marginTop: '24px' }}>Projects</h2>
-        <hr className="animate" style={{ animationDelay: '0.22s', border: 'none', borderTop: '1px solid var(--border-light)', width: '100%', marginTop: '-24px' }} />
-        <ul className="projects no-bg-hover" style={{ width: '100%', marginTop: '-32px' }}>
+        <h2 className="page-heading animate home-projects-heading" style={{ animationDelay: '0.2s', marginTop: '24px' }}>Projects</h2>
+        <hr className="animate home-projects-hr" style={{ animationDelay: '0.22s', border: 'none', borderTop: '1px solid var(--border-light)', width: '100%', marginTop: '-24px' }} />
+        <ul className="projects no-bg-hover home-projects-list" style={{ width: '100%', marginTop: '-32px' }}>
           {projects.map((p, i) => (
             <li
               key={p.name}
               className={`project animate${p.dim ? ' dim' : ''}`}
-              style={{ animationDelay: `${0.25 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed' }}
+              style={{ animationDelay: `${0.25 + i * 0.05}s`, '--end-opacity': (p.dim || (!p.sections && !p.href)) ? 0.4 : 1, cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed' }}
               onClick={() => { if (p.sections && !p.linkOnly) setActiveProject(p); else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
               onMouseEnter={() => playClick(0.4)}
             >
@@ -1344,10 +1362,10 @@ export default function App() {
 
   return (
     <div style={{ height: '100%' }}>
-      {page === 'home'    && <HomePage    setPage={setPage} hueDeg={hueDeg} setHueDeg={setHueDeg} theme={theme} onCycleTheme={() => setThemeIndex(i => (i + 1) % THEMES.length)} />}
-      {page === 'about'   && <AboutPage    setPage={setPage} hueDeg={hueDeg} theme={theme} />}
-      {page === 'writing' && <WritingPage  setPage={setPage} hueDeg={hueDeg} theme={theme} />}
-      {page === 'music'   && <MusicPage    onBack={() => setPage('home')} setPage={setPage} hueDeg={hueDeg} theme={theme} />}
+      {page === 'home'       && <HomePage       setPage={setPage} hueDeg={hueDeg} setHueDeg={setHueDeg} theme={theme} onCycleTheme={() => setThemeIndex(i => (i + 1) % THEMES.length)} />}
+      {page === 'about'      && <AboutPage      setPage={setPage} hueDeg={hueDeg} theme={theme} />}
+      {page === 'writing'    && <WritingPage    setPage={setPage} hueDeg={hueDeg} theme={theme} />}
+      {page === 'music'      && <MusicPage      onBack={() => setPage('home')} setPage={setPage} hueDeg={hueDeg} theme={theme} />}
     </div>
   )
 }

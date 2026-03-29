@@ -325,7 +325,7 @@ html, body, #app {
   width: 100%;
   aspect-ratio: 2 / 3;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 16px;
   border: 1px solid var(--border-light);
 }
 
@@ -355,8 +355,7 @@ html, body, #app {
 .manga-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(3px);
+  background: rgba(0, 0, 0, 0.32);
   z-index: 50;
 }
 .manga-panel {
@@ -374,10 +373,51 @@ html, body, #app {
   padding: 16px 24px;
   overflow-y: auto;
 }
+
+.manga-panel--bottom {
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 80dvh;
+  border-left: none;
+  border-top: 1px solid var(--border-light);
+  border-radius: 40px 40px 0 0;
+  padding: 12px 0 0;
+  overflow: hidden;
+}
+.manga-panel-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.manga-panel--bottom .manga-panel-content {
+  overflow-y: auto;
+  padding: 0 24px 16px;
+}
 .manga-panel-header {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+}
+
+.manga-panel--bottom .manga-panel-header {
+  justify-content: center;
+  cursor: grab;
+  touch-action: none;
+  padding: 4px 0 8px;
+}
+
+.manga-panel-grabber {
+  width: 36px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border-light);
+  margin-top: -4px;
 }
 .manga-panel-close {
   background: none;
@@ -399,7 +439,7 @@ html, body, #app {
   width: 100%;
   aspect-ratio: 2 / 3;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 16px;
   border: 1px solid var(--border-light);
 }
 .manga-panel-info {
@@ -425,6 +465,7 @@ html, body, #app {
 }
 .manga-panel-body {
   margin-top: 24px;
+  margin-bottom: 32px;
   font-size: 14px;
   line-height: 1.6;
   color: var(--light);
@@ -435,7 +476,7 @@ html, body, #app {
   justify-content: space-between;
   gap: 16px;
   margin-top: auto;
-  padding-top: 16px;
+  padding-top: 32px;
   border-top: 1px solid var(--border-light);
 }
 .manga-panel-nav-btn {
@@ -650,7 +691,7 @@ html, body, #app {
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
-  padding: 100px 0 160px;
+  padding: 64px 0 160px;
 }
 
 .page-heading {
@@ -1474,7 +1515,7 @@ img.note-image-placeholder {
 
 .nav-card-label {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--dark);
 }
 
@@ -1485,6 +1526,19 @@ img.note-image-placeholder {
 }
 
 
+.home-projects-heading {
+  font-weight: 400;
+}
+
+.music-nav-wrap {
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 48px 48px 100px;
+  position: relative;
+  z-index: var(--z-nav);
+}
+
 .music-song-link {
   color: inherit;
   text-decoration: none;
@@ -1494,4 +1548,143 @@ img.note-image-placeholder {
   text-decoration: underline;
   text-decoration-color: var(--light);
   text-underline-offset: 2px;
+}
+
+
+/* ── Responsive ── */
+
+@media (max-width: 768px) {
+  .nav {
+    padding: 36px 24px 0;
+  }
+
+  .page-content {
+    padding: 64px 24px 120px;
+  }
+
+  .work-links {
+    padding: 0 24px 24px;
+  }
+
+  .nav-cards {
+    grid-template-columns: repeat(4, 1fr);
+    width: calc(100% + 32px);
+    margin: 0 -16px;
+  }
+
+  .project {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    height: auto;
+    padding: 16px 0;
+  }
+
+  .project-desc {
+    color: var(--light);
+  }
+
+  .project-year {
+    display: none;
+  }
+
+  .no-bg-hover .project {
+    padding: 14px 0;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .writing-item {
+    padding: 14px 0 !important;
+    margin: 0 !important;
+    border-radius: 0;
+  }
+
+  .note-sidebar {
+    display: none;
+  }
+
+  .note-article {
+    padding: 100px 24px 50vh;
+  }
+
+  .music-col-date {
+    display: none;
+  }
+
+  .music-col-headers-row {
+    grid-template-columns: 2fr 2fr;
+  }
+
+  .music-col-headers-row span:nth-child(3),
+  .music-col-headers-row span:nth-child(4) {
+    display: none;
+  }
+
+  .music-row {
+    grid-template-columns: 2fr 2fr;
+  }
+
+  .manga-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+.setup-modal {
+    width: calc(100% - 48px);
+    padding: 32px 28px;
+  }
+
+  .anime-swiper {
+    width: 240px;
+    height: 360px;
+  }
+
+  .music-nav-wrap {
+    padding: 36px 24px 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav {
+    padding: 28px 24px 0;
+  }
+
+  .page-content {
+    padding: 60px 24px 100px;
+  }
+
+  .work-links {
+    padding: 0 24px 24px;
+  }
+
+  .nav-cards {
+    width: calc(100% + 32px);
+    margin: 0 -16px;
+  }
+
+  .note-article {
+    padding: 80px 24px 50vh;
+  }
+
+  .music-inner {
+    padding: 0 24px;
+  }
+
+  .music-nav-wrap {
+    padding: 28px 24px 80px;
+  }
+
+  .anime-swiper {
+    width: 200px;
+    height: 300px;
+  }
+
+  .setup-modal {
+    width: calc(100% - 32px);
+    padding: 28px 24px;
+  }
+
+  .music-nav-wrap {
+    padding: 28px 20px 80px;
+  }
 }
