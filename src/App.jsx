@@ -279,7 +279,7 @@ function WorkFooter({ color, theme = 'Light', onCycleTheme }) {
         <span className="footer-sep">|</span>
         <span className="footer-item visitor-time">{time}</span>
       </div>
-      <button className="footer-item footer-link" type="button" onClick={onCycleTheme}>{theme}</button>
+      <button className="footer-item footer-link" type="button" onClick={(e) => onCycleTheme(e)}>{theme}</button>
     </footer>
   )
 }
@@ -1327,6 +1327,48 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
 
 const THEMES = ['Light', 'Dark']
 
+function cycleThemeWithTransition(e, setThemeIndex) {
+  const x = e.clientX
+  const y = e.clientY
+  const maxDist = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y)
+  )
+
+  if (!document.startViewTransition) {
+    setThemeIndex(i => (i + 1) % THEMES.length)
+    return
+  }
+
+  let styleEl = document.getElementById('theme-transition-style')
+  if (!styleEl) {
+    styleEl = document.createElement('style')
+    styleEl.id = 'theme-transition-style'
+    document.head.appendChild(styleEl)
+  }
+  styleEl.textContent = `
+    ::view-transition-group(root) {
+      animation-duration: 0.7s;
+      animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    ::view-transition-new(root) {
+      animation-name: reveal;
+    }
+    ::view-transition-old(root) {
+      animation: none;
+      z-index: -1;
+    }
+    @keyframes reveal {
+      from { clip-path: circle(0px at ${x}px ${y}px); }
+      to   { clip-path: circle(${maxDist}px at ${x}px ${y}px); }
+    }
+  `
+
+  document.startViewTransition(() => {
+    setThemeIndex(i => (i + 1) % THEMES.length)
+  })
+}
+
 export default function App() {
   const [page, setPage] = useState('home')
   const [hueDeg, setHueDeg] = useState(0)
@@ -1371,7 +1413,7 @@ export default function App() {
 
   return (
     <div style={{ height: '100%' }}>
-      {page === 'home'       && <HomePage       setPage={setPage} hueDeg={hueDeg} setHueDeg={setHueDeg} theme={theme} onCycleTheme={() => setThemeIndex(i => (i + 1) % THEMES.length)} />}
+      {page === 'home'       && <HomePage       setPage={setPage} hueDeg={hueDeg} setHueDeg={setHueDeg} theme={theme} onCycleTheme={(e) => cycleThemeWithTransition(e, setThemeIndex)} />}
       {page === 'about'      && <AboutPage      setPage={setPage} hueDeg={hueDeg} theme={theme} />}
       {page === 'writing'    && <WritingPage    setPage={setPage} hueDeg={hueDeg} theme={theme} />}
       {page === 'music'      && <MusicPage      onBack={() => setPage('home')} setPage={setPage} hueDeg={hueDeg} theme={theme} />}
