@@ -396,7 +396,7 @@ html, body, #app {
   border-left: none;
   border-top: 1px solid var(--border-light);
   border-radius: 40px 40px 0 0;
-  padding: 12px 0 0;
+  padding: 8px 0 0;
   overflow: hidden;
   overscroll-behavior: contain;
 }
@@ -408,7 +408,7 @@ html, body, #app {
 }
 .manga-panel--bottom .manga-panel-content {
   overflow-y: auto;
-  padding: 12px 24px 16px;
+  padding: 8px 24px 16px;
 }
 .manga-panel-header {
   display: flex;
@@ -420,7 +420,8 @@ html, body, #app {
   justify-content: center;
   cursor: grab;
   touch-action: none;
-  padding: 4px 0 8px;
+  padding: 0 0 4px;
+  margin-bottom: 0;
 }
 
 .manga-panel-grabber {
@@ -428,7 +429,6 @@ html, body, #app {
   height: 4px;
   border-radius: 999px;
   background: var(--border-light);
-  margin-top: -4px;
 }
 .manga-panel-close {
   background: none;
