@@ -1143,7 +1143,7 @@ img.note-image-placeholder {
 
 .music-scroll {
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .music-inner {
