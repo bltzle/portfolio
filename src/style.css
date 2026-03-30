@@ -1713,7 +1713,7 @@ img.note-image-placeholder {
   }
 
   .music-nav-wrap {
-    padding: 36px 24px 80px;
+    padding: 36px 24px 24px;
   }
 }
 
@@ -1744,7 +1744,7 @@ img.note-image-placeholder {
   }
 
   .music-nav-wrap {
-    padding: 28px 24px 80px;
+    padding: 28px 24px 24px;
   }
 
   .anime-swiper {
@@ -1757,6 +1757,6 @@ img.note-image-placeholder {
   }
 
   .music-nav-wrap {
-    padding: 28px 20px 80px;
+    padding: 28px 20px 24px;
   }
 }
