@@ -586,12 +586,14 @@ html, body, #app {
   transition: background 0.15s ease, opacity 0.2s ease;
 }
 
-.project:hover {
-  background: var(--hover-bg);
-}
+@media (hover: hover) {
+  .project:hover {
+    background: var(--hover-bg);
+  }
 
-.no-bg-hover .project:hover {
-  background: var(--hover-bg);
+  .no-bg-hover .project:hover {
+    background: var(--hover-bg);
+  }
 }
 
 .no-bg-hover .project {
@@ -650,8 +652,10 @@ html, body, #app {
   cursor: not-allowed;
 }
 
-.projects:has(.project:hover) .project:not(:hover) {
-  opacity: 0.2 !important;
+@media (hover: hover) {
+  .projects:has(.project:hover) .project:not(:hover) {
+    opacity: 0.2 !important;
+  }
 }
 
 .project-name {
@@ -1155,12 +1159,14 @@ img.note-image-placeholder {
   border-radius: 16px;
 }
 
-.music-row:hover {
-  background: var(--hover-bg);
-}
+@media (hover: hover) {
+  .music-row:hover {
+    background: var(--hover-bg);
+  }
 
-.music-rows:has(.music-row:hover) .music-row:not(:hover) {
-  opacity: 0.2;
+  .music-rows:has(.music-row:hover) .music-row:not(:hover) {
+    opacity: 0.2;
+  }
 }
 
 
@@ -1189,9 +1195,11 @@ img.note-image-placeholder {
   padding-right: 24px;
 }
 
-.music-row:hover .music-artist,
-.music-row:hover .music-col-date {
-  color: var(--dark);
+@media (hover: hover) {
+  .music-row:hover .music-artist,
+  .music-row:hover .music-col-date {
+    color: var(--dark);
+  }
 }
 
 .music-row .music-col-date {
@@ -1505,12 +1513,14 @@ img.note-image-placeholder {
   transition: background 0.15s ease, opacity 0.2s ease;
 }
 
-.nav-card:hover {
-  background: var(--hover-bg);
-}
+@media (hover: hover) {
+  .nav-card:hover {
+    background: var(--hover-bg);
+  }
 
-.nav-cards:has(.nav-card:hover) .nav-card:not(:hover) {
-  opacity: 0.2;
+  .nav-cards:has(.nav-card:hover) .nav-card:not(:hover) {
+    opacity: 0.2;
+  }
 }
 
 .nav-card-label {
