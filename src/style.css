@@ -391,7 +391,7 @@ html, body, #app {
   left: 0;
   width: 100%;
   max-width: 100%;
-  height: 80dvh;
+  height: 92dvh;
   max-height: none;
   border-left: none;
   border-top: 1px solid var(--border-light);
@@ -408,7 +408,7 @@ html, body, #app {
 }
 .manga-panel--bottom .manga-panel-content {
   overflow-y: auto;
-  padding: 0 24px 16px;
+  padding: 12px 24px 16px;
 }
 .manga-panel-header {
   display: flex;
