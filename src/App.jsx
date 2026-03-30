@@ -1068,10 +1068,8 @@ function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
 }
 
 function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
-  const cached = localStorage.getItem('spotify_tracks')
-  const [tracks, setTracks] = useState(cached ? dedupeTracks(JSON.parse(cached)) : [])
-  const [loading, setLoading] = useState(!cached)
-  const [authed, setAuthed] = useState(!!localStorage.getItem('spotify_tokens'))
+  const [tracks, setTracks] = useState([])
+  const [loading, setLoading] = useState(true)
   const [sort, setSort] = useState({ col: null, dir: null })
   const [sheetOpen, setSheetOpen] = useState(false)
 
@@ -1097,22 +1095,11 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
     : tracks
 
   useEffect(() => {
-    if (!authed) { setLoading(false); return }
-    async function load() {
-      const token = await getValidToken()
-      if (!token) { setAuthed(false); setLoading(false); return }
-      const res = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=50', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-      const data = await res.json()
-      const existing = JSON.parse(localStorage.getItem('spotify_tracks') || '[]')
-      const merged = dedupeTracks([...(data.items ?? []), ...existing])
-      localStorage.setItem('spotify_tracks', JSON.stringify(merged))
-      setTracks(merged)
-setLoading(false)
-    }
-    load().catch(() => setLoading(false))
-  }, [authed])
+    fetch('/api/spotify')
+      .then(r => r.json())
+      .then(items => { setTracks(items); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [])
 
   return (
     <>
@@ -1124,7 +1111,7 @@ setLoading(false)
       </div>
       <div className="music-col-headers">
         <div className="music-inner">
-          {!loading && authed && (
+          {!loading && tracks.length > 0 && (
             <div className="music-col-headers-row">
               {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
                 <span key={col} onClick={() => cycleSort(col)} style={{ cursor: 'pointer', userSelect: 'none', color: sort.col === col ? 'var(--dark)' : '' }}>
@@ -1142,8 +1129,6 @@ setLoading(false)
         <div className="music-inner">
           {loading ? (
             <p className="music-empty">Loading...</p>
-          ) : !authed ? (
-            <button className="music-connect" onClick={initiateSpotifyAuth}>Connect Spotify</button>
           ) : (
             <div className="music-rows">
               {displayedTracks.map(({ track, played_at }, i) => (
