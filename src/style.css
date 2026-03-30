@@ -365,6 +365,8 @@ html, body, #app {
   inset: 0;
   background: rgba(0, 0, 0, 0.32);
   z-index: 50;
+  touch-action: none;
+  overscroll-behavior: none;
 }
 .manga-panel {
   position: fixed;
@@ -383,19 +385,16 @@ html, body, #app {
 }
 
 .manga-panel--bottom {
-  top: auto;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   max-width: 100%;
-  height: auto;
-  max-height: 80dvh;
+  height: 100dvh;
+  max-height: none;
   border-left: none;
-  border-top: 1px solid var(--border-light);
-  border-radius: 40px 40px 0 0;
+  border-radius: 0;
   padding: 12px 0 0;
   overflow: hidden;
+  overscroll-behavior: contain;
 }
 .manga-panel-content {
   flex: 1;

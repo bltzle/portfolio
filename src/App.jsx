@@ -981,6 +981,11 @@ function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
     return () => document.removeEventListener('keydown', onKey)
   }, [isOpen])
 
+  useEffect(() => {
+    document.body.classList.toggle('modal-open', isOpen)
+    return () => document.body.classList.remove('modal-open')
+  }, [isOpen])
+
   return (
     <div className="page">
       <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
