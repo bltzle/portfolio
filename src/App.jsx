@@ -1170,16 +1170,18 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
 
     </div>
 
-      {/* Setup modal */}
+      {/* Setup sidebar */}
       <div className={`sheet-backdrop note-backdrop${sheetOpen ? ' open' : ''}`} onClick={() => setSheetOpen(false)} />
-      <div className={`setup-modal${sheetOpen ? ' open' : ''}`}>
-        <p className="setup-modal-heading">Setup</p>
-        <button className="setup-modal-close" onClick={() => setSheetOpen(false)}>
-          <Xmark width={16} height={16} strokeWidth={1.75} />
-        </button>
+      <aside className={`music-sidebar${sheetOpen ? ' open' : ''}`}>
+        <div className="music-sidebar-header">
+          <p className="setup-modal-heading">Setup</p>
+          <button className="setup-modal-close" onClick={() => setSheetOpen(false)}>
+            <Xmark width={16} height={16} strokeWidth={1.75} />
+          </button>
+        </div>
         <p>I love music. I'm not too concerned with critical listening, but good sound changes how music&nbsp;feels.</p>
         <p>Currently alternating between the <a href="https://mezeaudio.com/products/109-pro" target="_blank" rel="noreferrer">Meze 109 Pro</a> and <a href="https://shop.zmfheadphones.com/collections/stock-headphones/products/bokeh-open-copy" target="_blank" rel="noreferrer">ZMF Bokeh Open</a>, paired with the <a href="https://www.fiio.com/k11r2r" target="_blank" rel="noreferrer">FiiO K11&nbsp;R2R</a>. I strongly encourage you to try listening to music with some nice wired gear if you ever get the&nbsp;opportunity.</p>
-      </div>
+      </aside>
     </>
   )
 }
