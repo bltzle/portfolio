@@ -261,7 +261,7 @@ function useVisitorLocation() {
 }
 
 function useLocalTime() {
-  const fmt = () => new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+  const fmt = () => { const d = new Date(); const h = d.getHours() % 12 || 12; const m = d.getMinutes().toString().padStart(2, '0'); return `${h.toString().padStart(2, '0')}:${m}` }
   const [time, setTime] = useState(fmt)
   useEffect(() => {
     const id = setInterval(() => setTime(fmt()), 1000)
