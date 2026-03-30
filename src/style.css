@@ -1732,7 +1732,16 @@ img.note-image-placeholder {
 
   .music-track-info {
     flex-direction: column;
-    gap: 1px;
+    gap: 0;
+  }
+
+  .music-track-info span {
+    padding: 0;
+    line-height: 1.4;
+  }
+
+  .music-title-cell {
+    padding: 6px 0;
   }
 
   .music-thumb {
