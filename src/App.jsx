@@ -1086,19 +1086,6 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   const [tracks, setTracks] = useState([])
   const [loading, setLoading] = useState(true)
   const [sort, setSort] = useState({ col: null, dir: null })
-  const [sheetOpen, setSheetOpen] = useState(false)
-
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') setSheetOpen(false) }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [])
-
-  useEffect(() => {
-    document.body.classList.toggle('modal-open', sheetOpen)
-    return () => document.body.classList.remove('modal-open')
-  }, [sheetOpen])
-
   const cycleSort = (col) => setSort(s => {
     if (col === 'played') return s.col === 'played' ? { col: null, dir: null } : { col, dir: 'asc' }
     return s.col !== col ? { col, dir: 'asc' } : s.dir === 'asc' ? { col, dir: 'desc' } : { col: null, dir: null }
@@ -1109,6 +1096,7 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
         let cmp = 0
         if (sort.col === 'song')   cmp = cleanTitle(a.track.name).localeCompare(cleanTitle(b.track.name))
         if (sort.col === 'artist') cmp = a.track.artists[0]?.name.localeCompare(b.track.artists[0]?.name)
+        if (sort.col === 'album')  cmp = (a.track.album?.name || '').localeCompare(b.track.album?.name || '')
         if (sort.col === 'played') cmp = new Date(a.played_at) - new Date(b.played_at)
         return sort.dir === 'asc' ? cmp : -cmp
       })
@@ -1122,7 +1110,6 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   }, [])
 
   return (
-    <>
     <div className="music-page">
       <TopFade />
       <div className="music-scroll-fade" />
@@ -1133,14 +1120,11 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
         <div className="music-inner">
           {!loading && tracks.length > 0 && (
             <div className="music-col-headers-row">
-              {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
-                <span key={col} onClick={() => cycleSort(col)} style={{ cursor: 'pointer', userSelect: 'none', color: sort.col === col ? 'var(--dark)' : '' }}>
+              {[['song', 'Title'], ['artist', 'Artist'], ['album', 'Album'], ['played', 'Played']].map(([col, label]) => (
+                <span key={col} className={col === 'album' ? 'music-col-album' : ''} onClick={() => cycleSort(col)} style={{ cursor: 'pointer', userSelect: 'none', color: sort.col === col ? 'var(--dark)' : '' }}>
                   {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
                 </span>
               ))}
-              <button className="note-info-btn" aria-label="Setup" onClick={() => setSheetOpen(true)}>
-                <Post width={16} height={16} strokeWidth={1.75} />
-              </button>
             </div>
           )}
         </div>
@@ -1160,6 +1144,7 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
                     <span className="music-song-name">{cleanTitle(track.name)}</span>
                   </span>
                   <span className="music-artist">{track.artists.map(a => a.name).join(', ')}</span>
+                  <span className="music-col-album">{track.album?.name}</span>
                   <span className="music-col-date">{formatDate(played_at)}</span>
                 </div>
               ))}
@@ -1169,20 +1154,6 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
       </div>
 
     </div>
-
-      {/* Setup sidebar */}
-      <div className={`sheet-backdrop note-backdrop${sheetOpen ? ' open' : ''}`} onClick={() => setSheetOpen(false)} />
-      <aside className={`music-sidebar${sheetOpen ? ' open' : ''}`}>
-        <div className="music-sidebar-header">
-          <p className="setup-modal-heading">Setup</p>
-          <button className="setup-modal-close" onClick={() => setSheetOpen(false)}>
-            <Xmark width={16} height={16} strokeWidth={1.75} />
-          </button>
-        </div>
-        <p>I love music. I'm not too concerned with critical listening, but good sound changes how music&nbsp;feels.</p>
-        <p>Currently alternating between the <a href="https://mezeaudio.com/products/109-pro" target="_blank" rel="noreferrer">Meze 109 Pro</a> and <a href="https://shop.zmfheadphones.com/collections/stock-headphones/products/bokeh-open-copy" target="_blank" rel="noreferrer">ZMF Bokeh Open</a>, paired with the <a href="https://www.fiio.com/k11r2r" target="_blank" rel="noreferrer">FiiO K11&nbsp;R2R</a>. I strongly encourage you to try listening to music with some nice wired gear if you ever get the&nbsp;opportunity.</p>
-      </aside>
-    </>
   )
 }
 

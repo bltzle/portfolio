@@ -1122,7 +1122,7 @@ img.note-image-placeholder {
 
 .music-col-headers-row {
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr auto;
+  grid-template-columns: 2fr 2fr 2fr 1fr;
   align-items: center;
   padding: 0 0 16px;
   border-bottom: 1px solid var(--border-light);
@@ -1159,7 +1159,7 @@ img.note-image-placeholder {
 
 .music-row {
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr;
+  grid-template-columns: 2fr 2fr 2fr 1fr;
   align-items: center;
   transition: opacity 0.15s ease, background 0.15s ease;
   cursor: pointer;
@@ -1204,8 +1204,18 @@ img.note-image-placeholder {
   padding-right: 24px;
 }
 
+.music-row .music-col-album,
+.music-col-headers-row .music-col-album {
+  color: var(--light);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 24px;
+}
+
 @media (hover: hover) {
   .music-row:hover .music-artist,
+  .music-row:hover .music-col-album,
   .music-row:hover .music-col-date {
     color: var(--dark);
   }
@@ -1675,16 +1685,13 @@ img.note-image-placeholder {
     padding: 100px 24px 50vh;
   }
 
-  .music-col-date {
+  .music-col-date,
+  .music-col-album {
     display: none;
   }
 
   .music-col-headers-row {
-    grid-template-columns: 2fr 2fr auto;
-  }
-
-  .music-col-headers-row span:nth-child(3) {
-    display: none;
+    grid-template-columns: 2fr 2fr;
   }
 
   .music-row {
