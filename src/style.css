@@ -1595,7 +1595,7 @@ img.note-image-placeholder {
 .nav-card-label {
   font-size: 14px;
   font-weight: 400;
-  color: var(--dark);
+  color: var(--light);
 }
 
 .nav-card-desc {
@@ -1611,7 +1611,7 @@ img.note-image-placeholder {
 
 .music-nav-wrap {
   width: 100%;
-  padding: 48px 48px 100px;
+  padding: 48px 48px 40px;
   position: relative;
   z-index: var(--z-nav);
 }

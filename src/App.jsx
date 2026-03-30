@@ -275,9 +275,7 @@ function WorkFooter({ color, theme = 'Light', onCycleTheme }) {
   return (
     <footer className="work-links animate" style={{ color, transition: 'color 0.5s ease', animationDelay: '0.5s' }}>
       <div className="footer-left">
-        <span className="footer-item">San Francisco, California</span>
-        <span className="footer-sep">|</span>
-        <span className="footer-item visitor-time">{time}</span>
+        <span className="footer-item visitor-time">{time} PT</span>
       </div>
       <button className="footer-item footer-link" type="button" onClick={onCycleTheme}>{theme}</button>
     </footer>
@@ -1264,7 +1262,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
       <div className="page-content">
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s', display: 'flex', flexDirection: 'column', gap: '6px' }}>
           <span>Baltzelle</span>
-          <span style={{ color: 'var(--light)', fontWeight: 400, lineHeight: 1.6 }}>Software Designer crafting stories for early-stage companies</span>
+          <span style={{ color: 'var(--light)', fontWeight: 400, lineHeight: 1.6 }}>Product Designer</span>
         </h1>
         <div className="nav-cards animate" style={{ animationDelay: '0.12s', marginTop: '24px' }}>
           {categories.map((c) => (
@@ -1273,8 +1271,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
             </div>
           ))}
         </div>
-        <h2 className="page-heading animate home-projects-heading" style={{ animationDelay: '0.2s', marginTop: '24px' }}>Projects</h2>
-        <hr className="animate home-projects-hr" style={{ animationDelay: '0.22s', border: 'none', borderTop: '1px solid var(--border-light)', width: '100%', marginTop: '-24px' }} />
+        <h2 className="page-heading animate home-projects-heading" style={{ animationDelay: '0.2s', marginTop: '24px', color: 'var(--light)' }}>Work</h2>
         <ul className="projects no-bg-hover home-projects-list" style={{ width: '100%', marginTop: '-32px' }}>
           {projects.map((p, i) => (
             <li
