@@ -1129,8 +1129,6 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
         <div className="music-inner">
           {loading ? (
             <p className="music-empty">Loading...</p>
-          ) : tracks.length === 0 && window.location.hostname === 'localhost' || tracks.length === 0 && window.location.hostname === '127.0.0.1' ? (
-            <button className="music-connect" onClick={initiateSpotifyAuth}>Connect Spotify</button>
           ) : (
             <div className="music-rows">
               {displayedTracks.map(({ track, played_at }, i) => (
