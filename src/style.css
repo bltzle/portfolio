@@ -68,8 +68,11 @@
 
 html[data-theme="dark"] ::selection { background-color: #333; }
 
-body.modal-open {
-  overflow: hidden;
+body.modal-open,
+body.modal-open .page-transition,
+body.modal-open .music-scroll,
+body.modal-open .note-article {
+  overflow: hidden !important;
   touch-action: none;
 }
 
