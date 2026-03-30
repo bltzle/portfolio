@@ -1137,11 +1137,14 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
             <div className="music-rows">
               {displayedTracks.map(({ track, played_at }, i) => (
                 <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
-                    {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" style={{ width: 34, height: 34, borderRadius: 8, flexShrink: 0, border: '1px solid var(--border-light)' }} />}
-                    <span className="music-song-name">{cleanTitle(track.name)}</span>
+                  <span className="music-title-cell">
+                    {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" className="music-thumb" style={{ flexShrink: 0, border: '1px solid var(--border-light)' }} />}
+                    <span className="music-track-info">
+                      <span className="music-song-name">{cleanTitle(track.name)}</span>
+                      <span className="music-artist music-artist-sub">{track.artists.map(a => a.name).join(', ')}</span>
+                    </span>
                   </span>
-                  <span className="music-artist">{track.artists.map(a => a.name).join(', ')}</span>
+                  <span className="music-artist music-artist-col">{track.artists.map(a => a.name).join(', ')}</span>
                   <span className="music-col-album">{track.album?.name}</span>
                   <span className="music-col-date">{formatDate(played_at)}</span>
                 </div>

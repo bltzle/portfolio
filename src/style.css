@@ -1227,6 +1227,30 @@ img.note-image-placeholder {
   white-space: nowrap;
 }
 
+.music-title-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.music-thumb {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.music-track-info {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+}
+
+.music-artist-sub {
+  display: none;
+}
+
 .music-empty {
   font-size: 13px;
   color: var(--light);
@@ -1690,12 +1714,30 @@ img.note-image-placeholder {
     display: none;
   }
 
-  .music-col-headers-row {
-    grid-template-columns: 2fr 2fr;
+  .music-col-headers {
+    display: none;
   }
 
   .music-row {
-    grid-template-columns: 2fr 2fr;
+    grid-template-columns: 1fr;
+  }
+
+  .music-artist-col {
+    display: none;
+  }
+
+  .music-artist-sub {
+    display: block;
+  }
+
+  .music-track-info {
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .music-thumb {
+    width: 42px;
+    height: 42px;
   }
 
   .manga-grid {
