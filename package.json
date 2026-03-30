@@ -25,6 +25,7 @@
     "swiper": "^12.1.2",
     "three": "^0.183.2",
     "three-stdlib": "^2.36.1",
-    "web-haptics": "^0.0.6"
+    "web-haptics": "^0.0.6",
+    "redis": "^4.7.0"
   }
 }
