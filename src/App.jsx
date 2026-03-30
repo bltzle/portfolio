@@ -1097,7 +1097,7 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   useEffect(() => {
     fetch('/api/spotify')
       .then(r => r.json())
-      .then(items => { setTracks(Array.isArray(items) ? items : []); setLoading(false) })
+      .then(items => { setTracks(Array.isArray(items) ? dedupeTracks(items) : []); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
 
