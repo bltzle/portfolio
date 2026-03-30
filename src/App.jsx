@@ -358,6 +358,11 @@ function ProjectDetailPage({ project, onBack, setPage, hueDeg = 0, theme = 'Ligh
   }, [])
 
   useEffect(() => {
+    document.body.classList.toggle('modal-open', sheetOpen)
+    return () => document.body.classList.remove('modal-open')
+  }, [sheetOpen])
+
+  useEffect(() => {
     if (!hasSections) return
     const el = breadcrumbRef.current
     if (!el) return
@@ -687,6 +692,11 @@ function NoteDetailPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) 
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [])
+
+  useEffect(() => {
+    document.body.classList.toggle('modal-open', sheetOpen)
+    return () => document.body.classList.remove('modal-open')
+  }, [sheetOpen])
 
   useEffect(() => {
     if (!hasSections) return
@@ -1078,6 +1088,11 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [])
+
+  useEffect(() => {
+    document.body.classList.toggle('modal-open', sheetOpen)
+    return () => document.body.classList.remove('modal-open')
+  }, [sheetOpen])
 
   const cycleSort = (col) => setSort(s => {
     if (col === 'played') return s.col === 'played' ? { col: null, dir: null } : { col, dir: 'asc' }
