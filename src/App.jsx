@@ -571,7 +571,7 @@ function WorkPage({ setPage, active, hueDeg = 0 }) {
               <li
                 key={p.name}
                 className={`project writing-item animate${p.dim ? ' dim' : ''}`}
-                style={{ animationDelay: `${0.15 + i * 0.05}s`, '--end-opacity': p.dim ? 0.4 : 1, cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed' }}
+                style={{ animationDelay: `${0.15 + i * 0.05}s`, '--end-opacity': p.dim ? 0.3 : 1, cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed' }}
                 onClick={() => { if (p.sections && !p.linkOnly) { setHoveredProject(null); setActiveProject(p) } else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
                 onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
                 onMouseLeave={() => setHoveredProject(null)}
@@ -604,7 +604,7 @@ function ColophonPage({ setPage, hueDeg = 0, theme = 'Light' }) {
           <p className="animate" style={{ animationDelay: '0.15s' }}>A colophon is a tradition from print publishing — a behind-the-scenes look at how something was made. This is mine.</p>
           <h2 className="page-heading animate" style={{ animationDelay: '0.2s', marginTop: '48px' }}>Philosophy</h2>
           <p className="animate" style={{ animationDelay: '0.25s' }}>I'm deeply guided by things that have high craft, precision, and restraint. That's just my personal style. I tend to gravitate towards design that emulates these principles.</p>
-          <p className="animate" style={{ animationDelay: '0.28s' }}>All of the writing on this site was done by myself so the writing quality itself might be cooked. It's not meant to be perfect, it's meant to be my true authentic self.</p>
+          <p className="animate" style={{ animationDelay: '0.3s' }}>All of the writing on this site was done by myself so the writing quality itself might be cooked. It's not meant to be perfect, it's meant to be my true authentic self.</p>
           <h2 className="page-heading animate" style={{ animationDelay: '0.3s', marginTop: '48px' }}>Typography</h2>
           <p className="animate" style={{ animationDelay: '0.35s' }}><a href="https://displaay.net/typeface/matter/" target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>Matter by Displaay Type Foundry</a> — restrained but with enough personality in the characters to feel like mine. I studied letterforms in design school, so when it came time to build this I wanted something unique to me rather than another open-source default.</p>
           <h2 className="page-heading animate" style={{ animationDelay: '0.5s', marginTop: '48px' }}>Construction</h2>
@@ -1124,10 +1124,10 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
       <div className="music-nav-wrap">
         <img src={theme === 'Dark' ? SPRITE_DARK : SPRITE_LIGHT} alt="" className="nav-logo" onClick={() => setPage('home')} style={{ cursor: 'pointer', filter: `hue-rotate(${hueDeg}deg)`, transition: 'filter 0.3s ease' }} />
       </div>
-      <div className="music-inner" style={{ paddingTop: '12px', paddingBottom: '24px' }}>
+      <div className="music-inner animate" style={{ paddingTop: '12px', paddingBottom: '24px', animationDelay: '0.05s' }}>
         <h1 className="page-heading">Music</h1>
       </div>
-      <div className="music-col-headers">
+      <div className="music-col-headers animate" style={{ animationDelay: '0.1s' }}>
         <div className="music-inner">
           {!loading && tracks.length > 0 && (
             <div className="music-col-headers-row">
@@ -1149,7 +1149,7 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
           ) : (
             <div className="music-rows">
               {displayedTracks.map(({ track, played_at }, i) => (
-                <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
+                <div key={i} className="music-row animate" style={{ animationDelay: `${0.1 + i * 0.03}s` }} onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
                   <span className="music-title-cell">
                     {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" className="music-thumb" style={{ flexShrink: 0, border: '1px solid var(--border-light)' }} />}
                     <span className="music-track-info">
@@ -1330,7 +1330,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
         </div>
         <div className="nav-cards animate" style={{ animationDelay: '0.12s', marginTop: '12px' }}>
           {categories.map((c) => (
-            <div key={c.label} className={`nav-card${c.disabled ? ' disabled' : ''}`} onClick={() => { if (!c.disabled) setPage(c.page) }} onMouseEnter={() => { if (!c.disabled) playClick(0.4) }} style={c.disabled ? { cursor: 'not-allowed', opacity: 0.4 } : undefined}>
+            <div key={c.label} className={`nav-card${c.disabled ? ' disabled' : ''}`} onClick={() => { if (!c.disabled) setPage(c.page) }} onMouseEnter={() => { if (!c.disabled) playClick(0.4) }} style={c.disabled ? { cursor: 'not-allowed', opacity: 0.3 } : undefined}>
               <span className="nav-card-label">{c.label}</span>
               <span className="nav-card-desc">{c.desc}</span>
             </div>
@@ -1342,7 +1342,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
             <li
               key={p.name}
               className={`project animate${p.dim ? ' dim' : ''}`}
-              style={{ animationDelay: `${0.25 + i * 0.05}s`, '--end-opacity': (p.dim || (!p.sections && !p.href)) ? 0.4 : 1, cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed' }}
+              style={{ animationDelay: `${0.25 + i * 0.05}s`, '--end-opacity': (p.dim || (!p.sections && !p.href)) ? 0.3 : 1, cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed' }}
               onClick={() => { if (p.sections && !p.linkOnly) setActiveProject(p); else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
               onMouseEnter={() => playClick(0.4)}
             >

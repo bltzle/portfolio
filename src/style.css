@@ -609,9 +609,17 @@ html, body, #app {
     background: var(--hover-bg);
   }
 
+  .project[style*="not-allowed"]:hover {
+    background: rgba(0,0,0,0.06);
+  }
+
   .no-bg-hover .project:hover {
     background: var(--hover-bg);
   }
+}
+
+[data-theme="dark"] .project[style*="not-allowed"]:hover {
+  background: var(--hover-bg);
 }
 
 .no-bg-hover .project {
@@ -1622,9 +1630,17 @@ img.note-image-placeholder {
     background: var(--hover-bg);
   }
 
+  .nav-card.disabled:hover {
+    background: rgba(0,0,0,0.06);
+  }
+
   .nav-cards:has(.nav-card:hover) .nav-card:not(:hover) {
     opacity: 0.2;
   }
+}
+
+[data-theme="dark"] .nav-card.disabled:hover {
+  background: var(--hover-bg);
 }
 
 .nav-card-label {
@@ -1777,6 +1793,10 @@ img.note-image-placeholder {
   .music-nav-wrap {
     padding: 36px 24px 24px;
   }
+
+  .music-inner {
+    padding: 0 24px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1816,9 +1836,5 @@ img.note-image-placeholder {
 
   .setup-modal {
     padding: 28px 24px;
-  }
-
-  .music-nav-wrap {
-    padding: 28px 20px 24px;
   }
 }
