@@ -744,7 +744,8 @@ html, body, #app {
   gap: 24px;
 }
 
-.about-links a {
+.about-links a,
+.bio-links a {
   font-size: 14px;
   font-weight: 400;
   color: var(--light);
@@ -754,7 +755,8 @@ html, body, #app {
   transition: color 0.15s ease, text-decoration-color 0.15s ease;
 }
 
-.about-links a:hover {
+.about-links a:hover,
+.bio-links a:hover {
   color: var(--dark);
   text-decoration-color: var(--dark);
 }
@@ -1602,7 +1604,7 @@ img.note-image-placeholder {
 
 .nav-cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   gap: 0;
   width: calc(100% + 32px);
   margin: 0 -16px;
@@ -1637,7 +1639,7 @@ img.note-image-placeholder {
 .nav-card-desc {
   font-size: 14px;
   font-weight: 400;
-  color: var(--light);
+  color: var(--dark);
 }
 
 
@@ -1680,7 +1682,7 @@ img.note-image-placeholder {
   }
 
   .nav-cards {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
     width: calc(100% + 32px);
     margin: 0 -16px;
   }

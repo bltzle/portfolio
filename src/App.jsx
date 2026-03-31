@@ -1289,9 +1289,8 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
   const hue = hueDeg
 
   const categories = [
-    { label: 'About',                  desc: 'Little ol\' me',          page: 'about'         },
-    { label: 'Misc',                  desc: 'What\'s on my mind',      page: 'writing'       },
-    { label: 'Music',                  desc: 'What I\'ve been hearing',  page: 'music'         },
+    { label: 'Misc',                  desc: 'Bits and pieces',      page: 'writing'       },
+    { label: 'Music',                  desc: 'Recent listening',  page: 'music'         },
     { label: 'Play', desc: 'Visual experiments', page: 'prototypes' },
   ]
 
@@ -1320,10 +1319,16 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
           <span>Baltzelle</span>
           <span style={{ color: 'var(--light)', fontWeight: 400, lineHeight: 1.6 }}>Product Designer</span>
         </h1>
-        <div className="nav-cards animate" style={{ animationDelay: '0.12s', marginTop: '24px' }}>
+        <div className="animate" style={{ animationDelay: '0.12s', display: 'flex', flexDirection: 'column', gap: '8px', color: 'var(--dark)', fontSize: '14px', lineHeight: 1.6, marginTop: '-16px' }}>
+          <p>Crafting stories for early-stage companies with a focus on aesthetics, intention, and detail.</p>
+          <p>In middle school I began making designs for my online gaming profile. Eventually, this would lead me to design school, but I've really grown by building things and being exposed to others who are exceptional at their craft.</p>
+          <p className="bio-links">Feel free to reach out to me on <a href="https://x.com/bltzle" target="_blank" rel="noreferrer">X</a> or <a href="http://www.linkedin.com/in/matthew-baltzelle" target="_blank" rel="noreferrer">LinkedIn</a>. Or reach me through <a href="mailto:mabaltzelle@gmail.com">Email</a>.</p>
+        </div>
+        <div className="nav-cards animate" style={{ animationDelay: '0.12s', marginTop: '12px' }}>
           {categories.map((c) => (
             <div key={c.label} className={`nav-card${c.disabled ? ' disabled' : ''}`} onClick={() => { if (!c.disabled) setPage(c.page) }} onMouseEnter={() => { if (!c.disabled) playClick(0.4) }} style={c.disabled ? { cursor: 'not-allowed', opacity: 0.4 } : undefined}>
               <span className="nav-card-label">{c.label}</span>
+              <span className="nav-card-desc">{c.desc}</span>
             </div>
           ))}
         </div>
@@ -1396,7 +1401,7 @@ export default function App() {
   return (
     <div style={{ height: '100%' }}>
       {page === 'home'       && <HomePage       setPage={setPage} hueDeg={hueDeg} setHueDeg={setHueDeg} theme={theme} onCycleTheme={() => setThemeIndex(i => (i + 1) % THEMES.length)} />}
-      {page === 'about'      && <AboutPage      setPage={setPage} hueDeg={hueDeg} theme={theme} />}
+
       {page === 'writing'    && <WritingPage    setPage={setPage} hueDeg={hueDeg} theme={theme} />}
       {page === 'music'      && <MusicPage      onBack={() => setPage('home')} setPage={setPage} hueDeg={hueDeg} theme={theme} />}
       {page === 'prototypes' && <PrototypesPage setPage={setPage} hueDeg={hueDeg} theme={theme} />}
