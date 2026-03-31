@@ -430,7 +430,7 @@ html, body, #app {
   justify-content: center;
   cursor: grab;
   touch-action: none;
-  padding: 0 0 4px;
+  padding: 16px 0;
   margin-bottom: 0;
 }
 
