@@ -1745,6 +1745,16 @@ img.note-image-placeholder {
     display: none;
   }
 
+  .music-page {
+    position: static;
+    overflow-y: auto;
+  }
+
+  .music-scroll {
+    overflow-y: visible;
+    flex: none;
+  }
+
   .music-row {
     grid-template-columns: 1fr;
   }
