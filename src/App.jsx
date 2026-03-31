@@ -1285,7 +1285,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
   const categories = [
     { label: 'Notes',                  desc: 'My interests',      page: 'writing'       },
     { label: 'Music',                  desc: 'Recent listening',  page: 'music'         },
-    { label: 'Play', desc: 'Visual experiments', page: 'prototypes' },
+    { label: 'Play', desc: 'Visual experiments', page: 'prototypes', disabled: true },
   ]
 
   if (activeProject) {
