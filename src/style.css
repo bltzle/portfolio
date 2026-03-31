@@ -1177,9 +1177,9 @@ img.note-image-placeholder {
   align-items: center;
   transition: opacity 0.15s ease, background 0.15s ease;
   cursor: pointer;
-  padding: 0 8px;
+  padding: 6px 8px;
   margin: 0 -8px;
-  border-radius: 16px;
+  border-radius: 12px;
 }
 
 @media (hover: hover) {
