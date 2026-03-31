@@ -43,19 +43,6 @@
   --z-modal: 101;
 }
 
-[data-theme="dark"] {
-  --dark: #e0e0e0;
-  --light: #888888;
-  --light-2: #666666;
-  --caption: #555555;
-  --bg: #161616;
-  --bg-elevated: #222222;
-  --shadow: 0 16px 64px rgba(0,0,0,0.3), 0 4px 24px rgba(0,0,0,0.2);
-  --shadow-card: 0 24px 80px rgba(0,0,0,0.4), 0 8px 32px rgba(0,0,0,0.25);
-  --hover-bg: rgba(255,255,255,0.06);
-  --hover-bg-strong: rgba(255,255,255,0.08);
-  --border-light: rgba(255,255,255,0.08);
-}
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -66,7 +53,7 @@
 
 ::selection { background-color: #e8e8e8; color: inherit; }
 
-html[data-theme="dark"] ::selection { background-color: #333; }
+
 
 body.modal-open,
 body.modal-open .page-transition,
@@ -84,6 +71,10 @@ body.modal-open .page-transition {
 .manga-page-blurred > .page > .page-content {
   opacity: 0.3;
   transition: opacity 0.2s ease;
+}
+
+html {
+  overflow-y: scroll;
 }
 
 html, body, #app {
@@ -173,15 +164,16 @@ html, body, #app {
 /* Layout */
 .split {
   display: flex;
-  height: 100%;
+  min-height: 100%;
 }
 
 .left {
   width: 50%;
-  height: 100%;
-  flex-shrink: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
   overflow: hidden;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -201,6 +193,11 @@ html, body, #app {
   filter: drop-shadow(0 24px 48px rgba(0,0,0,0.3));
 }
 
+.project-preview.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
 .left-label {
   position: absolute;
   z-index: var(--z-content);
@@ -210,6 +207,7 @@ html, body, #app {
   letter-spacing: 0;
   text-transform: uppercase;
   pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
 @keyframes grain {
@@ -231,10 +229,10 @@ html, body, #app {
 
 .right {
   width: 50%;
-  height: 100%;
+  margin-left: 50%;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  min-height: 100dvh;
 }
 
 /* Work links */
@@ -243,9 +241,8 @@ html, body, #app {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: 640px;
-  margin: auto auto 0;
-  padding: 0 0 24px;
+  padding: 0 76px 24px;
+  margin-top: auto;
   position: relative;
 }
 
@@ -536,7 +533,7 @@ html, body, #app {
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
-  padding: 48px 0 0;
+  padding: 40px 0 0;
   flex-shrink: 0;
 }
 
@@ -546,6 +543,22 @@ html, body, #app {
   object-fit: contain;
   image-rendering: pixelated;
   transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.nav-home {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: 'Matter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.nav-home:hover {
+  color: var(--light);
 }
 
 
@@ -565,6 +578,43 @@ html, body, #app {
   color: var(--dark);
 }
 
+/* Home nav */
+.home-nav {
+  display: flex;
+  justify-content: flex-end;
+  padding: 40px 76px 0;
+}
+
+.home-nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.home-nav-links a {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--light);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.home-nav-links a:hover {
+  color: var(--dark);
+}
+
+.home-nav-links a.active {
+  color: var(--dark);
+  font-weight: 400;
+}
+
+/* Home content area */
+.home-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Content */
 .content {
   display: flex;
@@ -577,7 +627,8 @@ html, body, #app {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 48px 76px 0;
+  padding: 96px 76px 0;
+  margin-bottom: 64px;
 }
 
 .header h1 {
@@ -590,7 +641,7 @@ html, body, #app {
 .header p {
   font-size: 14px;
   font-weight: 400;
-  color: var(--dark);
+  color: var(--light);
   text-wrap: pretty;
 }
 
@@ -628,9 +679,6 @@ html, body, #app {
   }
 }
 
-[data-theme="dark"] .project[style*="not-allowed"]:hover {
-  background: var(--hover-bg);
-}
 
 .no-bg-hover .project {
   position: relative;
@@ -686,6 +734,7 @@ html, body, #app {
 
 .project.dim {
   cursor: not-allowed;
+  opacity: 0.3;
 }
 
 @media (hover: hover) {
@@ -698,6 +747,8 @@ html, body, #app {
   font-size: 14px;
   font-weight: 400;
   color: var(--dark);
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: color 0.15s ease;
 }
 
@@ -705,13 +756,26 @@ html, body, #app {
   font-size: 14px;
   font-weight: 400;
   color: var(--light);
-  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .project-year {
   font-size: 14px;
   font-weight: 400;
   color: var(--light);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.project-leader {
+  flex: 1;
+  border-bottom: 1px dotted var(--border-light);
+  min-width: 20px;
+  align-self: center;
+  margin-bottom: -3px;
 }
 
 
@@ -731,7 +795,7 @@ html, body, #app {
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
-  padding: 64px 0 160px;
+  padding: 36px 0 160px;
 }
 
 .page-heading {
@@ -1649,9 +1713,6 @@ img.note-image-placeholder {
   }
 }
 
-[data-theme="dark"] .nav-card.disabled:hover {
-  background: var(--hover-bg);
-}
 
 .nav-card-label {
   font-size: 14px;
