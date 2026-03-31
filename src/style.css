@@ -82,8 +82,8 @@ body.modal-open .page-transition {
 
 .manga-page-blurred > .page > nav,
 .manga-page-blurred > .page > .page-content {
-  filter: blur(6px);
-  transition: filter 0.2s ease;
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
 }
 
 html, body, #app {
@@ -116,13 +116,13 @@ html, body, #app {
 
 
 @keyframes content-fade {
-  from { opacity: 0; filter: blur(8px); }
-  to   { opacity: 1; filter: blur(0px); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @keyframes itemIn {
-  from { opacity: 0; filter: blur(4px); transform: translateY(18px); }
-  to   { opacity: var(--end-opacity, 1); filter: blur(0); transform: translateY(0); }
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: var(--end-opacity, 1); transform: translateY(0); }
 }
 
 @keyframes dropdown-enter {
@@ -146,6 +146,16 @@ html, body, #app {
 .animate {
   opacity: 0;
   animation: itemIn 1s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+}
+
+@keyframes musicItemIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.music-row.animate {
+  animation-name: musicItemIn;
+  animation-duration: 0.6s;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -319,8 +329,8 @@ html, body, #app {
 
 
 @keyframes blur-in {
-  from { filter: blur(6px); opacity: 0; }
-  to   { filter: blur(0px); opacity: 1; }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 
@@ -811,7 +821,7 @@ html, body, #app {
   top: 0;
   left: 0;
   width: 300px;
-  height: 100vh;
+  height: 100dvh;
   padding: 204px 32px 48px 140px;
   z-index: var(--z-sheet);
   display: flex;
