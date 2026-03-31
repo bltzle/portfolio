@@ -733,7 +733,7 @@ function NoteDetailPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) 
       {hasSections && (
         <aside className="note-sidebar">
           <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
-            <button className="note-back" onClick={onBack}>Misc</button>
+            <button className="note-back" onClick={onBack}>Notes</button>
           </div>
           <nav className="note-toc">
             <a
@@ -768,7 +768,7 @@ function NoteDetailPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) 
       <article className="note-article" style={!hasSections ? { paddingBottom: '80px' } : undefined}>
         <div className="note-breadcrumb" ref={breadcrumbRef}>
           <div className="note-breadcrumb-left">
-            <button className="note-back" onClick={onBack}>Misc</button>
+            <button className="note-back" onClick={onBack}>Notes</button>
             <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <span className="note-breadcrumb-current">{note.title}</span>
           </div>
@@ -944,7 +944,7 @@ function AnimePage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
       <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
       <div className="page-content">
         <div className="note-breadcrumb-left">
-          <button className="note-back" onClick={onBack}>Misc</button>
+          <button className="note-back" onClick={onBack}>Notes</button>
           <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
           <span className="note-breadcrumb-current">{note?.title}</span>
         </div>
@@ -1009,14 +1009,14 @@ function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
       <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
       <div className="page-content">
         <div className="note-breadcrumb-left">
-          <button className="note-back" onClick={onBack}>Misc</button>
+          <button className="note-back" onClick={onBack}>Notes</button>
           <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
           <span className="note-breadcrumb-current">{note?.title}</span>
         </div>
         <div className="manga-grid">
           {mangaCovers.map((cover, i) => (
             <div key={i} className="manga-item">
-              <button className="manga-trigger" onClick={() => setOpenIdx(i)}>
+              <button className="manga-trigger" onClick={() => { if (!isMobile) setOpenIdx(i) }}>
                 <img src={cover.src} alt={`${cover.title} ${cover.volume}`} className="manga-cover" draggable="false" />
               </button>
               <div className="manga-info">
@@ -1209,7 +1209,7 @@ function WritingPage({ setPage, initialNote, hueDeg = 0, theme = 'Light' }) {
       <div className="page">
         <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
         <div className="page-content">
-          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Misc</h1>
+          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {writings.map((w, i) => (
               <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
@@ -1224,7 +1224,11 @@ function WritingPage({ setPage, initialNote, hueDeg = 0, theme = 'Light' }) {
   )
 }
 
-const prototypes = []
+const prototypes = [
+  { title: 'Drag-to-reorder list', date: '2026-03-15' },
+  { title: 'Animated page transitions', date: '2026-03-01' },
+  { title: 'Scroll-linked parallax', date: '2026-02-20' },
+]
 
 function PrototypesPage({ setPage, hueDeg = 0, theme = 'Light' }) {
   const [activeItem, setActiveItem] = useState(null)
@@ -1279,7 +1283,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
   const hue = hueDeg
 
   const categories = [
-    { label: 'Misc',                  desc: 'Bits and pieces',      page: 'writing'       },
+    { label: 'Notes',                  desc: 'My interests',      page: 'writing'       },
     { label: 'Music',                  desc: 'Recent listening',  page: 'music'         },
     { label: 'Play', desc: 'Visual experiments', page: 'prototypes' },
   ]
@@ -1358,7 +1362,7 @@ export default function App() {
   }, [theme])
 
   useEffect(() => {
-    const titles = { home: 'Baltzelle', about: 'About', writing: 'Misc', 'writing-music': 'Misc', prototypes: 'Play' }
+    const titles = { home: 'Baltzelle', about: 'About', writing: 'Notes', 'writing-music': 'Notes', prototypes: 'Play' }
     document.title = titles[page] ?? 'Baltzelle'
   }, [page])
 

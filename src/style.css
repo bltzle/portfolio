@@ -329,7 +329,7 @@ html, body, #app {
 .manga-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 24px 16px;
   width: 100%;
 }
 
