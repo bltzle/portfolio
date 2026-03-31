@@ -1105,9 +1105,18 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
     : tracks
 
   useEffect(() => {
+    const cached = sessionStorage.getItem('spotify_tracks')
+    if (cached) {
+      try { setTracks(JSON.parse(cached)); setLoading(false) } catch {}
+    }
     fetch('/api/spotify')
       .then(r => r.json())
-      .then(items => { setTracks(Array.isArray(items) ? dedupeTracks(items) : []); setLoading(false) })
+      .then(items => {
+        const deduped = Array.isArray(items) ? dedupeTracks(items) : []
+        setTracks(deduped)
+        setLoading(false)
+        sessionStorage.setItem('spotify_tracks', JSON.stringify(deduped))
+      })
       .catch(() => setLoading(false))
   }, [])
 
@@ -1116,6 +1125,9 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
       <TopFade />
       <div className="music-nav-wrap">
         <img src={theme === 'Dark' ? SPRITE_DARK : SPRITE_LIGHT} alt="" className="nav-logo" onClick={() => setPage('home')} style={{ cursor: 'pointer', filter: `hue-rotate(${hueDeg}deg)`, transition: 'filter 0.3s ease' }} />
+      </div>
+      <div className="music-inner" style={{ paddingTop: '12px', paddingBottom: '8px' }}>
+        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Music</h1>
       </div>
       <div className="music-col-headers">
         <div className="music-inner">
@@ -1373,6 +1385,10 @@ export default function App() {
     }
     document.addEventListener('pointerdown', handler)
     return () => document.removeEventListener('pointerdown', handler)
+  }, [])
+
+  useEffect(() => {
+    mangaCovers.forEach(c => { const img = new Image(); img.src = c.src })
   }, [])
 
   useEffect(() => {

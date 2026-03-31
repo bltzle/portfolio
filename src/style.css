@@ -1165,7 +1165,7 @@ img.note-image-placeholder {
 .music-rows {
   width: 100%;
   padding-top: 12px;
-  padding-bottom: 20px;
+  padding-bottom: 30px;
 }
 
 .music-row {
@@ -1352,7 +1352,7 @@ img.note-image-placeholder {
 }
 
 .anime-section:last-child .music-rows {
-  padding-bottom: 20px;
+  padding-bottom: 30px;
 }
 
 .music-connect {
