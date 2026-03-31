@@ -1085,8 +1085,10 @@ function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
 }
 
 function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
-  const [tracks, setTracks] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [tracks, setTracks] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem('spotify_tracks')) || [] } catch { return [] }
+  })
+  const [loading, setLoading] = useState(() => !sessionStorage.getItem('spotify_tracks'))
   const [sort, setSort] = useState({ col: null, dir: null })
   const cycleSort = (col) => setSort(s => {
     if (col === 'played') return s.col === 'played' ? { col: null, dir: null } : { col, dir: 'asc' }
@@ -1105,10 +1107,6 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
     : tracks
 
   useEffect(() => {
-    const cached = sessionStorage.getItem('spotify_tracks')
-    if (cached) {
-      try { setTracks(JSON.parse(cached)); setLoading(false) } catch {}
-    }
     fetch('/api/spotify')
       .then(r => r.json())
       .then(items => {
@@ -1126,8 +1124,8 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
       <div className="music-nav-wrap">
         <img src={theme === 'Dark' ? SPRITE_DARK : SPRITE_LIGHT} alt="" className="nav-logo" onClick={() => setPage('home')} style={{ cursor: 'pointer', filter: `hue-rotate(${hueDeg}deg)`, transition: 'filter 0.3s ease' }} />
       </div>
-      <div className="music-inner" style={{ paddingTop: '12px', paddingBottom: '8px' }}>
-        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Music</h1>
+      <div className="music-inner" style={{ paddingTop: '12px', paddingBottom: '24px' }}>
+        <h1 className="page-heading">Music</h1>
       </div>
       <div className="music-col-headers">
         <div className="music-inner">
@@ -1295,9 +1293,9 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
   const hue = hueDeg
 
   const categories = [
-    { label: 'Notes',                  desc: 'My interests',      page: 'writing'       },
-    { label: 'Music',                  desc: 'Recent listening',  page: 'music'         },
-    { label: 'Play', desc: 'Visual experiments', page: 'prototypes', disabled: true },
+    { label: 'Notes',                  desc: 'Interests',      page: 'writing'       },
+    { label: 'Music',                  desc: 'Listening',  page: 'music'         },
+    { label: 'Play', desc: 'Experiments', page: 'prototypes', disabled: true },
   ]
 
   if (activeProject) {
@@ -1328,7 +1326,7 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
         <div className="animate" style={{ animationDelay: '0.12s', display: 'flex', flexDirection: 'column', gap: '8px', color: 'var(--dark)', fontSize: '14px', lineHeight: 1.6, marginTop: '-16px' }}>
           <p>Crafting stories for early-stage companies with a focus on aesthetics, intention, and detail.</p>
           <p>In middle school I began making designs for my online gaming profile. Eventually, this would lead me to design school, but I've really grown by building things and being exposed to others who are exceptional at their craft.</p>
-          <p className="bio-links">Feel free to reach out to me on <a href="https://x.com/bltzle" target="_blank" rel="noreferrer">X</a> or <a href="http://www.linkedin.com/in/matthew-baltzelle" target="_blank" rel="noreferrer">LinkedIn</a>. Or reach me through <a href="mailto:mabaltzelle@gmail.com">Email</a>.</p>
+          <p className="bio-links">Feel free to reach out to me on <a href="http://www.linkedin.com/in/matthew-baltzelle" target="_blank" rel="noreferrer">LinkedIn</a> or <a href="mailto:mabaltzelle@gmail.com">Email</a>.</p>
         </div>
         <div className="nav-cards animate" style={{ animationDelay: '0.12s', marginTop: '12px' }}>
           {categories.map((c) => (
