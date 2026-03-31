@@ -1039,32 +1039,16 @@ function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
               onClick={() => setOpenIdx(null)}
             />
             <motion.aside
-              className={isMobile ? 'manga-panel manga-panel--bottom' : 'manga-panel'}
+              className={isMobile ? 'manga-panel manga-panel--full' : 'manga-panel'}
               initial={isMobile ? { y: '100%' } : { x: '100%' }}
               animate={isMobile ? { y: 0 } : { x: 0 }}
               exit={isMobile ? { y: '100%' } : { x: '100%' }}
               transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-              {...(isMobile ? {
-                drag: 'y',
-                dragControls,
-                dragListener: false,
-                dragConstraints: { top: 0, bottom: 0 },
-                dragElastic: { top: 0, bottom: 0.6 },
-                onDragEnd: (_, info) => {
-                  if (info.offset.y > 100 || info.velocity.y > 300) setOpenIdx(null)
-                }
-              } : {})}
             >
-              <div
-                className="manga-panel-header"
-                onPointerDown={isMobile ? (e) => dragControls.start(e) : undefined}
-              >
-                {isMobile
-                  ? <div className="manga-panel-grabber" />
-                  : <button className="manga-panel-close" aria-label="Close panel" onClick={() => setOpenIdx(null)}>
-                      <Xmark width={18} height={18} strokeWidth={1.75} />
-                    </button>
-                }
+              <div className="manga-panel-header">
+                <button className="manga-panel-close" aria-label="Close panel" onClick={() => setOpenIdx(null)}>
+                  <Xmark width={18} height={18} strokeWidth={1.75} />
+                </button>
               </div>
               {activeCover && (
                 <div className="manga-panel-content">
