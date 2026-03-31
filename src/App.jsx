@@ -969,6 +969,12 @@ function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   const dragControls = useDragControls()
 
   useEffect(() => {
+    if (openIdx === null) return
+    const content = document.querySelector('.manga-panel-content')
+    if (content) content.scrollTop = 0
+  }, [openIdx])
+
+  useEffect(() => {
     if (!isOpen) return
     const onKey = (e) => {
       if (e.key === 'Escape') setOpenIdx(null)

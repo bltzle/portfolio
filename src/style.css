@@ -430,8 +430,8 @@ html, body, #app {
   justify-content: center;
   cursor: grab;
   touch-action: none;
-  padding: 12px 0 24px;
-  margin-bottom: 0;
+  padding: 8px 0 28px;
+  margin-bottom: -20px;
 }
 
 .manga-panel-grabber {
@@ -1764,7 +1764,7 @@ img.note-image-placeholder {
   }
 
   .manga-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
 .setup-modal {
