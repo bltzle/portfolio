@@ -733,7 +733,7 @@ function NoteDetailPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) 
       {hasSections && (
         <aside className="note-sidebar">
           <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
-            <button className="note-back" onClick={onBack}>Notes</button>
+            <button className="note-back" onClick={onBack}>Misc</button>
           </div>
           <nav className="note-toc">
             <a
@@ -768,7 +768,7 @@ function NoteDetailPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) 
       <article className="note-article" style={!hasSections ? { paddingBottom: '80px' } : undefined}>
         <div className="note-breadcrumb" ref={breadcrumbRef}>
           <div className="note-breadcrumb-left">
-            <button className="note-back" onClick={onBack}>Notes</button>
+            <button className="note-back" onClick={onBack}>Misc</button>
             <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <span className="note-breadcrumb-current">{note.title}</span>
           </div>
@@ -944,7 +944,7 @@ function AnimePage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
       <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
       <div className="page-content">
         <div className="note-breadcrumb-left">
-          <button className="note-back" onClick={onBack}>Notes</button>
+          <button className="note-back" onClick={onBack}>Misc</button>
           <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
           <span className="note-breadcrumb-current">{note?.title}</span>
         </div>
@@ -980,8 +980,22 @@ function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   }, [isOpen])
 
   useEffect(() => {
-    document.body.classList.toggle('modal-open', isOpen)
-    return () => document.body.classList.remove('modal-open')
+    const pageTransition = document.querySelector('.page-transition')
+    if (isOpen) {
+      const scrollbarWidth = pageTransition ? pageTransition.offsetWidth - pageTransition.clientWidth : 0
+      document.documentElement.style.setProperty('--scrollbar-compensation', `${scrollbarWidth}px`)
+      document.body.classList.add('modal-open')
+      pageTransition?.classList.add('manga-page-blurred')
+    } else {
+      document.body.classList.remove('modal-open')
+      document.documentElement.style.removeProperty('--scrollbar-compensation')
+      pageTransition?.classList.remove('manga-page-blurred')
+    }
+    return () => {
+      document.body.classList.remove('modal-open')
+      document.documentElement.style.removeProperty('--scrollbar-compensation')
+      pageTransition?.classList.remove('manga-page-blurred')
+    }
   }, [isOpen])
 
   return (
@@ -989,7 +1003,7 @@ function MangaPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
       <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
       <div className="page-content">
         <div className="note-breadcrumb-left">
-          <button className="note-back" onClick={onBack}>Notes</button>
+          <button className="note-back" onClick={onBack}>Misc</button>
           <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
           <span className="note-breadcrumb-current">{note?.title}</span>
         </div>
@@ -1110,7 +1124,6 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
   return (
     <div className="music-page">
       <TopFade />
-      <div className="music-scroll-fade" />
       <div className="music-nav-wrap">
         <img src={theme === 'Dark' ? SPRITE_DARK : SPRITE_LIGHT} alt="" className="nav-logo" onClick={() => setPage('home')} style={{ cursor: 'pointer', filter: `hue-rotate(${hueDeg}deg)`, transition: 'filter 0.3s ease' }} />
       </div>
@@ -1152,6 +1165,7 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
             </div>
           )}
         </div>
+        <div className="music-scroll-fade" />
       </div>
 
     </div>
@@ -1161,7 +1175,7 @@ function MusicPage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
 function WritingPage({ setPage, initialNote, hueDeg = 0, theme = 'Light' }) {
   const [activeNote, setActiveNote] = useState(() => initialNote ? writings.find(w => w.type === initialNote) ?? null : null)
   const [animateList, setAnimateList] = useState(true)
-  const [easterEgg, setEasterEgg] = useState(false)
+
   useEffect(() => {
     if (!animateList) return
     const t = setTimeout(() => setAnimateList(false), 1200)
@@ -1205,12 +1219,51 @@ function WritingPage({ setPage, initialNote, hueDeg = 0, theme = 'Light' }) {
       <div className="page">
         <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
         <div className="page-content">
-          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes<span style={{ color: 'var(--border-light)', cursor: 'pointer' }} onClick={() => setEasterEgg(e => !e)}>{easterEgg ? <span style={{ color: 'var(--light)', fontWeight: 400 }}> — do people actually read these?</span> : ' ...'}</span></h1>
+          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Misc</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {writings.map((w, i) => (
               <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
                 <span className="project-name">{w.title}</span>
                 {w.date && <span className="writing-category">{`${new Date(w.date + 'T00:00').getMonth() + 1}.${new Date(w.date + 'T00:00').getDate()}.${new Date(w.date + 'T00:00').getFullYear()}`}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </>
+  )
+}
+
+const prototypes = []
+
+function PrototypesPage({ setPage, hueDeg = 0, theme = 'Light' }) {
+  const [activeItem, setActiveItem] = useState(null)
+  const [animateList, setAnimateList] = useState(true)
+  useEffect(() => {
+    if (!animateList) return
+    const t = setTimeout(() => setAnimateList(false), 1200)
+    return () => clearTimeout(t)
+  }, [animateList])
+
+  if (activeItem) {
+    return (
+      <div key={activeItem.title} className="page-transition">
+        <NoteDetailPage note={activeItem} onBack={() => { setAnimateList(true); setActiveItem(null) }} setPage={setPage} hueDeg={hueDeg} theme={theme} />
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div className="page">
+        <Nav setPage={setPage} hueDeg={hueDeg} theme={theme} />
+        <div className="page-content">
+          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Play</h1>
+          <ul className="projects no-bg-hover" style={{ width: '100%' }}>
+            {prototypes.map((p, i) => (
+              <li key={p.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveItem(p)} onMouseEnter={() => playClick(0.4)}>
+                <span className="project-name">{p.title}</span>
+                {p.date && <span className="writing-category">{`${new Date(p.date + 'T00:00').getMonth() + 1}.${new Date(p.date + 'T00:00').getDate()}.${new Date(p.date + 'T00:00').getFullYear()}`}</span>}
               </li>
             ))}
           </ul>
@@ -1237,9 +1290,9 @@ function HomePage({ setPage, hueDeg = 0, setHueDeg, theme, onCycleTheme }) {
 
   const categories = [
     { label: 'About',                  desc: 'Little ol\' me',          page: 'about'         },
-    { label: 'Notes',                  desc: 'What\'s on my mind',      page: 'writing'       },
+    { label: 'Misc',                  desc: 'What\'s on my mind',      page: 'writing'       },
     { label: 'Music',                  desc: 'What I\'ve been hearing',  page: 'music'         },
-    { label: 'Play', desc: 'Visual experiments', page: 'prototypes', disabled: true },
+    { label: 'Play', desc: 'Visual experiments', page: 'prototypes' },
   ]
 
   if (activeProject) {
@@ -1310,7 +1363,7 @@ export default function App() {
   }, [theme])
 
   useEffect(() => {
-    const titles = { home: 'Baltzelle', about: 'About', writing: 'Notes', 'writing-music': 'Notes' }
+    const titles = { home: 'Baltzelle', about: 'About', writing: 'Misc', 'writing-music': 'Misc', prototypes: 'Play' }
     document.title = titles[page] ?? 'Baltzelle'
   }, [page])
 
@@ -1346,6 +1399,7 @@ export default function App() {
       {page === 'about'      && <AboutPage      setPage={setPage} hueDeg={hueDeg} theme={theme} />}
       {page === 'writing'    && <WritingPage    setPage={setPage} hueDeg={hueDeg} theme={theme} />}
       {page === 'music'      && <MusicPage      onBack={() => setPage('home')} setPage={setPage} hueDeg={hueDeg} theme={theme} />}
+      {page === 'prototypes' && <PrototypesPage setPage={setPage} hueDeg={hueDeg} theme={theme} />}
     </div>
   )
 }
