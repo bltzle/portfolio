@@ -951,7 +951,7 @@ function AnimePage({ note, onBack, setPage, hueDeg = 0, theme = 'Light' }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
           {animeData.watching.filter(item => item.quote).map((item, i) => (
             <div key={i}>
-              <p style={{ fontFamily: "'Gambetta', serif", fontSize: '16px', fontStyle: 'italic', color: 'var(--dark)', lineHeight: 1.75, textAlign: 'justify', textWrap: 'pretty' }}>{item.quote}</p>
+              <p style={{ fontFamily: "'Gambetta', serif", fontSize: '16px', fontStyle: 'italic', color: 'var(--dark)', lineHeight: 1.75, textWrap: 'pretty' }}>{item.quote}</p>
               <p style={{ fontSize: '13px', color: 'var(--light)', marginTop: '10px' }}>— {item.quoteAttr ?? item.title}{item.quoteSource && <>, <a href={item.quoteHref} target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>{item.quoteSource}</a></>}</p>
             </div>
           ))}
