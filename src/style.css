@@ -1197,7 +1197,7 @@ img.note-image-placeholder {
   font-size: 13px;
   font-weight: 400;
   color: var(--dark);
-  padding: 7px 0;
+  padding: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
