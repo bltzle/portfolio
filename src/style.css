@@ -112,8 +112,8 @@ html, body, #app {
 }
 
 @keyframes itemIn {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: var(--end-opacity, 1); transform: translateY(0); }
+  from { opacity: 0; transform: translateY(18px); filter: blur(4px); }
+  to   { opacity: var(--end-opacity, 1); transform: translateY(0); filter: blur(0px); }
 }
 
 @keyframes dropdown-enter {
@@ -734,7 +734,6 @@ html, body, #app {
 
 .project.dim {
   cursor: not-allowed;
-  opacity: 0.3;
 }
 
 @media (hover: hover) {

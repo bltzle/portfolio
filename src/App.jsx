@@ -389,7 +389,6 @@ function ProjectDetailPage({ project, onBack, setPage }) {
       <TopFade />
       {hasSections && (
         <aside className="note-sidebar">
-          <button className="nav-home" onClick={onBack} style={{ position: 'absolute', top: '48px', left: '140px' }}>Baltzelle</button>
           <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
             <button className="note-back" onClick={onBack}>Work</button>
           </div>
@@ -590,8 +589,7 @@ function WorkPage({ setPage, active }) {
 function ColophonPage({ setPage }) {
   return (
     <div className="page">
-      <Nav setPage={setPage} />
-      <div className="page-content">
+      <div className="page-content" style={{ paddingTop: '156px' }}>
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Colophon</h1>
         <div className="about-text">
           <p className="animate" style={{ animationDelay: '0.15s' }}>A colophon is a tradition from print publishing — a behind-the-scenes look at how something was made. This is mine.</p>
@@ -661,17 +659,17 @@ const mangaCovers = [
 const writings = [
   {
     title: 'Quotes from animations',
-    date: '2026-02-18',
+    category: 'Anime',
     type: 'anime',
   },
   {
     title: 'Collection of my favorite manga covers',
-    date: '2026-03-28',
+    category: 'Manga',
     type: 'manga',
   },
   {
     title: 'Recent listening',
-    date: '2026-04-01',
+    category: 'Music',
     type: 'music',
   },
 ]
@@ -945,8 +943,7 @@ const animeData = {
 function AnimePage({ note, onBack, setPage }) {
   return (
     <div className="page">
-      <Nav setPage={setPage} />
-      <div className="page-content">
+      <div className="page-content" style={{ paddingTop: '156px' }}>
         <div className="note-breadcrumb-left">
           <button className="note-back" onClick={onBack}>Notes</button>
           <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
@@ -1010,8 +1007,7 @@ function MangaPage({ note, onBack, setPage }) {
 
   return (
     <div className="page">
-      <Nav setPage={setPage} />
-      <div className="page-content">
+      <div className="page-content" style={{ paddingTop: '156px' }}>
         <div className="note-breadcrumb-left">
           <button className="note-back" onClick={onBack}>Notes</button>
           <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
@@ -1125,7 +1121,7 @@ function MusicPage({ note, onBack, setPage }) {
   return (
     <div className="music-page">
       <TopFade />
-      <div className="music-inner animate" style={{ paddingTop: '96px', paddingBottom: '24px', animationDelay: '0.05s' }}>
+      <div className="music-inner animate" style={{ paddingTop: '156px', paddingBottom: '24px', animationDelay: '0.05s' }}>
         <h1 className="page-heading">Music</h1>
       </div>
       <div className="music-col-headers animate" style={{ animationDelay: '0.1s' }}>
@@ -1231,7 +1227,7 @@ function WritingPage({ setPage, initialNote }) {
             {writings.map((w, i) => (
               <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
                 <span className="project-name">{w.title}</span>
-                {w.date && <span className="writing-category">{`${new Date(w.date + 'T00:00').getMonth() + 1}.${new Date(w.date + 'T00:00').getDate()}.${new Date(w.date + 'T00:00').getFullYear()}`}</span>}
+                {w.category && <span className="writing-category">{w.category}</span>}
               </li>
             ))}
           </ul>
@@ -1267,8 +1263,7 @@ function PrototypesPage({ setPage }) {
   return (
     <>
       <div className="page">
-        <Nav setPage={setPage} />
-        <div className="page-content">
+        <div className="page-content" style={{ paddingTop: '156px' }}>
           <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Play</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {prototypes.map((p, i) => (
@@ -1328,15 +1323,15 @@ function HomePage({ setPage }) {
         </nav>
         <div className="home-content">
           <header className="header">
-            <h1>Baltzelle</h1>
-            <p>Designer crafting stories for early-stage companies</p>
+            <h1 className="animate" style={{ animationDelay: '0.1s' }}>Baltzelle</h1>
+            <p className="animate" style={{ animationDelay: '0.15s' }}>Designer crafting stories for early-stage companies</p>
           </header>
           <ul className="projects">
-            {projects.map((p) => (
+            {projects.map((p, i) => (
               <li
                 key={p.name}
-                className={`project${(!p.sections && !p.href) ? ' dim' : ''}`}
-                style={{ cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed' }}
+                className={`project animate${(!p.sections && !p.href) ? ' dim' : ''}`}
+                style={{ cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed', animationDelay: `${0.2 + i * 0.04}s`, '--end-opacity': (!p.sections && !p.href) ? 0.3 : 1 }}
                 onClick={() => { if (p.sections && !p.linkOnly) setActiveProject(p); else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
                 onMouseEnter={() => { setHoveredProject(p); if (p.img) setPreviewSrc(p.img); playClick(0.4) }}
                 onMouseLeave={() => setHoveredProject(null)}
