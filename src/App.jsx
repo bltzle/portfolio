@@ -617,7 +617,7 @@ function AboutPage({ setPage }) {
         <div className="home-nav-links">
           <a onClick={() => setPage('home')}>Work</a>
           <a className="active">About</a>
-          <a onClick={() => setPage('music')}>Music</a>
+          <a onClick={() => setPage('writing')}>Notes</a>
         </div>
       </nav>
       <div className="page-content" style={{ paddingTop: '96px' }}>
@@ -668,6 +668,11 @@ const writings = [
     title: 'Collection of my favorite manga covers',
     date: '2026-03-28',
     type: 'manga',
+  },
+  {
+    title: 'Recent listening',
+    date: '2026-04-01',
+    type: 'music',
   },
 ]
 
@@ -1120,13 +1125,6 @@ function MusicPage({ note, onBack, setPage }) {
   return (
     <div className="music-page">
       <TopFade />
-      <nav className="home-nav">
-        <div className="home-nav-links">
-          <a onClick={() => setPage('home')}>Work</a>
-          <a onClick={() => setPage('about')}>About</a>
-          <a className="active">Music</a>
-        </div>
-      </nav>
       <div className="music-inner animate" style={{ paddingTop: '96px', paddingBottom: '24px', animationDelay: '0.05s' }}>
         <h1 className="page-heading">Music</h1>
       </div>
@@ -1220,8 +1218,14 @@ function WritingPage({ setPage, initialNote }) {
   return (
     <>
       <div className="page">
-        <Nav setPage={setPage} />
-        <div className="page-content">
+        <nav className="home-nav">
+          <div className="home-nav-links">
+            <a onClick={() => setPage('home')}>Work</a>
+            <a onClick={() => setPage('about')}>About</a>
+            <a className="active">Notes</a>
+          </div>
+        </nav>
+        <div className="page-content" style={{ paddingTop: '96px' }}>
           <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {writings.map((w, i) => (
@@ -1319,7 +1323,7 @@ function HomePage({ setPage }) {
           <div className="home-nav-links">
             <a className="active">Work</a>
             <a onClick={() => setPage('about')}>About</a>
-            <a onClick={() => setPage('music')}>Music</a>
+            <a onClick={() => setPage('writing')}>Notes</a>
           </div>
         </nav>
         <div className="home-content">
@@ -1385,7 +1389,7 @@ export default function App() {
         }))
       }
       window.history.replaceState({}, '', '/')
-      setPage('writing-music')
+      setPage('writing')
     })
   }, [])
 
@@ -1394,7 +1398,6 @@ export default function App() {
       {page === 'home'       && <HomePage       setPage={setPage} />}
       {page === 'about'      && <AboutPage      setPage={setPage} />}
       {page === 'writing'    && <WritingPage    setPage={setPage} />}
-      {page === 'music'      && <MusicPage      onBack={() => setPage('home')} setPage={setPage} />}
       {page === 'prototypes' && <PrototypesPage setPage={setPage} />}
     </div>
   )

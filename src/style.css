@@ -592,7 +592,7 @@ html, body, #app {
 
 .home-nav-links a {
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--light);
   cursor: pointer;
   text-decoration: none;
@@ -605,7 +605,7 @@ html, body, #app {
 
 .home-nav-links a.active {
   color: var(--dark);
-  font-weight: 400;
+  font-weight: 500;
 }
 
 /* Home content area */
@@ -641,7 +641,7 @@ html, body, #app {
 .header p {
   font-size: 14px;
   font-weight: 400;
-  color: var(--light);
+  color: var(--dark);
   text-wrap: pretty;
 }
 
