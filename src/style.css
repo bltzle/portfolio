@@ -1840,8 +1840,13 @@ img.note-image-placeholder {
   }
 
   .home-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     justify-content: center;
-    padding: 24px 24px 0;
+    padding: 0 24px 24px;
+    z-index: var(--z-nav);
   }
 
   .home-nav-links {
@@ -1866,7 +1871,7 @@ img.note-image-placeholder {
   }
 
   .header {
-    padding: 60px 24px 0;
+    padding: 96px 24px 0;
     margin-bottom: 32px;
   }
 
@@ -1875,7 +1880,7 @@ img.note-image-placeholder {
   }
 
   .work-footer {
-    padding: 0 24px 24px;
+    padding: 0 24px 80px;
   }
 
   .nav {
