@@ -1017,20 +1017,20 @@ function AnimePage({ note, onBack, setPage }) {
     return [
       { x: pad, y: pad },
       { x: vw - w - pad, y: pad },
-      { x: pad, y: vh - h - pad - 80 },
-      { x: vw - w - pad, y: vh - h - pad - 80 },
+      { x: pad, y: vh - h - pad },
+      { x: vw - w - pad, y: vh - h - pad },
     ]
   }
 
   const handleDragEnd = (_, info) => {
-    const cx = info.point.x + info.velocity.x * 0.12
-    const cy = info.point.y + info.velocity.y * 0.12
+    const elX = pipXY.x + info.offset.x + info.velocity.x * 0.12
+    const elY = pipXY.y + info.offset.y + info.velocity.y * 0.12
     const corners = getCorners()
     let closest = corners[0]
     let minDist = Infinity
     for (const c of corners) {
-      const dx = cx - (c.x + 90)
-      const dy = cy - (c.y + 70)
+      const dx = elX - c.x
+      const dy = elY - c.y
       const dist = dx * dx + dy * dy
       if (dist < minDist) { minDist = dist; closest = c }
     }
@@ -1068,7 +1068,7 @@ function AnimePage({ note, onBack, setPage }) {
                   style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'auto' }}
                   drag
                   dragElastic={0.2}
-                  dragConstraints={{ top: 16, left: 16, right: window.innerWidth - 196, bottom: window.innerHeight - 236 }}
+                  dragConstraints={{ top: 16, left: 16, right: window.innerWidth - 196, bottom: window.innerHeight - 156 }}
                   dragTransition={{ bounceStiffness: 600, bounceDamping: 18, power: 0.4 }}
                   onDragEnd={handleDragEnd}
                   initial={{ x: pipXY.x, y: pipXY.y, opacity: 0, scale: 0.9 }}
