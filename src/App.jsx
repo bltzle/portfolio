@@ -181,7 +181,7 @@ function playClick(intensity = 0.4) {
   src.start()
 }
 
-import { Post, ArrowDownLeft, NavArrowRight, Xmark, Plus, FilterList, Check } from 'iconoir-react'
+import { Post, ArrowDownLeft, NavArrowRight, Xmark, Plus, FilterList, Check, LongArrowUpLeft } from 'iconoir-react'
 import { motion, AnimatePresence, useDragControls } from 'motion/react'
 import './style.css'
 
@@ -271,12 +271,14 @@ function useLocalTime() {
   return time
 }
 
-function WorkFooter({ color }) {
+function WorkFooter({ color, setPage }) {
   const time = useLocalTime()
   return (
-    <footer className="work-links animate" style={{ color, transition: 'color 0.5s ease', animationDelay: '0.5s' }}>
+    <footer className="work-footer animate" style={{ color, transition: 'color 0.5s ease', animationDelay: '0.5s' }}>
       <div className="footer-left">
         <span className="footer-item visitor-time">{time}</span>
+        <span className="footer-divider" />
+        <a className="footer-item" onClick={() => setPage('colophon')}>Colophon</a>
       </div>
     </footer>
   )
@@ -589,20 +591,23 @@ function WorkPage({ setPage, active }) {
 
 function ColophonPage({ setPage }) {
   return (
-    <div className="page">
+    <div className="page page-transition">
       <div className="page-content" style={{ paddingTop: '156px' }}>
-        <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Colophon</h1>
+        <button className="back-btn" onClick={() => setPage('home')} aria-label="Back">
+          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+        </button>
+        <h1 className="page-heading">Colophon</h1>
         <div className="about-text">
-          <p className="animate" style={{ animationDelay: '0.15s' }}>A colophon is a tradition from print publishing — a behind-the-scenes look at how something was made. This is mine.</p>
-          <h2 className="page-heading animate" style={{ animationDelay: '0.2s', marginTop: '48px' }}>Philosophy</h2>
-          <p className="animate" style={{ animationDelay: '0.25s' }}>I'm deeply guided by things that have high craft, precision, and restraint. That's just my personal style. I tend to gravitate towards design that emulates these principles.</p>
-          <p className="animate" style={{ animationDelay: '0.3s' }}>All of the writing on this site was done by myself so the writing quality itself might be cooked. It's not meant to be perfect, it's meant to be my true authentic self.</p>
-          <h2 className="page-heading animate" style={{ animationDelay: '0.3s', marginTop: '48px' }}>Typography</h2>
-          <p className="animate" style={{ animationDelay: '0.35s' }}><a href="https://displaay.net/typeface/matter/" target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>Matter by Displaay Type Foundry</a> — restrained but with enough personality in the characters to feel like mine. I studied letterforms in design school, so when it came time to build this I wanted something unique to me rather than another open-source default.</p>
-          <h2 className="page-heading animate" style={{ animationDelay: '0.5s', marginTop: '48px' }}>Construction</h2>
-          <p className="animate" style={{ animationDelay: '0.55s' }}>My previous site was built using Framer and I think it's still a great product, but not the best choice for me moving forward. With the advent of powerful tools like Cursor and Claude, I can go beyond the boundaries of what Framer allows, implement my ideas much quicker, and move away from another subscription. This transition has given me immense freedom.</p>
-          <h2 className="page-heading animate" style={{ animationDelay: '0.6s', marginTop: '48px' }}>Domain</h2>
-          <p className="animate" style={{ animationDelay: '0.65s' }}>I initially used my entire name as my domain, but that felt a bit too long. Only using my last name felt right. It's short, simple, personal, and memorable even if people can never figure out how to properly pronounce it initially. That's alright with me though, I think it feels like a gamer tag.</p>
+          <p>A colophon is a tradition from print publishing — a behind-the-scenes look at how something was made. This is mine.</p>
+          <h2 className="page-heading" style={{ marginTop: '48px' }}>Philosophy</h2>
+          <p>I'm deeply guided by things that have high craft, precision, and restraint. That's just my personal style. I tend to gravitate towards design that emulates these principles.</p>
+          <p>All of the writing on this site was done by myself so the writing quality itself might be cooked. It's not meant to be perfect, it's meant to be my true authentic self.</p>
+          <h2 className="page-heading" style={{ marginTop: '48px' }}>Typography</h2>
+          <p><a href="https://displaay.net/typeface/matter/" target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>Matter by Displaay Type Foundry</a> — restrained but with enough personality in the characters to feel like mine. I studied letterforms in design school, so when it came time to build this I wanted something unique to me rather than another open-source default.</p>
+          <h2 className="page-heading" style={{ marginTop: '48px' }}>Construction</h2>
+          <p>My previous site was built using Framer and I think it's still a great product, but not the best choice for me moving forward. With the advent of powerful tools like Cursor and Claude, I can go beyond the boundaries of what Framer allows, implement my ideas much quicker, and move away from another subscription. This transition has given me immense freedom.</p>
+          <h2 className="page-heading" style={{ marginTop: '48px' }}>Domain</h2>
+          <p>I initially used my entire name as my domain, but that felt a bit too long. Only using my last name felt right. It's short, simple, personal, and memorable even if people can never figure out how to properly pronounce it initially. That's alright with me though, I think it feels like a gamer tag.</p>
         </div>
       </div>
     </div>
@@ -946,6 +951,13 @@ function AnimePage({ note, onBack, setPage }) {
   const mouse = useRef({ x: 0, y: 0 })
   const pos = useRef({ x: 0, y: 0 })
   const raf = useRef(null)
+
+  useEffect(() => {
+    animeData.watching.filter(item => item.quoteImg).forEach(item => {
+      const img = new Image()
+      img.src = item.quoteImg
+    })
+  }, [])
 
   useEffect(() => {
     if (hovered === null) {
@@ -1385,7 +1397,7 @@ function HomePage({ setPage }) {
             ))}
           </ul>
         </div>
-        <WorkFooter color={footerColor} />
+        <WorkFooter color={footerColor} setPage={setPage} />
       </div>
     </div>
   )
@@ -1435,6 +1447,7 @@ export default function App() {
       {page === 'about'      && <AboutPage      setPage={setPage} />}
       {page === 'music'      && <MusicPage      setPage={setPage} />}
       {page === 'writing'    && <WritingPage    setPage={setPage} />}
+      {page === 'colophon'   && <ColophonPage   setPage={setPage} />}
       {page === 'prototypes' && <PrototypesPage setPage={setPage} />}
     </div>
   )

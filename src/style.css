@@ -239,20 +239,26 @@ html, body, #app {
 }
 
 /* Work links */
-.work-links {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0 76px 24px;
+.work-footer {
   margin-top: auto;
-  position: relative;
+  padding: 0 76px 24px;
+}
+
+.footer-divider {
+  width: 1px;
+  height: 12px;
+  background: currentColor;
+  opacity: 0.3;
 }
 
 .footer-left {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.footer-item {
+  cursor: pointer;
 }
 
 /* Music */
@@ -564,6 +570,24 @@ html, body, #app {
   color: var(--light);
 }
 
+.back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  margin-bottom: 32px;
+  color: var(--light);
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.back-btn:hover {
+  color: var(--dark);
+  background: rgba(0, 0, 0, 0.08);
+}
 
 .nav a {
   text-decoration: none;
@@ -1265,6 +1289,7 @@ img.note-image-placeholder {
 .music-col-headers-row span {
   padding: 0;
   margin: 0;
+  width: fit-content;
   transition: color 0.15s ease;
 }
 
