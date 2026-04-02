@@ -661,6 +661,7 @@ a.footer-item:hover {
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 /* Content */
@@ -839,6 +840,7 @@ a.footer-item:hover {
   flex-direction: column;
   align-items: flex-start;
   gap: 40px;
+  overflow-x: hidden;
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
@@ -1332,6 +1334,7 @@ img.note-image-placeholder {
   width: 100%;
   padding-top: 12px;
   padding-bottom: 120px;
+  overflow-x: hidden;
 }
 
 .music-row {
