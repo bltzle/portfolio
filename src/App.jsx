@@ -241,11 +241,12 @@ const projects = [
     modalBody: `I came on as Product Designer to help lay the groundwork for the product. A lot of early decisions about how things looked and felt. We did this over the summer of 2024.`,
     modalContent: `Special thanks to`,
     collaborators: ['Gabriel Valdivia'],
+    hoverText: 'THIS IS THE NEBULA',
   },
-  { name: 'Goodword',              desc: 'Maintain relationships in your professional network',         year: '2024', href: 'https://www.goodword.com/' },
-  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024', href: 'https://www.workmate.com/' },
-  { name: 'Sensible',              desc: 'A high yield account for your crypto',                       year: '2024', href: 'https://www.coinbase.com/en-gb/blog/Coinbase-acquires-team-to-accelerate-onchain-consumer-roadmap' },
-  { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025', href: 'https://www.dex.camera/' },
+  { name: 'Goodword',              desc: 'Maintain relationships in your professional network',         year: '2024', href: 'https://www.goodword.com/', hoverText: 'A GLOW THAT NEVER ENDS' },
+  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024', href: 'https://www.workmate.com/', hoverText: 'DUSK SOAKED IN GREEN LIGHT' },
+  { name: 'Sensible',              desc: 'A high yield account for your crypto',                       year: '2024', href: 'https://www.coinbase.com/en-gb/blog/Coinbase-acquires-team-to-accelerate-onchain-consumer-roadmap', hoverText: 'AND STILL, IT DRIFTS ONWARD' },
+  { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025', href: 'https://www.dex.camera/', hoverText: 'FADING THE MOMENT YOU LOOK AWAY' },
   { name: 'Underline',             desc: 'An investment platform for alternative assets',              year: '2023' },
 ]
 
@@ -615,7 +616,7 @@ function AboutPage({ setPage }) {
         <div className="home-nav-links">
           <a onClick={() => setPage('home')}>Work</a>
           <a className="active">About</a>
-          <a onClick={() => setPage('writing')}>Notes</a>
+          <a onClick={() => setPage('writing')}>Misc</a>
         </div>
       </nav>
       <div className="page-content" style={{ paddingTop: '96px' }}>
@@ -735,7 +736,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
       {hasSections && (
         <aside className="note-sidebar">
           <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
-            <button className="note-back" onClick={onBack}>Notes</button>
+            <button className="note-back" onClick={onBack}>Misc</button>
           </div>
           <nav className="note-toc">
             <a
@@ -770,7 +771,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
       <article className="note-article" style={!hasSections ? { paddingBottom: '80px' } : undefined}>
         <div className="note-breadcrumb" ref={breadcrumbRef}>
           <div className="note-breadcrumb-left">
-            <button className="note-back" onClick={onBack}>Notes</button>
+            <button className="note-back" onClick={onBack}>Misc</button>
             <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <span className="note-breadcrumb-current">{note.title}</span>
           </div>
@@ -861,6 +862,7 @@ const animeData = {
       quoteAttr: 'Frieren',
       quoteSource: 'Frieren: Beyond Journey\'s End',
       quoteHref: 'https://en.wikipedia.org/wiki/Frieren',
+      quoteImg: '/images/quotes/frieren.gif',
     },
     {
       title: 'Avatar: The Last Airbender', studio: 'Nickelodeon', episodes: 61,
@@ -869,6 +871,8 @@ const animeData = {
       quoteAttr: 'Iroh',
       quoteSource: 'Avatar: The Last Airbender',
       quoteHref: 'https://en.wikipedia.org/wiki/Avatar:_The_Last_Airbender',
+      quoteImg: '/images/quotes/iroh.gif',
+      quoteImgCrop: true,
       desc: [
         'Avatar: The Last Airbender follows Aang, the last surviving Airbender, as he works to master all four elements and bring balance to a world at war. The show is deceptively layered — built for younger audiences but genuinely rich in its themes.',
         'Uncle Iroh is the character that makes the show. His warmth, his stillness, the way he holds wisdom without ever making it feel like a lecture. The quote above is the one I keep coming back to.',
@@ -882,6 +886,7 @@ const animeData = {
       quoteAttr: 'Riko',
       quoteSource: 'Made in Abyss',
       quoteHref: 'https://en.wikipedia.org/wiki/Made_in_Abyss',
+      quoteImg: '/images/quotes/riko.gif',
       desc: [
         'Made in Abyss follows Riko, a young girl who descends into a vast and ancient chasm in search of her missing mother. The Abyss is beautiful and deeply hostile in equal measure.',
         'The show has a deceptive quality to it — the art style reads as warm and childlike, and then uses that against you. The world-building is meticulous, and the deeper the story goes, the more it earns its darkness.',
@@ -895,6 +900,7 @@ const animeData = {
       quoteAttr: 'Killua Zoldyck',
       quoteSource: 'Hunter x Hunter',
       quoteHref: 'https://en.wikipedia.org/wiki/Hunter_%C3%97_Hunter',
+      quoteImg: '/images/quotes/killua.gif',
       desc: [
         'Hunter x Hunter follows Gon Freecss, a boy who discovers his absent father is one of the world\'s greatest hunters, and sets out to find him. What begins as a straightforward adventure quickly becomes something far darker and more considered.',
         'The Chimera Ant arc is one of the most ambitious things in anime — a long, slow build that earns everything it asks of you. Madhouse gives it the visual weight it deserves.',
@@ -904,10 +910,6 @@ const animeData = {
     {
       title: 'Jujutsu Kaisen', studio: 'MAPPA', episodes: 47,
       cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg',
-      quote: 'No matter how many people you\'ve saved, you have no right to take a human life.',
-      quoteAttr: 'Nanami Kento',
-      quoteSource: 'Jujutsu Kaisen',
-      quoteHref: 'https://en.wikipedia.org/wiki/Jujutsu_Kaisen',
       desc: [
         'Jujutsu Kaisen follows Yuji Itadori, a high schooler who swallows a cursed finger and gets pulled into a world of sorcerers and malevolent spirits. The premise moves fast and the show keeps pace with it.',
         'MAPPA\'s animation is the obvious draw — fluid, kinetic, and technically impressive in a way that holds up across the entire run. The Shibuya arc in particular is some of the most sustained high-quality animation in recent memory.',
@@ -921,6 +923,7 @@ const animeData = {
       quoteAttr: 'Uraraka',
       quoteSource: 'My Hero Academia',
       quoteHref: 'https://en.wikipedia.org/wiki/My_Hero_Academia',
+      quoteImg: '/images/quotes/uraraka.gif',
     },
     {
       title: 'Ranking of Kings', studio: 'Wit Studio', episodes: 23,
@@ -929,6 +932,7 @@ const animeData = {
       quoteAttr: 'Despa',
       quoteSource: 'Ranking of Kings',
       quoteHref: 'https://en.wikipedia.org/wiki/Ranking_of_Kings',
+      quoteImg: '/images/quotes/despa.gif',
     },
   ],
   finished: [
@@ -941,21 +945,67 @@ const animeData = {
 
 
 function AnimePage({ note, onBack, setPage }) {
+  const [hovered, setHovered] = useState(null)
+  const avatarRef = useRef(null)
+  const mouse = useRef({ x: 0, y: 0 })
+  const pos = useRef({ x: 0, y: 0 })
+  const raf = useRef(null)
+
+  useEffect(() => {
+    if (hovered === null) {
+      if (raf.current) { cancelAnimationFrame(raf.current); raf.current = null }
+      return
+    }
+    const lerp = 0.15
+    const tick = () => {
+      pos.current.x += (mouse.current.x - pos.current.x) * lerp
+      pos.current.y += (mouse.current.y - pos.current.y) * lerp
+      if (avatarRef.current) {
+        avatarRef.current.style.left = `${pos.current.x + 16}px`
+        avatarRef.current.style.top = `${pos.current.y}px`
+      }
+      raf.current = requestAnimationFrame(tick)
+    }
+    raf.current = requestAnimationFrame(tick)
+    return () => { if (raf.current) cancelAnimationFrame(raf.current) }
+  }, [hovered])
+
+  const handleMove = (e) => {
+    mouse.current.x = e.clientX
+    mouse.current.y = e.clientY
+  }
+
+  const handleEnter = (e, i) => {
+    mouse.current.x = e.clientX
+    mouse.current.y = e.clientY
+    pos.current.x = e.clientX
+    pos.current.y = e.clientY
+    setHovered(i)
+  }
+
   return (
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <div className="note-breadcrumb-left">
-          <button className="note-back" onClick={onBack}>Notes</button>
+          <button className="note-back" onClick={onBack}>Misc</button>
           <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
           <span className="note-breadcrumb-current">{note?.title}</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
           {animeData.watching.filter(item => item.quote).map((item, i) => (
-            <div key={i}>
+            <div key={i} className="quote-block" style={{ opacity: hovered !== null && hovered !== i ? 0.3 : 1 }} onMouseEnter={e => handleEnter(e, i)} onMouseMove={handleMove} onMouseLeave={() => setHovered(null)}>
               <p style={{ fontFamily: "'Gambetta', serif", fontSize: '16px', fontStyle: 'italic', color: 'var(--dark)', lineHeight: 1.75, textWrap: 'pretty' }}>{item.quote}</p>
-              <p style={{ fontSize: '13px', color: 'var(--light)', marginTop: '10px' }}>— {item.quoteAttr ?? item.title}{item.quoteSource && <>, <a href={item.quoteHref} target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>{item.quoteSource}</a></>}</p>
+              <p style={{ fontSize: '13px', color: 'var(--light)', marginTop: '10px' }}>— <span className="quote-name">{item.quoteAttr ?? item.title}</span>{item.quoteSource && <>, <a href={item.quoteHref} target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>{item.quoteSource}</a></>}</p>
             </div>
           ))}
+        </div>
+        <div ref={avatarRef} className={`quote-avatar${hovered !== null ? ' visible' : ''}`}>
+          {hovered !== null && (() => {
+            const item = animeData.watching.filter(item => item.quote)[hovered]
+            return item?.quoteImg ? (
+              <img src={item.quoteImg} alt="" className={`quote-avatar-img${item.quoteImgCrop ? ' crop' : ''}`} />
+            ) : null
+          })()}
         </div>
       </div>
     </div>
@@ -1009,7 +1059,7 @@ function MangaPage({ note, onBack, setPage }) {
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <div className="note-breadcrumb-left">
-          <button className="note-back" onClick={onBack}>Notes</button>
+          <button className="note-back" onClick={onBack}>Misc</button>
           <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
           <span className="note-breadcrumb-current">{note?.title}</span>
         </div>
@@ -1218,11 +1268,11 @@ function WritingPage({ setPage, initialNote }) {
           <div className="home-nav-links">
             <a onClick={() => setPage('home')}>Work</a>
             <a onClick={() => setPage('about')}>About</a>
-            <a className="active">Notes</a>
+            <a className="active">Misc</a>
           </div>
         </nav>
         <div className="page-content" style={{ paddingTop: '96px' }}>
-          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
+          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Miscellaneous</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {writings.map((w, i) => (
               <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
@@ -1310,7 +1360,7 @@ function HomePage({ setPage }) {
           />
         )}
         <span className="left-label" style={{ opacity: hoveredProject?.img ? 0 : 1 }}>
-          Hover a project
+          {hoveredProject?.hoverText || 'Hover a project'}
         </span>
       </div>
       <div className="right">
@@ -1318,7 +1368,7 @@ function HomePage({ setPage }) {
           <div className="home-nav-links">
             <a className="active">Work</a>
             <a onClick={() => setPage('about')}>About</a>
-            <a onClick={() => setPage('writing')}>Notes</a>
+            <a onClick={() => setPage('writing')}>Misc</a>
           </div>
         </nav>
         <div className="home-content">
@@ -1354,7 +1404,7 @@ export default function App() {
   const [page, setPage] = useState('home')
 
   useEffect(() => {
-    const titles = { home: 'Baltzelle', about: 'About', writing: 'Notes', 'writing-music': 'Notes', prototypes: 'Play' }
+    const titles = { home: 'Baltzelle', about: 'About', writing: 'Misc', 'writing-music': 'Misc', prototypes: 'Play' }
     document.title = titles[page] ?? 'Baltzelle'
   }, [page])
 

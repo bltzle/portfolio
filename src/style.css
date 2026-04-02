@@ -136,6 +136,7 @@ html, body, #app {
 
 .animate {
   opacity: 0;
+  will-change: transform, opacity, filter;
   animation: itemIn 1s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
 }
 
@@ -956,6 +957,45 @@ html, body, #app {
 
 .note-back:hover {
   color: var(--dark);
+}
+
+.quote-block {
+  transition: opacity 0.2s ease;
+}
+
+
+.quote-avatar {
+  position: fixed;
+  max-width: 180px;
+  max-height: 180px;
+  border-radius: 12px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05), 0 4px 15px rgba(0, 0, 0, 0.03);
+  z-index: var(--z-overlay);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+}
+
+.quote-avatar.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.quote-avatar-img {
+  display: block;
+  max-width: 180px;
+  max-height: 180px;
+}
+
+.quote-avatar-img.crop {
+  max-height: none;
+  width: 180px;
+  height: 101px;
+  object-fit: cover;
+  object-position: top;
 }
 
 .note-sidebar-crumb {
