@@ -90,6 +90,7 @@ html, body, #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
 }
 #app {
   isolation: isolate;
@@ -640,10 +641,14 @@ a.footer-item:hover {
   cursor: pointer;
   text-decoration: none;
   transition: color 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.home-nav-links a:hover {
-  color: var(--dark);
+@media (hover: hover) {
+  .home-nav-links a:hover {
+    color: var(--dark);
+  }
 }
 
 .home-nav-links a.active {
@@ -1882,7 +1887,7 @@ img.note-image-placeholder {
   }
 
   .work-footer {
-    padding: 0 24px 120px;
+    padding: 0 24px 88px;
     margin-top: 120px;
   }
 
