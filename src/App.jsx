@@ -1175,7 +1175,7 @@ function MusicPage({ setPage }) {
           <a onClick={() => setPage('writing')}>Notes</a>
         </div>
       </nav>
-      <div className="music-col-headers animate" style={{ padding: '0 48px', animationDelay: '0.1s' }}>
+      <div className="music-col-headers animate" style={{ padding: '0 48px', paddingTop: '96px', animationDelay: '0.1s' }}>
         {!loading && tracks.length > 0 && (
           <div className="music-col-headers-row">
             {[['song', 'Title'], ['artist', 'Artist'], ['album', 'Album'], ['played', 'Played']].map(([col, label]) => (
