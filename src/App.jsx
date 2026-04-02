@@ -998,8 +998,28 @@ function AnimePage({ note, onBack, setPage }) {
     setHovered(i)
   }
 
+  const [pipXY, setPipXY] = useState({ x: 0, y: 0 })
+
   const handleTap = (i) => {
-    setTapped(prev => prev === i ? null : i)
+    if (tapped === i) { setTapped(null); return }
+    const pad = 16
+    const vw = window.innerWidth
+    setPipXY({ x: vw - 180 - pad, y: pad + 60 })
+    setTapped(i)
+  }
+
+  const handleDragEnd = (_, info) => {
+    const pad = 16
+    const w = 180
+    const h = 140
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    const cx = info.point.x
+    const cy = info.point.y
+    const goLeft = cx < vw / 2
+    const snapX = goLeft ? pad : vw - w - pad
+    const snapY = Math.max(pad, Math.min(vh - h - pad - 80, cy - h / 2))
+    setPipXY({ x: snapX, y: snapY })
   }
 
   return (
@@ -1028,15 +1048,14 @@ function AnimePage({ note, onBack, setPage }) {
               if (!item?.quoteImg) return null
               return (
                 <motion.div
-                  key={tapped}
+                  key="pip"
                   className="quote-avatar visible"
-                  style={{ position: 'fixed', top: '50%', left: '50%', x: '-50%', y: '-80%', pointerEvents: 'auto' }}
+                  style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'auto' }}
                   drag
-                  dragElastic={0.6}
-                  dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
-                  dragTransition={{ bounceStiffness: 300, bounceDamping: 20 }}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  dragMomentum={false}
+                  onDragEnd={handleDragEnd}
+                  initial={{ x: pipXY.x, y: pipXY.y, opacity: 0, scale: 0.9 }}
+                  animate={{ x: pipXY.x, y: pipXY.y, opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 >

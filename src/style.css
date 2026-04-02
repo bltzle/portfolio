@@ -1035,6 +1035,14 @@ a.footer-item:hover {
   transform: translateY(0);
 }
 
+@media (max-width: 768px) {
+  .quote-avatar {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 .quote-avatar-img {
   display: block;
   max-width: 180px;
