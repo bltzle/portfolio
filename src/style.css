@@ -936,8 +936,9 @@ a.footer-item:hover {
 
 .note-breadcrumb {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 32px;
 }
 
 .note-breadcrumb-left {
@@ -1219,6 +1220,9 @@ img.note-image-placeholder {
   min-height: 100dvh;
 }
 
+.music-heading {
+  padding: 96px 48px 0;
+}
 
 .music-col-headers {
   flex-shrink: 0;
@@ -1880,7 +1884,7 @@ img.note-image-placeholder {
   }
 
   .work-footer {
-    padding: 0 24px 80px;
+    padding: 0 24px 120px;
     margin-top: 120px;
   }
 
@@ -1939,7 +1943,11 @@ img.note-image-placeholder {
   }
 
   .note-article {
-    padding: 100px 24px 50vh;
+    padding: 96px 24px 50vh;
+  }
+
+  .page-content {
+    padding-top: 96px !important;
   }
 
   .music-col-date,
@@ -1960,7 +1968,11 @@ img.note-image-placeholder {
     overflow-y: visible;
     flex: none;
     padding: 0 24px !important;
-    padding-top: 96px !important;
+    padding-bottom: 120px !important;
+  }
+
+  .music-heading {
+    padding: 96px 24px 0;
   }
 
   .music-row {
@@ -2036,7 +2048,7 @@ img.note-image-placeholder {
   }
 
   .note-article {
-    padding: 80px 24px 50vh;
+    padding: 96px 24px 50vh;
   }
 
   .music-inner {

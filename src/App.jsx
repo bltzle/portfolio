@@ -774,11 +774,10 @@ function NoteDetailPage({ note, onBack, setPage }) {
       )}
       <article className="note-article" style={!hasSections ? { paddingBottom: '80px' } : undefined}>
         <div className="note-breadcrumb" ref={breadcrumbRef}>
-          <div className="note-breadcrumb-left">
-            <button className="note-back" onClick={onBack}>Notes</button>
-            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
-            <span className="note-breadcrumb-current">{note.title}</span>
-          </div>
+          <button className="back-btn" onClick={onBack} aria-label="Back">
+            <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+          </button>
+          <h1 className="page-heading">{note.title}</h1>
         </div>
         {note.content.map((section, si) => (
           <Fragment key={section.id}>
@@ -997,11 +996,10 @@ function AnimePage({ note, onBack, setPage }) {
   return (
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
-        <div className="note-breadcrumb-left">
-          <button className="note-back" onClick={onBack}>Notes</button>
-          <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
-          <span className="note-breadcrumb-current">{note?.title}</span>
-        </div>
+        <button className="back-btn" onClick={onBack} aria-label="Back">
+          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+        </button>
+        <h1 className="page-heading">{note?.title}</h1>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
           {animeData.watching.filter(item => item.quote).map((item, i) => (
             <div key={i} className="quote-block" style={{ opacity: hovered !== null && hovered !== i ? 0.3 : 1 }} onMouseEnter={e => handleEnter(e, i)} onMouseMove={handleMove} onMouseLeave={() => setHovered(null)}>
@@ -1069,11 +1067,10 @@ function MangaPage({ note, onBack, setPage }) {
   return (
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
-        <div className="note-breadcrumb-left">
-          <button className="note-back" onClick={onBack}>Notes</button>
-          <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
-          <span className="note-breadcrumb-current">{note?.title}</span>
-        </div>
+        <button className="back-btn" onClick={onBack} aria-label="Back">
+          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+        </button>
+        <h1 className="page-heading">{note?.title}</h1>
         <div className="manga-grid">
           {mangaCovers.map((cover, i) => (
             <div key={i} className="manga-item">
@@ -1191,7 +1188,8 @@ function MusicPage({ setPage }) {
         </div>
       </nav>
       <div className="page-transition">
-      <div className="music-col-headers" style={{ padding: '0 48px', paddingTop: '96px' }}>
+      <h1 className="page-heading music-heading">Music</h1>
+      <div className="music-col-headers" style={{ padding: '0 48px' }}>
         {!loading && tracks.length > 0 && (
           <div className="music-col-headers-row">
             {[['song', 'Title'], ['artist', 'Artist'], ['album', 'Album'], ['played', 'Played']].map(([col, label]) => (
