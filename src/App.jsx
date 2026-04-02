@@ -1008,17 +1008,24 @@ function AnimePage({ note, onBack, setPage }) {
     setTapped(i)
   }
 
-  const handleDragEnd = (_, info) => {
+  const pipConstraints = useRef({ top: 0, left: 0, right: 0, bottom: 0 })
+  const updateConstraints = () => {
     const pad = 16
     const w = 180
     const h = 140
-    const vw = window.innerWidth
-    const vh = window.innerHeight
-    const cx = info.point.x
-    const cy = info.point.y
-    const goLeft = cx < vw / 2
-    const snapX = goLeft ? pad : vw - w - pad
-    const snapY = Math.max(pad, Math.min(vh - h - pad - 80, cy - h / 2))
+    pipConstraints.current = { top: pad, left: pad, right: window.innerWidth - w - pad, bottom: window.innerHeight - h - pad - 80 }
+  }
+
+  const handleDragEnd = (_, info) => {
+    updateConstraints()
+    const { top, left, right, bottom } = pipConstraints.current
+    const projected = {
+      x: info.point.x - 90 + info.velocity.x * 0.15,
+      y: info.point.y - 70 + info.velocity.y * 0.15,
+    }
+    const goLeft = projected.x + 90 < window.innerWidth / 2
+    const snapX = goLeft ? left : right
+    const snapY = Math.max(top, Math.min(bottom, projected.y))
     setPipXY({ x: snapX, y: snapY })
   }
 
@@ -1052,12 +1059,14 @@ function AnimePage({ note, onBack, setPage }) {
                   className="quote-avatar visible"
                   style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'auto' }}
                   drag
-                  dragMomentum={false}
+                  dragElastic={0.15}
+                  dragConstraints={{ top: 16, left: 16, right: window.innerWidth - 196, bottom: window.innerHeight - 236 }}
+                  dragTransition={{ bounceStiffness: 500, bounceDamping: 25, power: 0.3 }}
                   onDragEnd={handleDragEnd}
                   initial={{ x: pipXY.x, y: pipXY.y, opacity: 0, scale: 0.9 }}
                   animate={{ x: pipXY.x, y: pipXY.y, opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                 >
                   <img src={item.quoteImg} alt="" className={`quote-avatar-img${item.quoteImgCrop ? ' crop' : ''}`} />
                 </motion.div>
