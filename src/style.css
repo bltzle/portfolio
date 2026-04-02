@@ -1027,6 +1027,7 @@ a.footer-item:hover {
   opacity: 0;
   transform: translateY(4px);
   transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+  touch-action: none;
 }
 
 .quote-avatar.visible {

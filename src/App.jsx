@@ -949,10 +949,13 @@ const animeData = {
 
 function AnimePage({ note, onBack, setPage }) {
   const [hovered, setHovered] = useState(null)
+  const [tapped, setTapped] = useState(null)
   const avatarRef = useRef(null)
   const mouse = useRef({ x: 0, y: 0 })
   const pos = useRef({ x: 0, y: 0 })
   const raf = useRef(null)
+  const quoteRefs = useRef([])
+  const isMobile = window.matchMedia('(max-width: 768px)').matches
 
   useEffect(() => {
     animeData.watching.filter(item => item.quoteImg).forEach(item => {
@@ -962,23 +965,25 @@ function AnimePage({ note, onBack, setPage }) {
   }, [])
 
   useEffect(() => {
-    if (hovered === null) {
-      if (raf.current) { cancelAnimationFrame(raf.current); raf.current = null }
-      return
-    }
-    const lerp = 0.15
-    const tick = () => {
-      pos.current.x += (mouse.current.x - pos.current.x) * lerp
-      pos.current.y += (mouse.current.y - pos.current.y) * lerp
-      if (avatarRef.current) {
-        avatarRef.current.style.left = `${pos.current.x + 16}px`
-        avatarRef.current.style.top = `${pos.current.y}px`
+    if (!isMobile) {
+      if (hovered === null) {
+        if (raf.current) { cancelAnimationFrame(raf.current); raf.current = null }
+        return
+      }
+      const lerp = 0.15
+      const tick = () => {
+        pos.current.x += (mouse.current.x - pos.current.x) * lerp
+        pos.current.y += (mouse.current.y - pos.current.y) * lerp
+        if (avatarRef.current) {
+          avatarRef.current.style.left = `${pos.current.x + 16}px`
+          avatarRef.current.style.top = `${pos.current.y}px`
+        }
+        raf.current = requestAnimationFrame(tick)
       }
       raf.current = requestAnimationFrame(tick)
+      return () => { if (raf.current) cancelAnimationFrame(raf.current) }
     }
-    raf.current = requestAnimationFrame(tick)
-    return () => { if (raf.current) cancelAnimationFrame(raf.current) }
-  }, [hovered])
+  }, [hovered, isMobile])
 
   const handleMove = (e) => {
     mouse.current.x = e.clientX
@@ -993,6 +998,10 @@ function AnimePage({ note, onBack, setPage }) {
     setHovered(i)
   }
 
+  const handleTap = (i) => {
+    setTapped(prev => prev === i ? null : i)
+  }
+
   return (
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
@@ -1001,21 +1010,51 @@ function AnimePage({ note, onBack, setPage }) {
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
-          {animeData.watching.filter(item => item.quote).map((item, i) => (
-            <div key={i} className="quote-block" style={{ opacity: hovered !== null && hovered !== i ? 0.3 : 1 }} onMouseEnter={e => handleEnter(e, i)} onMouseMove={handleMove} onMouseLeave={() => setHovered(null)}>
-              <p style={{ fontFamily: "'Gambetta', serif", fontSize: '16px', fontStyle: 'italic', color: 'var(--dark)', lineHeight: 1.75, textWrap: 'pretty' }}>{item.quote}</p>
-              <p style={{ fontSize: '13px', color: 'var(--light)', marginTop: '10px' }}>— <span className="quote-name">{item.quoteAttr ?? item.title}</span>{item.quoteSource && <>, <a href={item.quoteHref} target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>{item.quoteSource}</a></>}</p>
-            </div>
-          ))}
+          {animeData.watching.filter(item => item.quote).map((item, i) => {
+            const active = isMobile ? tapped : hovered
+            const dimmed = active !== null && active !== i
+            return (
+              <div key={i} ref={el => quoteRefs.current[i] = el} className="quote-block" style={{ opacity: dimmed ? 0.3 : 1 }} onClick={isMobile ? () => handleTap(i) : undefined} onMouseEnter={!isMobile ? e => handleEnter(e, i) : undefined} onMouseMove={!isMobile ? handleMove : undefined} onMouseLeave={!isMobile ? () => setHovered(null) : undefined}>
+                <p style={{ fontFamily: "'Gambetta', serif", fontSize: '16px', fontStyle: 'italic', color: 'var(--dark)', lineHeight: 1.75, textWrap: 'pretty' }}>{item.quote}</p>
+                <p style={{ fontSize: '13px', color: 'var(--light)', marginTop: '10px' }}>— <span className="quote-name">{item.quoteAttr ?? item.title}</span>{item.quoteSource && <>, <a href={item.quoteHref} target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>{item.quoteSource}</a></>}</p>
+              </div>
+            )
+          })}
         </div>
-        <div ref={avatarRef} className={`quote-avatar${hovered !== null ? ' visible' : ''}`}>
-          {hovered !== null && (() => {
-            const item = animeData.watching.filter(item => item.quote)[hovered]
-            return item?.quoteImg ? (
-              <img src={item.quoteImg} alt="" className={`quote-avatar-img${item.quoteImgCrop ? ' crop' : ''}`} />
-            ) : null
-          })()}
-        </div>
+        {isMobile ? (
+          <AnimatePresence>
+            {tapped !== null && (() => {
+              const item = animeData.watching.filter(item => item.quote)[tapped]
+              if (!item?.quoteImg) return null
+              return (
+                <motion.div
+                  key={tapped}
+                  className="quote-avatar visible"
+                  style={{ position: 'fixed', top: '50%', left: '50%', x: '-50%', y: '-80%', pointerEvents: 'auto' }}
+                  drag
+                  dragElastic={0.6}
+                  dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                  dragTransition={{ bounceStiffness: 300, bounceDamping: 20 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                >
+                  <img src={item.quoteImg} alt="" className={`quote-avatar-img${item.quoteImgCrop ? ' crop' : ''}`} />
+                </motion.div>
+              )
+            })()}
+          </AnimatePresence>
+        ) : (
+          <div ref={avatarRef} className={`quote-avatar${hovered !== null ? ' visible' : ''}`}>
+            {hovered !== null && (() => {
+              const item = animeData.watching.filter(item => item.quote)[hovered]
+              return item?.quoteImg ? (
+                <img src={item.quoteImg} alt="" className={`quote-avatar-img${item.quoteImgCrop ? ' crop' : ''}`} />
+              ) : null
+            })()}
+          </div>
+        )}
       </div>
     </div>
   )
