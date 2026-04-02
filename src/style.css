@@ -1173,11 +1173,8 @@ img.note-image-placeholder {
 
 
 .music-page {
-  position: fixed;
-  inset: 0;
   background: var(--bg);
-  display: flex;
-  flex-direction: column;
+  min-height: 100dvh;
 }
 
 
@@ -1274,8 +1271,6 @@ img.note-image-placeholder {
 }
 
 .music-scroll {
-  flex: 1;
-  overflow-y: auto;
 }
 
 .music-inner {

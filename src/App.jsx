@@ -616,7 +616,8 @@ function AboutPage({ setPage }) {
         <div className="home-nav-links">
           <a onClick={() => setPage('home')}>Work</a>
           <a className="active">About</a>
-          <a onClick={() => setPage('writing')}>Misc</a>
+          <a onClick={() => setPage('music')}>Music</a>
+          <a onClick={() => setPage('writing')}>Notes</a>
         </div>
       </nav>
       <div className="page-content" style={{ paddingTop: '96px' }}>
@@ -667,11 +668,6 @@ const writings = [
     title: 'Collection of my favorite manga covers',
     category: 'Manga',
     type: 'manga',
-  },
-  {
-    title: 'Recent listening',
-    category: 'Music',
-    type: 'music',
   },
 ]
 
@@ -736,7 +732,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
       {hasSections && (
         <aside className="note-sidebar">
           <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
-            <button className="note-back" onClick={onBack}>Misc</button>
+            <button className="note-back" onClick={onBack}>Notes</button>
           </div>
           <nav className="note-toc">
             <a
@@ -771,7 +767,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
       <article className="note-article" style={!hasSections ? { paddingBottom: '80px' } : undefined}>
         <div className="note-breadcrumb" ref={breadcrumbRef}>
           <div className="note-breadcrumb-left">
-            <button className="note-back" onClick={onBack}>Misc</button>
+            <button className="note-back" onClick={onBack}>Notes</button>
             <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
             <span className="note-breadcrumb-current">{note.title}</span>
           </div>
@@ -987,7 +983,7 @@ function AnimePage({ note, onBack, setPage }) {
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <div className="note-breadcrumb-left">
-          <button className="note-back" onClick={onBack}>Misc</button>
+          <button className="note-back" onClick={onBack}>Notes</button>
           <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
           <span className="note-breadcrumb-current">{note?.title}</span>
         </div>
@@ -1059,7 +1055,7 @@ function MangaPage({ note, onBack, setPage }) {
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <div className="note-breadcrumb-left">
-          <button className="note-back" onClick={onBack}>Misc</button>
+          <button className="note-back" onClick={onBack}>Notes</button>
           <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
           <span className="note-breadcrumb-current">{note?.title}</span>
         </div>
@@ -1134,7 +1130,7 @@ function MangaPage({ note, onBack, setPage }) {
   )
 }
 
-function MusicPage({ note, onBack, setPage }) {
+function MusicPage({ setPage }) {
   const [tracks, setTracks] = useState(() => {
     try { return JSON.parse(sessionStorage.getItem('spotify_tracks')) || [] } catch { return [] }
   })
@@ -1171,10 +1167,18 @@ function MusicPage({ note, onBack, setPage }) {
   return (
     <div className="music-page">
       <TopFade />
-      <div className="music-inner animate" style={{ paddingTop: '156px', paddingBottom: '24px', animationDelay: '0.05s' }}>
+      <nav className="home-nav">
+        <div className="home-nav-links">
+          <a onClick={() => setPage('home')}>Work</a>
+          <a onClick={() => setPage('about')}>About</a>
+          <a className="active">Music</a>
+          <a onClick={() => setPage('writing')}>Notes</a>
+        </div>
+      </nav>
+      <div className="music-inner" style={{ paddingTop: '96px', paddingBottom: '24px' }}>
         <h1 className="page-heading">Music</h1>
       </div>
-      <div className="music-col-headers animate" style={{ animationDelay: '0.1s' }}>
+      <div className="music-col-headers">
         <div className="music-inner">
           {!loading && tracks.length > 0 && (
             <div className="music-col-headers-row">
@@ -1196,7 +1200,7 @@ function MusicPage({ note, onBack, setPage }) {
           ) : (
             <div className="music-rows">
               {displayedTracks.map(({ track, played_at }, i) => (
-                <div key={i} className="music-row animate" style={{ animationDelay: `${0.1 + i * 0.03}s` }} onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
+                <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
                   <span className="music-title-cell">
                     {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" className="music-thumb" style={{ flexShrink: 0, border: '1px solid var(--border-light)' }} />}
                     <span className="music-track-info">
@@ -1229,14 +1233,6 @@ function WritingPage({ setPage, initialNote }) {
     return () => clearTimeout(t)
   }, [animateList])
 
-  if (activeNote?.type === 'music') {
-    return (
-      <div key={activeNote.title} className="page-transition">
-        <MusicPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} />
-      </div>
-    )
-  }
-
   if (activeNote?.type === 'anime') {
     return (
       <div key={activeNote.title} className="page-transition">
@@ -1268,11 +1264,12 @@ function WritingPage({ setPage, initialNote }) {
           <div className="home-nav-links">
             <a onClick={() => setPage('home')}>Work</a>
             <a onClick={() => setPage('about')}>About</a>
-            <a className="active">Misc</a>
+            <a onClick={() => setPage('music')}>Music</a>
+            <a className="active">Notes</a>
           </div>
         </nav>
         <div className="page-content" style={{ paddingTop: '96px' }}>
-          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Miscellaneous</h1>
+          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {writings.map((w, i) => (
               <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
@@ -1368,7 +1365,8 @@ function HomePage({ setPage }) {
           <div className="home-nav-links">
             <a className="active">Work</a>
             <a onClick={() => setPage('about')}>About</a>
-            <a onClick={() => setPage('writing')}>Misc</a>
+            <a onClick={() => setPage('music')}>Music</a>
+            <a onClick={() => setPage('writing')}>Notes</a>
           </div>
         </nav>
         <div className="home-content">
@@ -1404,7 +1402,7 @@ export default function App() {
   const [page, setPage] = useState('home')
 
   useEffect(() => {
-    const titles = { home: 'Baltzelle', about: 'About', writing: 'Misc', 'writing-music': 'Misc', prototypes: 'Play' }
+    const titles = { home: 'Baltzelle', about: 'About', music: 'Music', writing: 'Notes', prototypes: 'Play' }
     document.title = titles[page] ?? 'Baltzelle'
   }, [page])
 
@@ -1442,6 +1440,7 @@ export default function App() {
     <div style={{ height: '100%' }}>
       {page === 'home'       && <HomePage       setPage={setPage} />}
       {page === 'about'      && <AboutPage      setPage={setPage} />}
+      {page === 'music'      && <MusicPage      setPage={setPage} />}
       {page === 'writing'    && <WritingPage    setPage={setPage} />}
       {page === 'prototypes' && <PrototypesPage setPage={setPage} />}
     </div>
