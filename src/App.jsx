@@ -1013,7 +1013,7 @@ function AnimePage({ note, onBack, setPage }) {
     const pad = 16
     const w = 180
     const h = 140
-    pipConstraints.current = { top: pad, left: pad, right: window.innerWidth - w - pad, bottom: window.innerHeight - h - pad - 80 }
+    pipConstraints.current = { top: pad, left: pad, right: window.innerWidth - w - pad, bottom: window.innerHeight - h - pad }
   }
 
   const handleDragEnd = (_, info) => {
@@ -1026,6 +1026,7 @@ function AnimePage({ note, onBack, setPage }) {
     const goLeft = projected.x + 90 < window.innerWidth / 2
     const snapX = goLeft ? left : right
     const snapY = Math.max(top, Math.min(bottom, projected.y))
+
     setPipXY({ x: snapX, y: snapY })
   }
 
@@ -1060,7 +1061,7 @@ function AnimePage({ note, onBack, setPage }) {
                   style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'auto' }}
                   drag
                   dragElastic={0.15}
-                  dragConstraints={{ top: 16, left: 16, right: window.innerWidth - 196, bottom: window.innerHeight - 236 }}
+                  dragConstraints={{ top: 16, left: 16, right: window.innerWidth - 196, bottom: window.innerHeight - 156 }}
                   dragTransition={{ bounceStiffness: 500, bounceDamping: 25, power: 0.3 }}
                   onDragEnd={handleDragEnd}
                   initial={{ x: pipXY.x, y: pipXY.y, opacity: 0, scale: 0.9 }}
