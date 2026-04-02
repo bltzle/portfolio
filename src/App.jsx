@@ -274,10 +274,13 @@ function useLocalTime() {
 function WorkFooter({ color, setPage }) {
   const time = useLocalTime()
   return (
-    <footer className="work-footer animate" style={{ color, transition: 'color 0.5s ease', animationDelay: '0.5s' }}>
-      <div className="footer-left">
-        <span className="footer-item visitor-time">{time}</span>
-        <span className="footer-divider" />
+    <footer className="work-footer animate" style={{ animationDelay: '0.5s' }}>
+      <div className="footer-row">
+        <div className="footer-left">
+          <span className="footer-item">San Francisco, CA</span>
+          <span className="footer-divider" />
+          <span className="footer-item visitor-time">{time}</span>
+        </div>
         <a className="footer-item" onClick={() => setPage('colophon')}>Colophon</a>
       </div>
     </footer>
@@ -497,47 +500,47 @@ function getShaderColor() {
 const WorkShader = memo(() => (
   <ShaderGradientCanvas style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
     <ShaderGradient
-      animate="on"
-      axesHelper="off"
-      brightness={1.2}
-      cAzimuthAngle={0}
-      cDistance={5.5}
-      cPolarAngle={90}
-      cameraZoom={1}
-      color1="#708238"
-      color2="#8A9A5B"
-      color3="#556B2F"
-      destination="onCanvas"
-      embedMode="off"
-      envPreset="city"
-      format="gif"
-      fov={40}
-      frameRate={10}
-      gizmoHelper="hide"
-      grain="off"
-      lightType="3d"
-      pixelDensity={1.2}
-      positionX={0}
-      positionY={0}
-      positionZ={0}
-      range="disabled"
-      rangeEnd={40}
-      rangeStart={0}
-      reflection={0.1}
-      rotationX={0}
-      rotationY={0}
-      rotationZ={0}
-      shader="defaults"
-      type="waterPlane"
-      uAmplitude={1}
-      uDensity={0.6}
-      uFrequency={5.5}
-      uSpeed={0.1}
-      uStrength={3.4}
-      uTime={0}
-      wireframe={false}
-      zoomOut={false}
-    />
+        animate="on"
+        axesHelper="off"
+        brightness={1.2}
+        cAzimuthAngle={0}
+        cDistance={5.5}
+        cPolarAngle={90}
+        cameraZoom={1}
+        color1="#708238"
+        color2="#8A9A5B"
+        color3="#556B2F"
+        destination="onCanvas"
+        embedMode="off"
+        envPreset="city"
+        format="gif"
+        fov={40}
+        frameRate={10}
+        gizmoHelper="hide"
+        grain="off"
+        lightType="3d"
+        pixelDensity={1.2}
+        positionX={0}
+        positionY={0}
+        positionZ={0}
+        range="disabled"
+        rangeEnd={40}
+        rangeStart={0}
+        reflection={0.1}
+        rotationX={0}
+        rotationY={0}
+        rotationZ={0}
+        shader="defaults"
+        type="waterPlane"
+        uAmplitude={1}
+        uDensity={0.6}
+        uFrequency={5.5}
+        uSpeed={0.1}
+        uStrength={3.4}
+        uTime={0}
+        wireframe={false}
+        zoomOut={false}
+      />
   </ShaderGradientCanvas>
 ))
 
@@ -1177,7 +1180,7 @@ function MusicPage({ setPage }) {
   }, [])
 
   return (
-    <div className="music-page">
+    <div className="music-page page-transition">
       <TopFade />
       <nav className="home-nav">
         <div className="home-nav-links">
@@ -1187,7 +1190,7 @@ function MusicPage({ setPage }) {
           <a onClick={() => setPage('writing')}>Notes</a>
         </div>
       </nav>
-      <div className="music-col-headers animate" style={{ padding: '0 48px', paddingTop: '96px', animationDelay: '0.1s' }}>
+      <div className="music-col-headers" style={{ padding: '0 48px', paddingTop: '96px' }}>
         {!loading && tracks.length > 0 && (
           <div className="music-col-headers-row">
             {[['song', 'Title'], ['artist', 'Artist'], ['album', 'Album'], ['played', 'Played']].map(([col, label]) => (
@@ -1206,7 +1209,7 @@ function MusicPage({ setPage }) {
         ) : (
           <div className="music-rows">
             {displayedTracks.map(({ track, played_at }, i) => (
-              <div key={i} className="music-row animate" style={{ animationDelay: `${0.15 + i * 0.03}s` }} onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
+              <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
                 <span className="music-title-cell">
                   {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" className="music-thumb" style={{ flexShrink: 0, border: '1px solid var(--border-light)' }} />}
                   <span className="music-track-info">
