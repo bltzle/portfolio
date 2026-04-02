@@ -1008,26 +1008,33 @@ function AnimePage({ note, onBack, setPage }) {
     setTapped(i)
   }
 
-  const pipConstraints = useRef({ top: 0, left: 0, right: 0, bottom: 0 })
-  const updateConstraints = () => {
+  const getCorners = () => {
     const pad = 16
     const w = 180
     const h = 140
-    pipConstraints.current = { top: pad, left: pad, right: window.innerWidth - w - pad, bottom: window.innerHeight - h - pad }
+    const vw = window.innerWidth
+    const vh = window.innerHeight
+    return [
+      { x: pad, y: pad },
+      { x: vw - w - pad, y: pad },
+      { x: pad, y: vh - h - pad - 80 },
+      { x: vw - w - pad, y: vh - h - pad - 80 },
+    ]
   }
 
   const handleDragEnd = (_, info) => {
-    updateConstraints()
-    const { top, left, right, bottom } = pipConstraints.current
-    const projected = {
-      x: info.point.x - 90 + info.velocity.x * 0.15,
-      y: info.point.y - 70 + info.velocity.y * 0.15,
+    const cx = info.point.x + info.velocity.x * 0.12
+    const cy = info.point.y + info.velocity.y * 0.12
+    const corners = getCorners()
+    let closest = corners[0]
+    let minDist = Infinity
+    for (const c of corners) {
+      const dx = cx - (c.x + 90)
+      const dy = cy - (c.y + 70)
+      const dist = dx * dx + dy * dy
+      if (dist < minDist) { minDist = dist; closest = c }
     }
-    const goLeft = projected.x + 90 < window.innerWidth / 2
-    const snapX = goLeft ? left : right
-    const snapY = Math.max(top, Math.min(bottom, projected.y))
-
-    setPipXY({ x: snapX, y: snapY })
+    setPipXY(closest)
   }
 
   return (
@@ -1060,14 +1067,14 @@ function AnimePage({ note, onBack, setPage }) {
                   className="quote-avatar visible"
                   style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'auto' }}
                   drag
-                  dragElastic={0.15}
-                  dragConstraints={{ top: 16, left: 16, right: window.innerWidth - 196, bottom: window.innerHeight - 156 }}
-                  dragTransition={{ bounceStiffness: 500, bounceDamping: 25, power: 0.3 }}
+                  dragElastic={0.2}
+                  dragConstraints={{ top: 16, left: 16, right: window.innerWidth - 196, bottom: window.innerHeight - 236 }}
+                  dragTransition={{ bounceStiffness: 600, bounceDamping: 18, power: 0.4 }}
                   onDragEnd={handleDragEnd}
                   initial={{ x: pipXY.x, y: pipXY.y, opacity: 0, scale: 0.9 }}
                   animate={{ x: pipXY.x, y: pipXY.y, opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                  transition={{ type: 'spring', stiffness: 250, damping: 20 }}
                 >
                   <img src={item.quoteImg} alt="" className={`quote-avatar-img${item.quoteImgCrop ? ' crop' : ''}`} />
                 </motion.div>
