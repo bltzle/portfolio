@@ -1881,6 +1881,7 @@ img.note-image-placeholder {
 
   .work-footer {
     padding: 0 24px 80px;
+    margin-top: 120px;
   }
 
   .nav {
@@ -1958,6 +1959,8 @@ img.note-image-placeholder {
   .music-scroll {
     overflow-y: visible;
     flex: none;
+    padding: 0 24px !important;
+    padding-top: 96px !important;
   }
 
   .music-row {
