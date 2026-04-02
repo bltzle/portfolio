@@ -1180,7 +1180,7 @@ function MusicPage({ setPage }) {
   }, [])
 
   return (
-    <div className="music-page page-transition">
+    <div className="music-page">
       <TopFade />
       <nav className="home-nav">
         <div className="home-nav-links">
@@ -1190,6 +1190,7 @@ function MusicPage({ setPage }) {
           <a onClick={() => setPage('writing')}>Notes</a>
         </div>
       </nav>
+      <div className="page-transition">
       <div className="music-col-headers" style={{ padding: '0 48px', paddingTop: '96px' }}>
         {!loading && tracks.length > 0 && (
           <div className="music-col-headers-row">
@@ -1225,6 +1226,7 @@ function MusicPage({ setPage }) {
           </div>
         )}
         <div className="music-scroll-fade" />
+      </div>
       </div>
 
     </div>
