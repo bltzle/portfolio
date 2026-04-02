@@ -46,10 +46,6 @@
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-::-webkit-scrollbar { width: 8px; border-radius: 32px; }
-::-webkit-scrollbar-track { background: none; }
-::-webkit-scrollbar-thumb { background: rgb(158 158 158 / 50%); border-radius: 16px; }
-::-webkit-scrollbar-thumb:hover { background: rgb(158 158 158 / 100%); }
 
 ::selection { background-color: #e8e8e8; color: inherit; }
 
@@ -75,7 +71,14 @@ body.modal-open .page-transition {
 
 html {
   overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(158 158 158 / 40%) transparent;
 }
+
+html::-webkit-scrollbar { width: 4px; }
+html::-webkit-scrollbar-track { background: none; }
+html::-webkit-scrollbar-thumb { background: rgb(158 158 158 / 40%); border-radius: 4px; }
+html::-webkit-scrollbar-thumb:hover { background: rgb(158 158 158 / 70%); }
 
 html, body, #app {
   height: 100%;
@@ -96,7 +99,6 @@ html, body, #app {
 /* Page transition — scroll container for full-screen pages */
 .page-transition {
   height: 100%;
-  overflow-y: auto;
   animation: page-fade 0.6s ease forwards;
 }
 
@@ -1229,7 +1231,7 @@ img.note-image-placeholder {
   position: fixed;
   top: 0;
   left: 0;
-  right: 8px;
+  right: 4px;
   height: 64px;
   pointer-events: none;
   z-index: var(--z-fade);
