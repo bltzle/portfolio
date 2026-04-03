@@ -72,6 +72,7 @@ body.modal-open .page-transition {
 html {
   overflow-x: hidden;
   overflow-y: auto;
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: rgb(158 158 158 / 40%) transparent;
 }
@@ -602,12 +603,18 @@ a.footer-item:hover {
   margin-bottom: 32px;
   color: var(--light);
   cursor: pointer;
-  transition: color 0.15s ease, background 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.back-btn:hover {
-  color: var(--dark);
-  background: rgba(0, 0, 0, 0.08);
+@media (hover: hover) {
+  .back-btn {
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .back-btn:hover {
+    color: var(--dark);
+    background: rgba(0, 0, 0, 0.08);
+  }
 }
 
 .nav a {
@@ -910,7 +917,8 @@ a.footer-item:hover {
   align-items: center;
   gap: 4px;
   line-height: 1;
-  transition: color 0.15s ease, box-shadow 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .back-nav svg {
@@ -918,8 +926,13 @@ a.footer-item:hover {
   color: var(--light);
 }
 
-.back-nav:hover {
-  color: var(--light);
+@media (hover: hover) {
+  .back-nav {
+    transition: color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .back-nav:hover {
+    color: var(--light);
+  }
 }
 
 
@@ -1289,7 +1302,7 @@ img.note-image-placeholder {
   position: fixed;
   top: 0;
   left: 0;
-  right: 4px;
+  right: 0;
   height: 64px;
   pointer-events: none;
   z-index: var(--z-fade);

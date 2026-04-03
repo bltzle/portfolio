@@ -4,17 +4,6 @@ export default async function handler(req, res) {
   const client = createClient({ url: process.env.REDIS_URL })
   await client.connect()
 
-  // Read accumulated history from Redis (newest first)
-  const entries = await client.zRange('spotify_history', 0, -1, { REV: true })
-
-  if (entries.length > 0) {
-    const items = entries.map(e => JSON.parse(e))
-    await client.disconnect()
-    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate')
-    return res.json(items)
-  }
-
-  // Fallback: no history yet, fetch live and seed the store
   const stored = await client.get('spotify_refresh_token')
   const refreshToken = stored || process.env.SPOTIFY_REFRESH_TOKEN
 
@@ -44,13 +33,14 @@ export default async function handler(req, res) {
   const data = await tracksRes.json()
   const items = data.items ?? []
 
-  // Seed the sorted set
+  let added = 0
   for (const item of items) {
     const score = new Date(item.played_at).getTime()
-    await client.zAdd('spotify_history', { score, value: JSON.stringify(item) }, { NX: true })
+    const value = JSON.stringify(item)
+    const wasAdded = await client.zAdd('spotify_history', { score, value }, { NX: true })
+    if (wasAdded) added++
   }
 
   await client.disconnect()
-  res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate')
-  res.json(items)
+  res.json({ synced: items.length, added })
 }
