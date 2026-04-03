@@ -359,19 +359,19 @@ function ProjectDetailPage({ project, onBack, setPage }) {
     if (!hasSections) return
     const container = containerRef.current
     if (!container) return
+    const trigger = window.innerHeight * 0.35
     const onScroll = () => {
       if (scrollingRef.current) return
-      const scrollTop = window.scrollY
-      if (scrollTop < 80) { setActiveId('__intro'); return }
-      const threshold = scrollTop + window.innerHeight * 0.3
+      if (window.scrollY < 80) { setActiveId('__intro'); return }
       let active = '__intro'
       for (const { id } of project.sections) {
         const el = container.querySelector(`#${id}`)
-        if (el && el.getBoundingClientRect().top + window.scrollY <= threshold) active = id
+        if (el && el.getBoundingClientRect().top <= trigger) active = id
       }
       setActiveId(active)
     }
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
     return () => window.removeEventListener('scroll', onScroll)
   }, [project, hasSections])
 
@@ -1518,7 +1518,7 @@ export default function App() {
   }, [])
 
   return (
-    <div ref={scrollRef} style={{ height: '100%' }}>
+    <div ref={scrollRef} style={{ minHeight: '100%' }}>
       {page === 'home'       && <HomePage       setPage={setPage} />}
       {page === 'about'      && <AboutPage      setPage={setPage} />}
       {page === 'music'      && <MusicPage      setPage={setPage} tracks={spotifyTracks} loading={spotifyLoading} />}
