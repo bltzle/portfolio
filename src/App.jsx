@@ -341,7 +341,9 @@ function ProjectDetailPage({ project, onBack, setPage }) {
   const scrollingRef = useRef(false)
 
   useEffect(() => {
-    window.scrollTo(0, 0)
+    const scrollEl = document.getElementById('app')
+    if (scrollEl) scrollEl.scrollTop = 0
+    else window.scrollTo(0, 0)
   }, [project])
 
   useEffect(() => {
@@ -359,10 +361,11 @@ function ProjectDetailPage({ project, onBack, setPage }) {
     if (!hasSections) return
     const container = containerRef.current
     if (!container) return
+    const scrollEl = document.getElementById('app') ?? document.documentElement
     const trigger = window.innerHeight * 0.35
     const onScroll = () => {
       if (scrollingRef.current) return
-      if (window.scrollY < 80) { setActiveId('__intro'); return }
+      if (scrollEl.scrollTop < 80) { setActiveId('__intro'); return }
       let active = '__intro'
       for (const { id } of project.sections) {
         const el = container.querySelector(`#${id}`)
@@ -370,9 +373,9 @@ function ProjectDetailPage({ project, onBack, setPage }) {
       }
       setActiveId(active)
     }
-    window.addEventListener('scroll', onScroll, { passive: true })
+    scrollEl.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => scrollEl.removeEventListener('scroll', onScroll)
   }, [project, hasSections])
 
   return (
@@ -392,7 +395,8 @@ function ProjectDetailPage({ project, onBack, setPage }) {
                 e.preventDefault()
                 setActiveId('__intro')
                 scrollingRef.current = true
-                window.scrollTo({ top: 0, behavior: 'smooth' })
+                const scrollEl = document.getElementById('app') ?? document.documentElement
+                scrollEl.scrollTo({ top: 0, behavior: 'smooth' })
                 setTimeout(() => { scrollingRef.current = false }, 1000)
               }}
             >{project.name}</a>
