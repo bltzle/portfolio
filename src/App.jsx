@@ -341,8 +341,7 @@ function ProjectDetailPage({ project, onBack, setPage }) {
   const scrollingRef = useRef(false)
 
   useEffect(() => {
-    const el = containerRef.current?.closest('.page-transition')
-    if (el) el.scrollTop = 0
+    window.scrollTo(0, 0)
   }, [project])
 
   useEffect(() => {
@@ -360,21 +359,20 @@ function ProjectDetailPage({ project, onBack, setPage }) {
     if (!hasSections) return
     const container = containerRef.current
     if (!container) return
-    const scrollEl = container.closest('.page-transition') ?? window
     const onScroll = () => {
       if (scrollingRef.current) return
-      const scrollTop = scrollEl instanceof Element ? scrollEl.scrollTop : window.scrollY
+      const scrollTop = window.scrollY
       if (scrollTop < 80) { setActiveId('__intro'); return }
-      const threshold = scrollTop + (scrollEl instanceof Element ? scrollEl.clientHeight : window.innerHeight) * 0.3
+      const threshold = scrollTop + window.innerHeight * 0.3
       let active = '__intro'
       for (const { id } of project.sections) {
         const el = container.querySelector(`#${id}`)
-        if (el && el.offsetTop <= threshold) active = id
+        if (el && el.getBoundingClientRect().top + window.scrollY <= threshold) active = id
       }
       setActiveId(active)
     }
-    scrollEl.addEventListener('scroll', onScroll)
-    return () => scrollEl.removeEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
   }, [project, hasSections])
 
   return (
@@ -394,8 +392,7 @@ function ProjectDetailPage({ project, onBack, setPage }) {
                 e.preventDefault()
                 setActiveId('__intro')
                 scrollingRef.current = true
-                const scrollEl = containerRef.current?.closest('.page-transition') ?? window
-                scrollEl.scrollTo({ top: 0, behavior: 'smooth' })
+                window.scrollTo({ top: 0, behavior: 'smooth' })
                 setTimeout(() => { scrollingRef.current = false }, 1000)
               }}
             >{project.name}</a>
