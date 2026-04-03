@@ -1301,7 +1301,7 @@ img.note-image-placeholder {
   position: fixed;
   top: 0;
   left: 0;
-  right: 4px;
+  right: 12px;
   height: 64px;
   pointer-events: none;
   z-index: var(--z-fade);
@@ -1312,7 +1312,7 @@ img.note-image-placeholder {
   position: fixed;
   bottom: 0;
   left: 0;
-  right: 4px;
+  right: 12px;
   height: 120px;
   pointer-events: none;
   z-index: var(--z-scroll-fade);
