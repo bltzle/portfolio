@@ -190,7 +190,7 @@ const projects = [
     name: 'Ritual Dental',
     desc: 'Using AI to better inform patient oral health',
     year: '2024',
-    img: '/images/ritual-dental/Perio 1.png',
+    img: '/images/ritual-dental/cover.png',
     href: 'https://ritualdental.com',
     tagline: 'Personalized preventative oral care that sticks',
     role: 'Product Designer',
