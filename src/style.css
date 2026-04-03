@@ -1062,6 +1062,7 @@ a.footer-item:hover {
   width: 180px;
   height: auto;
   border-radius: inherit;
+  margin-bottom: -1px;
 }
 
 
