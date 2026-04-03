@@ -1392,6 +1392,7 @@ function HomePage({ setPage }) {
   const [activeProject, setActiveProject] = useState(null)
   const [hoveredProject, setHoveredProject] = useState(null)
   const [previewSrc, setPreviewSrc] = useState(null)
+  const [previewSize, setPreviewSize] = useState(null)
   useEffect(() => {
     const id = setInterval(() => setFooterColor(getShaderColor()), 500)
     return () => clearInterval(id)
@@ -1415,7 +1416,7 @@ function HomePage({ setPage }) {
             src={previewSrc}
             alt=""
             className={`project-preview${hoveredProject?.img ? ' active' : ''}`}
-            style={hoveredProject?.previewSize ? { maxHeight: hoveredProject.previewSize } : undefined}
+            style={previewSize ? { maxHeight: previewSize } : undefined}
           />
         )}
         <span className="left-label" style={{ opacity: hoveredProject?.img ? 0 : 1 }}>
@@ -1443,7 +1444,7 @@ function HomePage({ setPage }) {
                 className={`project animate${(!p.sections && !p.href) ? ' dim' : ''}`}
                 style={{ cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed', animationDelay: `${0.2 + i * 0.04}s`, '--end-opacity': (!p.sections && !p.href) ? 0.3 : 1 }}
                 onClick={() => { if (p.sections && !p.linkOnly) setActiveProject(p); else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
-                onMouseEnter={() => { setHoveredProject(p); if (p.img) setPreviewSrc(p.img); playClick(0.4) }}
+                onMouseEnter={() => { setHoveredProject(p); if (p.img) { setPreviewSrc(p.img); setPreviewSize(p.previewSize || null) } playClick(0.4) }}
                 onMouseLeave={() => setHoveredProject(null)}
               >
                 <span className="project-name">{p.name}</span>
