@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, Fragment, memo } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, Fragment, memo } from 'react'
 import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
 import { createPortal } from 'react-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -1495,9 +1495,16 @@ function HomePage({ setPage }) {
 }
 
 export default function App() {
-  const [page, setPage] = useState('home')
+  const [page, setPageRaw] = useState('home')
 
-  useEffect(() => {
+  const setPage = useCallback((p) => {
+    window.scrollTo(0, 0)
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+    setPageRaw(p)
+  }, [])
+
+  useLayoutEffect(() => {
     const titles = { home: 'Baltzelle', about: 'About', music: 'Music', writing: 'Notes', prototypes: 'Play' }
     document.title = titles[page] ?? 'Baltzelle'
     window.scrollTo(0, 0)
