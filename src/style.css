@@ -191,8 +191,8 @@ html, body, #app {
 .project-preview {
   position: absolute;
   z-index: var(--z-preview);
-  max-width: 72%;
-  max-height: 78%;
+  max-width: 85%;
+  max-height: 85%;
   object-fit: contain;
   pointer-events: none;
   opacity: 0;
