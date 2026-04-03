@@ -1040,8 +1040,6 @@ a.footer-item:hover {
 
 @media (max-width: 768px) {
   .quote-avatar {
-    width: 180px;
-    height: 140px;
     opacity: 1;
     transform: none;
     transition: none;
@@ -1061,15 +1059,6 @@ a.footer-item:hover {
   object-position: top;
 }
 
-@media (max-width: 768px) {
-  .quote-avatar-img {
-    width: 180px;
-    height: 100%;
-    max-height: none;
-    object-fit: cover;
-    object-position: top;
-  }
-}
 
 .note-sidebar-crumb {
   display: flex;
