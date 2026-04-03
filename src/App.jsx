@@ -1501,6 +1501,8 @@ export default function App() {
     const titles = { home: 'Baltzelle', about: 'About', music: 'Music', writing: 'Notes', prototypes: 'Play' }
     document.title = titles[page] ?? 'Baltzelle'
     window.scrollTo(0, 0)
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
   }, [page])
 
 

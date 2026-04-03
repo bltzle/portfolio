@@ -1048,16 +1048,14 @@ a.footer-item:hover {
 
 .quote-avatar-img {
   display: block;
-  max-width: 180px;
+  width: 180px;
   max-height: 180px;
+  object-fit: cover;
+  object-position: top;
 }
 
 .quote-avatar-img.crop {
-  max-height: none;
-  width: 180px;
   height: 101px;
-  object-fit: cover;
-  object-position: top;
 }
 
 .note-sidebar-crumb {
