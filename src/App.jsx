@@ -182,7 +182,7 @@ function playClick(intensity = 0.4) {
 }
 
 import { Post, ArrowDownLeft, NavArrowRight, Xmark, Plus, FilterList, Check, LongArrowUpLeft } from 'iconoir-react'
-import { motion, AnimatePresence, useDragControls } from 'motion/react'
+import { motion, AnimatePresence, useDragControls, useMotionValue, animate as motionAnimate } from 'motion/react'
 import './style.css'
 
 const projects = [
@@ -998,15 +998,9 @@ function AnimePage({ note, onBack, setPage }) {
     setHovered(i)
   }
 
-  const [pipXY, setPipXY] = useState({ x: 0, y: 0 })
-
-  const handleTap = (i) => {
-    if (tapped === i) { setTapped(null); return }
-    const pad = 16
-    const vw = window.innerWidth
-    setPipXY({ x: vw - 180 - pad, y: pad + 60 })
-    setTapped(i)
-  }
+  const pipX = useMotionValue(0)
+  const pipY = useMotionValue(0)
+  const pipInitialized = useRef(false)
 
   const getCorners = () => {
     const pad = 16
@@ -1022,19 +1016,39 @@ function AnimePage({ note, onBack, setPage }) {
     ]
   }
 
-  const handleDragEnd = (_, info) => {
-    const elX = pipXY.x + info.offset.x + info.velocity.x * 0.12
-    const elY = pipXY.y + info.offset.y + info.velocity.y * 0.12
+  const snapToCorner = (fromX, fromY) => {
     const corners = getCorners()
     let closest = corners[0]
     let minDist = Infinity
     for (const c of corners) {
-      const dx = elX - c.x
-      const dy = elY - c.y
+      const dx = fromX - c.x
+      const dy = fromY - c.y
       const dist = dx * dx + dy * dy
       if (dist < minDist) { minDist = dist; closest = c }
     }
-    setPipXY(closest)
+    const spring = { type: 'spring', stiffness: 600, damping: 30 }
+    motionAnimate(pipX, closest.x, spring)
+    motionAnimate(pipY, closest.y, spring)
+  }
+
+  const handleTap = (i) => {
+    if (tapped === i) { setTapped(null); return }
+    if (tapped === null) {
+      const pad = 16
+      const vw = window.innerWidth
+      const startX = vw - 180 - pad
+      const startY = pad + 60
+      pipX.set(startX)
+      pipY.set(startY)
+      pipInitialized.current = true
+    }
+    setTapped(i)
+  }
+
+  const handleDragEnd = (_, info) => {
+    const elX = pipX.get() + info.velocity.x * 0.12
+    const elY = pipY.get() + info.velocity.y * 0.12
+    snapToCorner(elX, elY)
   }
 
   return (
@@ -1065,16 +1079,15 @@ function AnimePage({ note, onBack, setPage }) {
                 <motion.div
                   key="pip"
                   className="quote-avatar visible"
-                  style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'auto' }}
+                  style={{ position: 'fixed', top: 0, left: 0, x: pipX, y: pipY, pointerEvents: 'auto' }}
                   drag
-                  dragElastic={0.2}
-                  dragConstraints={{ top: 16, left: 16, right: window.innerWidth - 196, bottom: window.innerHeight - 156 }}
-                  dragTransition={{ bounceStiffness: 600, bounceDamping: 18, power: 0.4 }}
+                  dragElastic={0.18}
+                  dragMomentum={false}
                   onDragEnd={handleDragEnd}
-                  initial={{ x: pipXY.x, y: pipXY.y, opacity: 0, scale: 0.9 }}
-                  animate={{ x: pipXY.x, y: pipXY.y, opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ type: 'spring', stiffness: 250, damping: 20 }}
+                  transition={{ duration: 0.2 }}
                 >
                   <img src={item.quoteImg} alt="" className={`quote-avatar-img${item.quoteImgCrop ? ' crop' : ''}`} />
                 </motion.div>
@@ -1487,6 +1500,7 @@ export default function App() {
   useEffect(() => {
     const titles = { home: 'Baltzelle', about: 'About', music: 'Music', writing: 'Notes', prototypes: 'Play' }
     document.title = titles[page] ?? 'Baltzelle'
+    window.scrollTo(0, 0)
   }, [page])
 
 
