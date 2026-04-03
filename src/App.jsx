@@ -593,6 +593,10 @@ function WorkPage({ setPage, active }) {
 
 
 function ColophonPage({ setPage }) {
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0)
+    document.documentElement.scrollTop = 0
+  }, [])
   return (
     <div className="page page-transition">
       <div className="page-content" style={{ paddingTop: '156px' }}>
