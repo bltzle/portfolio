@@ -534,7 +534,7 @@ function WorkPage({ setPage, active }) {
   return (
     <>
       {activeProject && (
-        <div key={activeProject.name} className="page-transition" style={{ position: 'absolute', inset: 0, zIndex: 'var(--z-overlay)', background: 'var(--bg, #FAF8F4)' }}>
+        <div key={activeProject.name} className="page-transition" style={{ zIndex: 'var(--z-overlay)', background: 'var(--bg, #FAF8F4)' }}>
           <ProjectDetailPage project={activeProject} onBack={() => { setActiveProject(null); setContentKey(k => k + 1) }} setPage={setPage} />
         </div>
       )}
@@ -1395,7 +1395,7 @@ function HomePage({ setPage }) {
 
   if (activeProject) {
     return (
-      <div className="page-transition" style={{ height: '100%' }}>
+      <div className="page-transition">
         <ProjectDetailPage project={activeProject} onBack={() => setActiveProject(null)} setPage={setPage} />
       </div>
     )
