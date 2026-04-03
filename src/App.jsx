@@ -875,7 +875,6 @@ const animeData = {
       quoteSource: 'Avatar: The Last Airbender',
       quoteHref: 'https://en.wikipedia.org/wiki/Avatar:_The_Last_Airbender',
       quoteImg: '/images/quotes/iroh.gif',
-      quoteImgCrop: true,
       desc: [
         'Avatar: The Last Airbender follows Aang, the last surviving Airbender, as he works to master all four elements and bring balance to a world at war. The show is deceptively layered — built for younger audiences but genuinely rich in its themes.',
         'Uncle Iroh is the character that makes the show. His warmth, his stillness, the way he holds wisdom without ever making it feel like a lecture. The quote above is the one I keep coming back to.',
@@ -1079,7 +1078,7 @@ function AnimePage({ note, onBack, setPage }) {
                 <motion.div
                   key="pip"
                   className="quote-avatar visible"
-                  style={{ position: 'fixed', top: 0, left: 0, x: pipX, y: pipY, pointerEvents: 'auto', height: item.quoteImgCrop ? 101 : undefined }}
+                  style={{ position: 'fixed', top: 0, left: 0, x: pipX, y: pipY, pointerEvents: 'auto' }}
                   drag
                   dragElastic={0.18}
                   dragMomentum={false}
@@ -1089,7 +1088,7 @@ function AnimePage({ note, onBack, setPage }) {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <img src={item.quoteImg} alt="" className={`quote-avatar-img${item.quoteImgCrop ? ' crop' : ''}`} />
+                  <img src={item.quoteImg} alt="" className="quote-avatar-img" />
                 </motion.div>
               )
             })()}
@@ -1099,7 +1098,7 @@ function AnimePage({ note, onBack, setPage }) {
             {hovered !== null && (() => {
               const item = animeData.watching.filter(item => item.quote)[hovered]
               return item?.quoteImg ? (
-                <img src={item.quoteImg} alt="" className={`quote-avatar-img${item.quoteImgCrop ? ' crop' : ''}`} />
+                <img src={item.quoteImg} alt="" className="quote-avatar-img" />
               ) : null
             })()}
           </div>

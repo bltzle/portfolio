@@ -1048,11 +1048,6 @@ a.footer-item:hover {
 
 .quote-avatar-img {
   display: block;
-  max-width: 180px;
-  max-height: 180px;
-}
-
-.quote-avatar-img.crop {
   width: 180px;
   height: 101px;
   object-fit: cover;
