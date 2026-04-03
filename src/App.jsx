@@ -593,10 +593,6 @@ function WorkPage({ setPage, active }) {
 
 
 function ColophonPage({ setPage }) {
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0)
-    document.documentElement.scrollTop = 0
-  }, [])
   return (
     <div className="page page-transition">
       <div className="page-content" style={{ paddingTop: '156px' }}>
@@ -1501,19 +1497,16 @@ function HomePage({ setPage }) {
 export default function App() {
   const [page, setPageRaw] = useState('home')
 
+  const scrollRef = useRef(null)
+
   const setPage = useCallback((p) => {
-    window.scrollTo(0, 0)
-    document.documentElement.scrollTop = 0
-    document.body.scrollTop = 0
     setPageRaw(p)
   }, [])
 
   useLayoutEffect(() => {
     const titles = { home: 'Baltzelle', about: 'About', music: 'Music', writing: 'Notes', prototypes: 'Play' }
     document.title = titles[page] ?? 'Baltzelle'
-    window.scrollTo(0, 0)
-    document.documentElement.scrollTop = 0
-    document.body.scrollTop = 0
+    scrollRef.current?.scrollIntoView(true)
   }, [page])
 
 
@@ -1547,7 +1540,7 @@ export default function App() {
   }, [])
 
   return (
-    <div style={{ height: '100%' }}>
+    <div ref={scrollRef} style={{ height: '100%' }}>
       {page === 'home'       && <HomePage       setPage={setPage} />}
       {page === 'about'      && <AboutPage      setPage={setPage} />}
       {page === 'music'      && <MusicPage      setPage={setPage} />}

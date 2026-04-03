@@ -1050,10 +1050,25 @@ a.footer-item:hover {
 
 .quote-avatar-img {
   display: block;
+  max-width: 180px;
+  max-height: 180px;
+}
+
+.quote-avatar-img.crop {
   width: 180px;
-  height: 100%;
+  height: 101px;
   object-fit: cover;
   object-position: top;
+}
+
+@media (max-width: 768px) {
+  .quote-avatar-img {
+    width: 180px;
+    height: 100%;
+    max-height: none;
+    object-fit: cover;
+    object-position: top;
+  }
 }
 
 .note-sidebar-crumb {
