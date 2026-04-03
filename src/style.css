@@ -76,9 +76,9 @@ html {
   scrollbar-color: rgb(158 158 158 / 40%) transparent;
 }
 
-html::-webkit-scrollbar { width: 4px; }
+html::-webkit-scrollbar { width: 2px; }
 html::-webkit-scrollbar-track { background: none; }
-html::-webkit-scrollbar-thumb { background: rgb(158 158 158 / 40%); border-radius: 4px; }
+html::-webkit-scrollbar-thumb { background: rgb(158 158 158 / 40%); border-radius: 2px; }
 html::-webkit-scrollbar-thumb:hover { background: rgb(158 158 158 / 70%); }
 
 body, #app {
