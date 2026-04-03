@@ -192,7 +192,6 @@ const projects = [
     year: '2024',
     img: '/images/ritual-dental/Perio 1.png',
     href: 'https://ritualdental.com',
-    linkOnly: true,
     tagline: 'Personalized preventative oral care that sticks',
     role: 'Product Designer',
     tools: 'Figma',
@@ -337,10 +336,8 @@ function Nav({ setPage }) {
 function ProjectDetailPage({ project, onBack, setPage }) {
   const hasSections = project.sections?.length > 0
   const [activeId, setActiveId] = useState('__intro')
-  const [crumbInView, setCrumbInView] = useState(true)
   const [sheetOpen, setSheetOpen] = useState(false)
   const containerRef = useRef(null)
-  const breadcrumbRef = useRef(null)
   const scrollingRef = useRef(false)
 
   useEffect(() => {
@@ -358,15 +355,6 @@ function ProjectDetailPage({ project, onBack, setPage }) {
     document.body.classList.toggle('modal-open', sheetOpen)
     return () => document.body.classList.remove('modal-open')
   }, [sheetOpen])
-
-  useEffect(() => {
-    if (!hasSections) return
-    const el = breadcrumbRef.current
-    if (!el) return
-    const observer = new IntersectionObserver(([entry]) => setCrumbInView(entry.isIntersecting), { threshold: 0 })
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [hasSections])
 
   useEffect(() => {
     if (!hasSections) return
@@ -395,9 +383,9 @@ function ProjectDetailPage({ project, onBack, setPage }) {
       <TopFade />
       {hasSections && (
         <aside className="note-sidebar">
-          <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
-            <button className="note-back" onClick={onBack}>Work</button>
-          </div>
+          <button className="back-btn" onClick={onBack} aria-label="Back">
+            <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+          </button>
           <nav className="note-toc">
             <a
               className={`note-toc-item${activeId === '__intro' ? ' active' : ''}`}
@@ -429,13 +417,6 @@ function ProjectDetailPage({ project, onBack, setPage }) {
         </aside>
       )}
       <article className="note-article">
-        <div className="note-breadcrumb" ref={breadcrumbRef}>
-          <div className="note-breadcrumb-left">
-            <button className="note-back" onClick={onBack}>Work</button>
-            <NavArrowRight className="note-breadcrumb-sep" width={14} height={14} strokeWidth={1.75} />
-            <span className="note-breadcrumb-current">{project.name}</span>
-          </div>
-        </div>
         {project.content.map((section, si) => (
           <Fragment key={section.id}>
             {(section.heading || section.body) && (
