@@ -243,7 +243,7 @@ const projects = [
     hoverText: 'THIS IS THE NEBULA',
   },
   { name: 'Goodword',              desc: 'Maintain relationships in your professional network',         year: '2024', href: 'https://www.goodword.com/', hoverText: 'A GLOW THAT NEVER ENDS' },
-  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024', img: '/images/workmate/cover.png', href: 'https://www.workmate.com/', hoverText: 'DUSK SOAKED IN GREEN LIGHT' },
+  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024', img: '/images/workmate/cover.jpg', href: 'https://www.workmate.com/', hoverText: 'DUSK SOAKED IN GREEN LIGHT' },
   { name: 'Sensible',              desc: 'A high yield account for your crypto',                       year: '2024', href: 'https://www.coinbase.com/en-gb/blog/Coinbase-acquires-team-to-accelerate-onchain-consumer-roadmap', hoverText: 'AND STILL, IT DRIFTS ONWARD' },
   { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025', href: 'https://www.dex.camera/', hoverText: 'FADING THE MOMENT YOU LOOK AWAY' },
   { name: 'Underline',             desc: 'An investment platform for alternative assets',              year: '2023' },
