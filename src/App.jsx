@@ -1079,7 +1079,7 @@ function AnimePage({ note, onBack, setPage }) {
                 <motion.div
                   key="pip"
                   className="quote-avatar visible"
-                  style={{ position: 'fixed', top: 0, left: 0, x: pipX, y: pipY, pointerEvents: 'auto' }}
+                  style={{ position: 'fixed', top: 0, left: 0, x: pipX, y: pipY, pointerEvents: 'auto', height: item.quoteImgCrop ? 101 : undefined }}
                   drag
                   dragElastic={0.18}
                   dragMomentum={false}
@@ -1089,7 +1089,7 @@ function AnimePage({ note, onBack, setPage }) {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <img key={tapped} src={item.quoteImg} alt="" className={`quote-avatar-img${item.quoteImgCrop ? ' crop' : ''}`} />
+                  <img src={item.quoteImg} alt="" className={`quote-avatar-img${item.quoteImgCrop ? ' crop' : ''}`} />
                 </motion.div>
               )
             })()}
