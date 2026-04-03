@@ -1391,11 +1391,12 @@ function HomePage({ setPage }) {
   const [footerColor, setFooterColor] = useState(() => getShaderColor())
   const [activeProject, setActiveProject] = useState(null)
   const [hoveredProject, setHoveredProject] = useState(null)
-  const [previewSrc, setPreviewSrc] = useState(null)
-  const [previewSize, setPreviewSize] = useState(null)
   useEffect(() => {
     const id = setInterval(() => setFooterColor(getShaderColor()), 500)
     return () => clearInterval(id)
+  }, [])
+  useEffect(() => {
+    projects.forEach(p => { if (p.img) { const img = new Image(); img.src = p.img } })
   }, [])
 
   if (activeProject) {
@@ -1411,14 +1412,15 @@ function HomePage({ setPage }) {
       <div className="left">
         <WorkShader />
         <GrainOverlay />
-        {previewSrc && (
+        {projects.filter(p => p.img).map(p => (
           <img
-            src={previewSrc}
+            key={p.name}
+            src={p.img}
             alt=""
-            className={`project-preview${hoveredProject?.img ? ' active' : ''}`}
-            style={previewSize ? { maxHeight: previewSize } : undefined}
+            className={`project-preview${hoveredProject?.name === p.name ? ' active' : ''}`}
+            style={p.previewSize ? { maxHeight: p.previewSize } : undefined}
           />
-        )}
+        ))}
         <span className="left-label" style={{ opacity: hoveredProject?.img ? 0 : 1 }}>
           {hoveredProject?.hoverText || 'Hover a project'}
         </span>
@@ -1444,7 +1446,7 @@ function HomePage({ setPage }) {
                 className={`project animate${(!p.sections && !p.href) ? ' dim' : ''}`}
                 style={{ cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed', animationDelay: `${0.2 + i * 0.04}s`, '--end-opacity': (!p.sections && !p.href) ? 0.3 : 1 }}
                 onClick={() => { if (p.sections && !p.linkOnly) setActiveProject(p); else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
-                onMouseEnter={() => { setHoveredProject(p); if (p.img) { setPreviewSrc(p.img); setPreviewSize(p.previewSize || null) } playClick(0.4) }}
+                onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
                 onMouseLeave={() => setHoveredProject(null)}
               >
                 <span className="project-name">{p.name}</span>
