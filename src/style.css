@@ -600,7 +600,7 @@ a.footer-item:hover {
   padding: 8px;
   border-radius: 50%;
   width: fit-content;
-  margin-bottom: 16px;
+  margin-bottom: 32px;
   color: var(--light);
   cursor: pointer;
   touch-action: manipulation;
