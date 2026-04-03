@@ -1229,11 +1229,7 @@ function MangaPage({ note, onBack, setPage }) {
   )
 }
 
-function MusicPage({ setPage }) {
-  const [tracks, setTracks] = useState(() => {
-    try { return JSON.parse(sessionStorage.getItem('spotify_tracks')) || [] } catch { return [] }
-  })
-  const [loading, setLoading] = useState(() => !sessionStorage.getItem('spotify_tracks'))
+function MusicPage({ setPage, tracks, loading }) {
   const [sort, setSort] = useState({ col: null, dir: null })
   const cycleSort = (col) => setSort(s => {
     if (col === 'played') return s.col === 'played' ? { col: null, dir: null } : { col, dir: 'asc' }
@@ -1250,18 +1246,6 @@ function MusicPage({ setPage }) {
         return sort.dir === 'asc' ? cmp : -cmp
       })
     : tracks
-
-  useEffect(() => {
-    fetch('/api/spotify')
-      .then(r => r.json())
-      .then(items => {
-        const deduped = Array.isArray(items) ? dedupeTracks(items) : []
-        setTracks(deduped)
-        setLoading(false)
-        sessionStorage.setItem('spotify_tracks', JSON.stringify(deduped))
-      })
-      .catch(() => setLoading(false))
-  }, [])
 
   return (
     <div className="music-page">
@@ -1517,6 +1501,23 @@ export default function App() {
     return () => document.removeEventListener('pointerdown', handler)
   }, [])
 
+  const [spotifyTracks, setSpotifyTracks] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem('spotify_tracks')) || [] } catch { return [] }
+  })
+  const [spotifyLoading, setSpotifyLoading] = useState(() => !sessionStorage.getItem('spotify_tracks'))
+
+  useEffect(() => {
+    fetch('/api/spotify')
+      .then(r => r.json())
+      .then(items => {
+        const deduped = Array.isArray(items) ? dedupeTracks(items) : []
+        setSpotifyTracks(deduped)
+        setSpotifyLoading(false)
+        sessionStorage.setItem('spotify_tracks', JSON.stringify(deduped))
+      })
+      .catch(() => setSpotifyLoading(false))
+  }, [])
+
   useEffect(() => {
     mangaCovers.forEach(c => { const img = new Image(); img.src = c.src })
   }, [])
@@ -1542,7 +1543,7 @@ export default function App() {
     <div ref={scrollRef} style={{ height: '100%' }}>
       {page === 'home'       && <HomePage       setPage={setPage} />}
       {page === 'about'      && <AboutPage      setPage={setPage} />}
-      {page === 'music'      && <MusicPage      setPage={setPage} />}
+      {page === 'music'      && <MusicPage      setPage={setPage} tracks={spotifyTracks} loading={spotifyLoading} />}
       {page === 'writing'    && <WritingPage    setPage={setPage} />}
       {page === 'colophon'   && <ColophonPage   setPage={setPage} />}
       {page === 'prototypes' && <PrototypesPage setPage={setPage} />}
