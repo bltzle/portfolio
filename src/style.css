@@ -1060,9 +1060,10 @@ a.footer-item:hover {
 .quote-avatar-img {
   display: block;
   width: 180px;
-  height: auto;
+  height: 101px;
+  object-fit: cover;
+  object-position: center;
   border-radius: inherit;
-  margin-bottom: -1px;
 }
 
 
