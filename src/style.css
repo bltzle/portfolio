@@ -72,7 +72,6 @@ body.modal-open .page-transition {
 html {
   overflow-x: hidden;
   overflow-y: auto;
-  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: rgb(158 158 158 / 40%) transparent;
 }
@@ -1062,9 +1061,8 @@ a.footer-item:hover {
 .quote-avatar-img {
   display: block;
   width: 180px;
-  height: 101px;
-  object-fit: cover;
-  object-position: top;
+  height: auto;
+  border-radius: inherit;
 }
 
 
@@ -1352,8 +1350,7 @@ img.note-image-placeholder {
 
 .music-rows {
   width: 100%;
-  padding-top: 12px;
-  padding-bottom: 120px;
+  padding: 12px 8px 120px;
 }
 
 .music-row {
