@@ -599,7 +599,8 @@ a.footer-item:hover {
   border: none;
   padding: 8px;
   border-radius: 50%;
-  margin-bottom: 32px;
+  width: fit-content;
+  margin-bottom: 16px;
   color: var(--light);
   cursor: pointer;
   touch-action: manipulation;
