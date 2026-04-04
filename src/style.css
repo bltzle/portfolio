@@ -1570,6 +1570,8 @@ img.note-image-placeholder {
   flex-shrink: 0;
   object-fit: cover;
   background: rgba(0,0,0,0.05);
+  outline: 1px solid var(--border-light);
+  outline-offset: -1px;
 }
 
 .sites-info {
