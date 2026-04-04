@@ -30,6 +30,7 @@
   --shadow-card: 0 24px 80px rgba(0,0,0,0.18), 0 8px 32px rgba(0,0,0,0.10);
   --hover-bg: rgba(0,0,0,0.03);
   --hover-bg-strong: rgba(0,0,0,0.05);
+  --hover-bg-disabled: rgba(0,0,0,0.06);
   --border-light: rgba(0,0,0,0.06);
   --z-base: 1;
   --z-content: 2;
@@ -730,8 +731,8 @@ a.footer-item:hover {
     background: var(--hover-bg);
   }
 
-  .project[style*="not-allowed"]:hover {
-    background: rgba(0,0,0,0.06);
+  .project.disabled:hover {
+    background: var(--hover-bg-disabled);
   }
 
   .no-bg-hover .project:hover {
@@ -800,6 +801,10 @@ a.footer-item:hover {
   .projects:has(.project:hover) .project:not(:hover) {
     opacity: 0.2 !important;
   }
+}
+
+.project.disabled {
+  opacity: 0.3 !important;
 }
 
 .project-name {

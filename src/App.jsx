@@ -545,8 +545,8 @@ function WorkPage({ setPage, active }) {
             {projects.map((p, i) => (
               <li
                 key={p.name}
-                className={`project writing-item animate${p.dim ? ' dim' : ''}`}
-                style={{ animationDelay: `${0.15 + i * 0.05}s`, '--end-opacity': p.dim ? 0.3 : 1, cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed' }}
+                className={`project writing-item animate${(!p.sections && !p.href) ? ' disabled' : ''}`}
+                style={{ animationDelay: `${0.15 + i * 0.05}s`, '--end-opacity': (!p.sections && !p.href) ? 0.3 : 1, cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed' }}
                 onClick={() => { if (p.sections && !p.linkOnly) { setHoveredProject(null); setActiveProject(p) } else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
                 onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
                 onMouseLeave={() => setHoveredProject(null)}
@@ -663,8 +663,7 @@ const writings = [
     title: 'Cracked',
     category: 'Gaming',
     type: 'cracked',
-    sections: [],
-    content: [],
+    disabled: true,
   },
 ]
 
@@ -1372,7 +1371,7 @@ function WritingPage({ setPage, initialNote }) {
           <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
             {writings.map((w, i) => (
-              <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
+              <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}${w.disabled ? ' disabled' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: w.disabled ? 'not-allowed' : 'pointer', '--end-opacity': w.disabled ? 0.3 : 1 }} onClick={() => !w.disabled && setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
                 <span className="project-name">{w.title}</span>
                 {w.category && <span className="writing-category">{w.category}</span>}
               </li>
@@ -1484,7 +1483,7 @@ function HomePage({ setPage }) {
             {projects.map((p, i) => (
               <li
                 key={p.name}
-                className={`project animate${(!p.sections && !p.href) ? ' dim' : ''}`}
+                className={`project animate${(!p.sections && !p.href) ? ' dim disabled' : ''}`}
                 style={{ cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed', animationDelay: `${0.2 + i * 0.04}s`, '--end-opacity': (!p.sections && !p.href) ? 0.3 : 1 }}
                 onClick={() => { if (p.sections && !p.linkOnly) setActiveProject(p); else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
                 onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
