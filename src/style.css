@@ -1996,7 +1996,6 @@ img.note-image-placeholder {
   .music-scroll {
     overflow-y: visible;
     flex: none;
-    padding: 0 24px !important;
     padding-bottom: 120px !important;
   }
 
