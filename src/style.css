@@ -1561,15 +1561,21 @@ img.note-image-placeholder {
   min-width: 0;
 }
 
-.sites-thumb {
-  display: block;
+.sites-thumb-wrap {
   width: 34px;
   height: 34px;
-  border-radius: 8px;
   flex-shrink: 0;
-  object-fit: cover;
+  border-radius: 8px;
+  overflow: hidden;
   background: rgba(0,0,0,0.05);
   box-shadow: 0 0 0 1px var(--border-light);
+}
+
+.sites-thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .sites-info {

@@ -1238,7 +1238,9 @@ function SitesPage({ note, onBack }) {
           {sites.map((site, i) => (
             <div key={i} className="sites-row" onClick={() => window.open(site.href, '_blank', 'noreferrer')} onMouseEnter={() => playClick(0.4)}>
               <span className="sites-title-cell">
-                <img src={site.img} alt="" className="sites-thumb" />
+                <span className="sites-thumb-wrap">
+                  <img src={site.img} alt="" className="sites-thumb" />
+                </span>
                 <span className="sites-name">{site.name}</span>
               </span>
             </div>
