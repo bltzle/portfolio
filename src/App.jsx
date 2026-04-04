@@ -69,15 +69,11 @@ function useMagnetRepel(radius = 80, strength = 0.4) {
 }
 
 function formatDate(str) {
-  const diff = Date.now() - new Date(str).getTime()
-  const mins = Math.floor(diff / 60000)
-  const hours = Math.floor(diff / 3600000)
-  const days = Math.floor(diff / 86400000)
-  if (mins < 60) return `${mins}m ago`
-  if (hours < 24) return `${hours}h ago`
-  if (days < 7) return `${days}d ago`
-  if (days < 30) return `${Math.floor(days / 7)}w ago`
-  return `${Math.floor(days / 30)}mo ago`
+  const d = new Date(str)
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  const yy = String(d.getFullYear()).slice(-2)
+  return `${mm}/${dd}/${yy}`
 }
 
 function cleanTitle(name) {
@@ -275,11 +271,7 @@ function WorkFooter({ color, setPage }) {
   return (
     <footer className="work-footer" style={{ animation: 'page-fade 0.6s ease forwards', animationDelay: '0.5s', opacity: 0 }}>
       <div className="footer-row">
-        <div className="footer-left">
-          <span className="footer-item">San Francisco, CA</span>
-          <span className="footer-divider" />
-          <span className="footer-item visitor-time">{time}</span>
-        </div>
+        <span className="footer-item visitor-time">{time}</span>
         <div className="footer-left">
           <a className="footer-item" onClick={() => setPage('music')}>Music</a>
           <span className="footer-divider" />

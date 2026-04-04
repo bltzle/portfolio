@@ -19,7 +19,7 @@
 
 
 :root {
-  --dark: #404040;
+  --dark: #202020;
   --light: #737373;
   --light-2: #b3b9b9;
   --caption: #C4C4C4;
@@ -279,7 +279,7 @@ a.footer-item {
 }
 
 a.footer-item:hover {
-  color: var(--light);
+  color: var(--dark);
 }
 
 /* Music */
@@ -831,7 +831,7 @@ a.footer-item:hover {
 
 .project-leader {
   flex: 1;
-  border-bottom: 1px dotted var(--border-light);
+  border-bottom: 1px solid var(--border-light);
   min-width: 20px;
   align-self: center;
   margin-bottom: -3px;
