@@ -1239,18 +1239,18 @@ function MusicPage({ setPage, tracks, loading }) {
           <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading music-heading">Music</h1>
-      <div className="music-col-headers" style={{ padding: '0 48px' }}>
+      <div className="music-col-headers">
         {!loading && tracks.length > 0 && (
           <div className="music-col-headers-row">
-            {[['song', 'Title'], ['artist', 'Artist'], ['album', 'Album'], ['played', 'Played']].map(([col, label]) => (
-              <span key={col} className={col === 'album' ? 'music-col-album' : ''} onClick={() => cycleSort(col)} style={{ cursor: 'pointer', userSelect: 'none', color: sort.col === col ? 'var(--dark)' : '' }}>
+            {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
+              <span onClick={() => cycleSort(col)} style={{ cursor: 'pointer', userSelect: 'none', color: sort.col === col ? 'var(--dark)' : '' }}>
                 {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
               </span>
             ))}
           </div>
         )}
       </div>
-      <div className="music-scroll" style={{ padding: '0 48px' }}>
+      <div className="music-scroll">
         {loading ? (
           <p className="music-empty">Loading...</p>
         ) : tracks.length === 0 && ['localhost', '127.0.0.1'].includes(window.location.hostname) ? (
@@ -1267,7 +1267,6 @@ function MusicPage({ setPage, tracks, loading }) {
                   </span>
                 </span>
                 <span className="music-artist music-artist-col">{track.artists.map(a => a.name).join(', ')}</span>
-                <span className="music-col-album">{track.album?.name}</span>
                 <span className="music-col-date">{formatDate(played_at)}</span>
               </div>
             ))}
