@@ -1234,48 +1234,49 @@ function MusicPage({ setPage, tracks, loading }) {
   return (
     <div className="music-page page-transition">
       <TopFade />
-      <div className="page-content" style={{ paddingTop: '156px' }}>
+      <div className="page-content" style={{ paddingTop: '156px', paddingBottom: 0 }}>
         <button className="back-btn" onClick={() => setPage('home')} aria-label="Back">
           <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading music-heading">Music</h1>
-      <div className="music-col-headers">
-        {!loading && tracks.length > 0 && (
-          <div className="music-col-headers-row">
-            {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
-              <span onClick={() => cycleSort(col)} style={{ cursor: 'pointer', userSelect: 'none', color: sort.col === col ? 'var(--dark)' : '' }}>
-                {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
-              </span>
-            ))}
-          </div>
-        )}
       </div>
-      <div className="music-scroll">
-        {loading ? (
-          <p className="music-empty">Loading...</p>
-        ) : tracks.length === 0 && ['localhost', '127.0.0.1'].includes(window.location.hostname) ? (
-          <button className="music-connect" onClick={initiateSpotifyAuth}>Connect Spotify</button>
-        ) : (
-          <div className="music-rows">
-            {displayedTracks.map(({ track, played_at }, i) => (
-              <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
-                <span className="music-title-cell">
-                  {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" className="music-thumb" style={{ flexShrink: 0, border: '1px solid var(--border-light)' }} />}
-                  <span className="music-track-info">
-                    <span className="music-song-name">{cleanTitle(track.name)}</span>
-                    <span className="music-artist music-artist-sub">{track.artists.map(a => a.name).join(', ')}</span>
-                  </span>
+      <div className="music-table" style={{ padding: '0 48px' }}>
+        <div className="music-col-headers">
+          {!loading && tracks.length > 0 && (
+            <div className="music-col-headers-row">
+              {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
+                <span key={col} onClick={() => cycleSort(col)} style={{ cursor: 'pointer', userSelect: 'none', color: sort.col === col ? 'var(--dark)' : '' }}>
+                  {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
                 </span>
-                <span className="music-artist music-artist-col">{track.artists.map(a => a.name).join(', ')}</span>
-                <span className="music-col-date">{formatDate(played_at)}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        <div className="music-scroll-fade" />
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="music-scroll">
+          {loading ? (
+            <p className="music-empty">Loading...</p>
+          ) : tracks.length === 0 && ['localhost', '127.0.0.1'].includes(window.location.hostname) ? (
+            <button className="music-connect" onClick={initiateSpotifyAuth}>Connect Spotify</button>
+          ) : (
+            <div className="music-rows">
+              {displayedTracks.map(({ track, played_at }, i) => (
+                <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
+                  <span className="music-title-cell">
+                    {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" className="music-thumb" style={{ flexShrink: 0, border: '1px solid var(--border-light)' }} />}
+                    <span className="music-track-info">
+                      <span className="music-song-name">{cleanTitle(track.name)}</span>
+                      <span className="music-artist music-artist-sub">{track.artists.map(a => a.name).join(', ')}</span>
+                    </span>
+                  </span>
+                  <span className="music-artist music-artist-col">{track.artists.map(a => a.name).join(', ')}</span>
+                  <span className="music-col-date">{formatDate(played_at)}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="music-scroll-fade" />
+        </div>
       </div>
-      </div>
-
     </div>
   )
 }

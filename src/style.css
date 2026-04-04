@@ -1339,10 +1339,6 @@ img.note-image-placeholder {
   transition: color 0.15s ease;
 }
 
-.music-col-headers-row span:first-child {
-  padding-left: 44px;
-}
-
 .music-col-headers-row span:hover {
   color: var(--dark);
 }
