@@ -272,8 +272,6 @@ function WorkFooter({ color, setPage }) {
       <div className="footer-row">
         <span className="footer-item visitor-time">{time}</span>
         <div className="footer-left">
-          <a className="footer-item" onClick={() => setPage('music')}>Music</a>
-          <span className="footer-divider" />
           <a className="footer-item" onClick={() => setPage('colophon')}>Colophon</a>
         </div>
       </div>
@@ -658,6 +656,11 @@ const writings = [
     type: 'sites',
     sections: [],
     content: [],
+  },
+  {
+    title: 'Music',
+    category: 'Listening',
+    type: 'music',
   },
   {
     title: 'Cracked',
@@ -1250,7 +1253,7 @@ function SitesPage({ note, onBack }) {
   )
 }
 
-function MusicPage({ setPage, tracks, loading }) {
+function MusicPage({ setPage, tracks, loading, onBack }) {
   const [sort, setSort] = useState({ col: null, dir: null })
   const cycleSort = (col) => setSort(s => {
     if (col === 'played') return s.col === 'played' ? { col: null, dir: null } : { col, dir: 'asc' }
@@ -1272,7 +1275,7 @@ function MusicPage({ setPage, tracks, loading }) {
     <div className="music-page page-transition">
       <TopFade />
       <div className="page-content" style={{ paddingTop: '156px' }}>
-        <button className="back-btn" onClick={() => setPage('home')} aria-label="Back">
+        <button className="back-btn" onClick={onBack || (() => setPage('home'))} aria-label="Back">
           <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading music-heading">Music</h1>
@@ -1316,7 +1319,7 @@ function MusicPage({ setPage, tracks, loading }) {
   )
 }
 
-function WritingPage({ setPage, initialNote }) {
+function WritingPage({ setPage, initialNote, tracks, loading }) {
   const [activeNote, setActiveNote] = useState(() => initialNote ? writings.find(w => w.type === initialNote) ?? null : null)
   const [animateList, setAnimateList] = useState(true)
 
@@ -1339,6 +1342,12 @@ function WritingPage({ setPage, initialNote }) {
       <div key={activeNote.title} className="page-transition">
         <MangaPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} />
       </div>
+    )
+  }
+
+  if (activeNote?.type === 'music') {
+    return (
+      <MusicPage setPage={setPage} tracks={tracks} loading={loading} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
     )
   }
 
@@ -1514,7 +1523,7 @@ export default function App() {
   }, [])
 
   useLayoutEffect(() => {
-    const titles = { home: 'Baltzelle', about: 'About', music: 'Music', writing: 'Notes', prototypes: 'Play' }
+    const titles = { home: 'Baltzelle', about: 'About', writing: 'Notes', prototypes: 'Play' }
     document.title = titles[page] ?? 'Baltzelle'
     scrollRef.current?.scrollIntoView(true)
   }, [page])
@@ -1570,8 +1579,7 @@ export default function App() {
     <div ref={scrollRef} style={{ minHeight: '100%' }}>
       {page === 'home'       && <HomePage       setPage={setPage} />}
       {page === 'about'      && <AboutPage      setPage={setPage} />}
-      {page === 'music'      && <MusicPage      setPage={setPage} tracks={spotifyTracks} loading={spotifyLoading} />}
-      {page === 'writing'    && <WritingPage    setPage={setPage} />}
+      {page === 'writing'    && <WritingPage    setPage={setPage} tracks={spotifyTracks} loading={spotifyLoading} />}
       {page === 'colophon'   && <ColophonPage   setPage={setPage} />}
       {page === 'prototypes' && <PrototypesPage setPage={setPage} />}
     </div>
