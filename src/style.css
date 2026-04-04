@@ -1252,7 +1252,7 @@ img.note-image-placeholder {
 }
 
 .music-page .page-content {
-  gap: 16px;
+  gap: 8px;
 }
 
 .music-page .page-content > .page-heading + * {
