@@ -1297,7 +1297,7 @@ function MusicPage({ setPage, tracks, loading }) {
               {displayedTracks.map(({ track, played_at }, i) => (
                 <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
                   <span className="music-title-cell">
-                    {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" className="music-thumb" />}
+                    {track.album?.images?.[1]?.url && <img src={track.album.images[1].url} alt="" className="music-thumb" />}
                     <span className="music-track-info">
                       <span className="music-song-name">{cleanTitle(track.name)}</span>
                       <span className="music-artist music-artist-sub">{track.artists.map(a => a.name).join(', ')}</span>
