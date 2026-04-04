@@ -280,7 +280,11 @@ function WorkFooter({ color, setPage }) {
           <span className="footer-divider" />
           <span className="footer-item visitor-time">{time}</span>
         </div>
-        <a className="footer-item" onClick={() => setPage('colophon')}>Colophon</a>
+        <div className="footer-left">
+          <a className="footer-item" onClick={() => setPage('music')}>Music</a>
+          <span className="footer-divider" />
+          <a className="footer-item" onClick={() => setPage('colophon')}>Colophon</a>
+        </div>
       </div>
     </footer>
   )
@@ -605,7 +609,6 @@ function AboutPage({ setPage }) {
         <div className="home-nav-links">
           <a onClick={() => setPage('home')}>Work</a>
           <a className="active">About</a>
-          <a onClick={() => setPage('music')}>Music</a>
           <a onClick={() => setPage('writing')}>Notes</a>
         </div>
       </nav>
@@ -1229,18 +1232,13 @@ function MusicPage({ setPage, tracks, loading }) {
     : tracks
 
   return (
-    <div className="music-page">
+    <div className="music-page page-transition">
       <TopFade />
-      <nav className="home-nav">
-        <div className="home-nav-links">
-          <a onClick={() => setPage('home')}>Work</a>
-          <a onClick={() => setPage('about')}>About</a>
-          <a className="active">Music</a>
-          <a onClick={() => setPage('writing')}>Notes</a>
-        </div>
-      </nav>
-      <div className="page-transition">
-      <h1 className="page-heading music-heading">Music</h1>
+      <div className="page-content" style={{ paddingTop: '156px' }}>
+        <button className="back-btn" onClick={() => setPage('home')} aria-label="Back">
+          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+        </button>
+        <h1 className="page-heading music-heading">Music</h1>
       <div className="music-col-headers" style={{ padding: '0 48px' }}>
         {!loading && tracks.length > 0 && (
           <div className="music-col-headers-row">
@@ -1324,7 +1322,6 @@ function WritingPage({ setPage, initialNote }) {
           <div className="home-nav-links">
             <a onClick={() => setPage('home')}>Work</a>
             <a onClick={() => setPage('about')}>About</a>
-            <a onClick={() => setPage('music')}>Music</a>
             <a className="active">Notes</a>
           </div>
         </nav>
@@ -1429,7 +1426,6 @@ function HomePage({ setPage }) {
           <div className="home-nav-links">
             <a className="active">Work</a>
             <a onClick={() => setPage('about')}>About</a>
-            <a onClick={() => setPage('music')}>Music</a>
             <a onClick={() => setPage('writing')}>Notes</a>
           </div>
         </nav>
