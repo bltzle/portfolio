@@ -1444,7 +1444,7 @@ function HomePage({ setPage }) {
   if (activeProject) {
     return (
       <div className="page-transition">
-        <ProjectDetailPage project={activeProject} onBack={() => setActiveProject(null)} setPage={setPage} />
+        <ProjectDetailPage project={activeProject} onBack={() => { setHoveredProject(null); setActiveProject(null) }} setPage={setPage} />
       </div>
     )
   }
