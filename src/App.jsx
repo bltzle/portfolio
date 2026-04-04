@@ -652,6 +652,20 @@ const writings = [
     category: 'Manga',
     type: 'manga',
   },
+  {
+    title: 'Beautiful personal sites',
+    category: 'Design',
+    type: 'sites',
+    sections: [],
+    content: [],
+  },
+  {
+    title: 'Cracked',
+    category: 'Gaming',
+    type: 'cracked',
+    sections: [],
+    content: [],
+  },
 ]
 
 function TopFade() {
@@ -1204,6 +1218,38 @@ function MangaPage({ note, onBack, setPage }) {
   )
 }
 
+const sites = [
+  { name: 'Gustavo Rodrigues', href: 'https://www.guhrodrigues.com/', img: 'https://www.guhrodrigues.com/favicon.svg' },
+  { name: 'Gabriel Valdivia', href: 'https://www.gabrielvaldivia.com/', img: 'https://pub-0c00865d02c1476494008dbb74525b2a.r2.dev/favicon.png' },
+  { name: 'Eryc', href: 'https://eryc.cc/', img: 'https://eryc.cc/favicon.svg' },
+  { name: 'Luke', href: 'https://www.luke.boo/', img: '/images/sites/4.png' },
+  { name: 'Yiling', href: 'https://www.yiling.art/', img: 'https://www.yiling.art/favicon.jpg' },
+  { name: 'Todd Hamilton', href: 'https://toddham.com/', img: 'https://toddham.com/favicon.ico' },
+]
+
+function SitesPage({ note, onBack }) {
+  return (
+    <div className="page">
+      <div className="page-content" style={{ paddingTop: '156px' }}>
+        <button className="back-btn" onClick={onBack} aria-label="Back">
+          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+        </button>
+        <h1 className="page-heading">{note?.title}</h1>
+        <div className="sites-rows">
+          {sites.map((site, i) => (
+            <div key={i} className="sites-row" onClick={() => window.open(site.href, '_blank', 'noreferrer')} onMouseEnter={() => playClick(0.4)}>
+              <span className="sites-title-cell">
+                <img src={site.img} alt="" className="sites-thumb" />
+                <span className="sites-name">{site.name}</span>
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function MusicPage({ setPage, tracks, loading }) {
   const [sort, setSort] = useState({ col: null, dir: null })
   const cycleSort = (col) => setSort(s => {
@@ -1292,6 +1338,14 @@ function WritingPage({ setPage, initialNote }) {
     return (
       <div key={activeNote.title} className="page-transition">
         <MangaPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} />
+      </div>
+    )
+  }
+
+  if (activeNote?.type === 'sites') {
+    return (
+      <div key={activeNote.title} className="page-transition">
+        <SitesPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
       </div>
     )
   }

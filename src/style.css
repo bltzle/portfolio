@@ -1521,6 +1521,76 @@ img.note-image-placeholder {
   margin-bottom: 0;
 }
 
+.sites-rows {
+  width: 100%;
+  padding-top: 12px;
+}
+
+.sites-row {
+  display: flex;
+  align-items: center;
+  transition: opacity 0.15s ease, background 0.15s ease;
+  cursor: pointer;
+  padding: 8px;
+  margin: 0 -8px;
+  border-radius: 12px;
+}
+
+@media (hover: hover) {
+  .sites-row:hover {
+    background: var(--hover-bg);
+  }
+
+  .sites-rows:has(.sites-row:hover) .sites-row:not(:hover) {
+    opacity: 0.2;
+  }
+
+  .sites-row:hover .sites-person {
+    color: var(--dark);
+  }
+}
+
+.sites-title-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.sites-thumb {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border: 1px solid var(--border-light);
+}
+
+.sites-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sites-name {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--dark);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sites-person {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--light);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
 .anime-swiper {
   width: 300px;
   height: 450px;
