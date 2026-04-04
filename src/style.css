@@ -1253,6 +1253,7 @@ img.note-image-placeholder {
 
 .music-col-headers {
   flex-shrink: 0;
+  width: 100%;
   background: var(--bg);
   z-index: var(--z-overlay);
 }
@@ -1344,6 +1345,7 @@ img.note-image-placeholder {
 }
 
 .music-scroll {
+  width: 100%;
 }
 
 .music-inner {
