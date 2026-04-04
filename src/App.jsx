@@ -1234,13 +1234,11 @@ function MusicPage({ setPage, tracks, loading }) {
   return (
     <div className="music-page page-transition">
       <TopFade />
-      <div className="page-content" style={{ paddingTop: '156px', paddingBottom: 0 }}>
+      <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={() => setPage('home')} aria-label="Back">
           <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading music-heading">Music</h1>
-      </div>
-      <div className="music-table" style={{ padding: '0 48px' }}>
         <div className="music-col-headers">
           {!loading && tracks.length > 0 && (
             <div className="music-col-headers-row">
