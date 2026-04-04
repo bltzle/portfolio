@@ -236,12 +236,11 @@ const projects = [
     modalBody: `I came on as Product Designer to help lay the groundwork for the product. A lot of early decisions about how things looked and felt. We did this over the summer of 2024.`,
     modalContent: `Special thanks to`,
     collaborators: ['Gabriel Valdivia'],
-    hoverText: 'THIS IS THE NEBULA',
   },
-  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024', img: '/images/workmate/cover.png', href: 'https://www.workmate.com/', hoverText: 'DUSK SOAKED IN GREEN LIGHT' },
-  { name: 'Goodword',              desc: 'Maintain relationships in your professional network',         year: '2024', img: '/images/goodword/Cover.png', href: 'https://www.goodword.com/', hoverText: 'A GLOW THAT NEVER ENDS' },
-  { name: 'Sensible',              desc: 'A high yield account for your crypto',                       year: '2024', img: '/images/sensible/Sensible.png', href: 'https://www.coinbase.com/en-gb/blog/Coinbase-acquires-team-to-accelerate-onchain-consumer-roadmap', hoverText: 'AND STILL, IT DRIFTS ONWARD' },
-  { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025', img: '/images/dex/cover.png', previewSize: '50%', href: 'https://www.dex.camera/', hoverText: 'FADING THE MOMENT YOU LOOK AWAY' },
+  { name: 'Workmate',              desc: 'Turning your inbox into an auto-updating task list',         year: '2024', img: '/images/workmate/cover.png', href: 'https://www.workmate.com/' },
+  { name: 'Goodword',              desc: 'Maintain relationships in your professional network',         year: '2024', img: '/images/goodword/Cover.png', href: 'https://www.goodword.com/' },
+  { name: 'Sensible',              desc: 'A high yield account for your crypto',                       year: '2024', img: '/images/sensible/Sensible.png', href: 'https://www.coinbase.com/en-gb/blog/Coinbase-acquires-team-to-accelerate-onchain-consumer-roadmap' },
+  { name: 'Dex',                   desc: 'Learning camera for children',                               year: '2025', img: '/images/dex/cover.png', previewSize: '50%', href: 'https://www.dex.camera/' },
   { name: 'Underline',             desc: 'An investment platform for alternative assets',              year: '2023', img: '/images/underline/Referral View.png' },
 ]
 
@@ -1377,6 +1376,9 @@ function HomePage({ setPage }) {
   const [footerColor, setFooterColor] = useState(() => getShaderColor())
   const [activeProject, setActiveProject] = useState(null)
   const [hoveredProject, setHoveredProject] = useState(null)
+  const hoverLines = ['Hover a project', 'THIS IS THE NEBULA', 'DUSK SOAKED IN GREEN LIGHT', 'A GLOW THAT NEVER ENDS', 'AND STILL, IT DRIFTS ONWARD', 'FADING THE MOMENT YOU LOOK AWAY']
+  const hoverIndexRef = useRef(0)
+  const [lastHoverText, setLastHoverText] = useState(null)
   useEffect(() => {
     const id = setInterval(() => setFooterColor(getShaderColor()), 500)
     return () => clearInterval(id)
@@ -1408,7 +1410,7 @@ function HomePage({ setPage }) {
           />
         ))}
         <span className="left-label" style={{ opacity: hoveredProject?.img ? 0 : 1 }}>
-          {hoveredProject?.hoverText || 'Hover a project'}
+          {lastHoverText || hoverLines[0]}
         </span>
       </div>
       <div className="right">
@@ -1432,7 +1434,7 @@ function HomePage({ setPage }) {
                 style={{ cursor: (p.sections || p.href) ? 'pointer' : 'not-allowed', animationDelay: `${0.2 + i * 0.04}s`, '--end-opacity': (!p.sections && !p.href) ? 0.3 : 1 }}
                 onClick={() => { if (p.sections && !p.linkOnly) setActiveProject(p); else if (p.href) window.open(p.href, '_blank', 'noreferrer') }}
                 onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
-                onMouseLeave={() => setHoveredProject(null)}
+                onMouseLeave={() => { setLastHoverText(hoverLines[hoverIndexRef.current % hoverLines.length]); hoverIndexRef.current++; setHoveredProject(null) }}
               >
                 <span className="project-name">{p.name}</span>
                 <span className="project-desc">{p.desc}</span>
