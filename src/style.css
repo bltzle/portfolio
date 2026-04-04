@@ -1248,7 +1248,7 @@ img.note-image-placeholder {
 }
 
 .music-heading {
-  padding: 96px 48px 32px;
+  padding: 0;
 }
 
 .music-col-headers {
@@ -1998,7 +1998,7 @@ img.note-image-placeholder {
   }
 
   .music-heading {
-    padding: 96px 24px 0;
+    padding: 0;
   }
 
   .music-row {
