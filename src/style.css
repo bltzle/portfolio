@@ -1251,6 +1251,14 @@ img.note-image-placeholder {
   padding: 0;
 }
 
+.music-page .page-content {
+  gap: 16px;
+}
+
+.music-page .page-content > .page-heading + * {
+  margin-top: 0;
+}
+
 .music-col-headers {
   flex-shrink: 0;
   width: 100%;
