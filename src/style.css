@@ -1249,6 +1249,13 @@ img.note-image-placeholder {
 
 .music-heading {
   padding: 0;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .music-heading {
+    display: block;
+  }
 }
 
 .music-page .page-content {
