@@ -803,8 +803,8 @@ a.footer-item:hover {
   }
 }
 
-.project.disabled {
-  opacity: 0.3 !important;
+.project.disabled:not(.animate) {
+  opacity: 0.3;
 }
 
 .project-name {
@@ -1563,10 +1563,9 @@ img.note-image-placeholder {
 }
 
 .sites-thumb {
+  display: block;
   width: 34px;
   height: 34px;
-  min-width: 34px;
-  min-height: 34px;
   border-radius: 8px;
   flex-shrink: 0;
   object-fit: cover;
