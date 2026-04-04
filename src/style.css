@@ -1459,7 +1459,8 @@ img.note-image-placeholder {
   height: 34px;
   border-radius: 8px;
   flex-shrink: 0;
-  box-shadow: 0 0 0 1px var(--border-light);
+  outline: 1px solid var(--border-light);
+  outline-offset: -1px;
 }
 
 .music-track-info {
@@ -1568,7 +1569,8 @@ img.note-image-placeholder {
   border-radius: 8px;
   overflow: hidden;
   background: rgba(0,0,0,0.05);
-  box-shadow: 0 0 0 1px var(--border-light);
+  outline: 1px solid var(--border-light);
+  outline-offset: -1px;
 }
 
 .sites-thumb {

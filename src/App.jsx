@@ -1218,7 +1218,6 @@ function MangaPage({ note, onBack, setPage }) {
 }
 
 const sites = [
-  { name: 'Gustavo Rodrigues', href: 'https://www.guhrodrigues.com/', img: 'https://www.guhrodrigues.com/favicon.svg' },
   { name: 'Gabriel Valdivia', href: 'https://www.gabrielvaldivia.com/', img: 'https://pub-0c00865d02c1476494008dbb74525b2a.r2.dev/favicon.png' },
   { name: 'Eryc', href: 'https://eryc.cc/', img: 'https://eryc.cc/favicon.svg' },
   { name: 'Luke', href: 'https://www.luke.boo/', img: '/images/sites/4.png' },
