@@ -785,7 +785,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
                         <img key={i} src={src} alt="" style={{ flex: 1, minWidth: 0, height: 'auto', display: 'block', borderRadius: 'var(--radius)' }} />
                       ))
                     : section.img
-                    ? <img src={section.img} alt="" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 'var(--radius)', outline: '1px solid rgba(0,0,0,0.07)', outlineOffset: '-1px' }} />
+                    ? <img src={section.img} alt="" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 'var(--radius)', boxShadow: '0 0 0 1px rgba(0,0,0,0.07)' }} />
                     : si === 1
                     ? <img src="/tumblr_8b97eed4e22307c56b8c51612a492c87_8b2d8fbc_540.gif" alt="" className="note-image-placeholder" style={{ objectFit: 'cover' }} />
                     : si === 2
@@ -1296,7 +1296,7 @@ function MusicPage({ setPage, tracks, loading }) {
               {displayedTracks.map(({ track, played_at }, i) => (
                 <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
                   <span className="music-title-cell">
-                    {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" className="music-thumb" style={{ flexShrink: 0, border: '1px solid var(--border-light)' }} />}
+                    {track.album?.images?.[2]?.url && <img src={track.album.images[2].url} alt="" className="music-thumb" />}
                     <span className="music-track-info">
                       <span className="music-song-name">{cleanTitle(track.name)}</span>
                       <span className="music-artist music-artist-sub">{track.artists.map(a => a.name).join(', ')}</span>
