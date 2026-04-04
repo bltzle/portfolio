@@ -1565,6 +1565,8 @@ img.note-image-placeholder {
 .sites-thumb {
   width: 34px;
   height: 34px;
+  min-width: 34px;
+  min-height: 34px;
   border-radius: 8px;
   flex-shrink: 0;
   object-fit: cover;
