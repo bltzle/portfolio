@@ -1324,7 +1324,8 @@ img.note-image-placeholder {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr;
   align-items: center;
-  padding: 0 0 16px;
+  padding: 0 8px 16px;
+  margin: 0 -8px;
   border-bottom: 1px solid var(--border-light);
   font-size: 12px;
   font-weight: 400;
