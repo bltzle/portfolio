@@ -1043,14 +1043,17 @@ function MangaPage({ note, onBack, setPage }) {
     if (isOpen) {
       const scrollbarWidth = pageTransition ? pageTransition.offsetWidth - pageTransition.clientWidth : 0
       document.documentElement.style.setProperty('--scrollbar-compensation', `${scrollbarWidth}px`)
+      document.documentElement.classList.add('modal-open')
       document.body.classList.add('modal-open')
       pageTransition?.classList.add('manga-page-blurred')
     } else {
+      document.documentElement.classList.remove('modal-open')
       document.body.classList.remove('modal-open')
       document.documentElement.style.removeProperty('--scrollbar-compensation')
       pageTransition?.classList.remove('manga-page-blurred')
     }
     return () => {
+      document.documentElement.classList.remove('modal-open')
       document.body.classList.remove('modal-open')
       document.documentElement.style.removeProperty('--scrollbar-compensation')
       pageTransition?.classList.remove('manga-page-blurred')

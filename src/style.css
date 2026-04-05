@@ -52,14 +52,18 @@
 
 
 
+html.modal-open,
 body.modal-open {
   overflow: hidden !important;
   touch-action: none;
+  position: fixed;
+  width: 100%;
 }
 
 body.modal-open .page-transition,
 body.modal-open .music-scroll,
-body.modal-open .note-article {
+body.modal-open .note-article,
+body.modal-open .page {
   overflow: hidden !important;
   touch-action: none;
 }
