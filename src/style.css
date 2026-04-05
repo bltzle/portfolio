@@ -353,7 +353,7 @@ a.footer-item:hover {
   border-left: 1px solid var(--border-light);
   display: flex;
   flex-direction: column;
-  padding: 16px 24px;
+  padding: 16px 24px 40px;
   overflow-y: auto;
 }
 
@@ -1668,6 +1668,14 @@ img.note-image-placeholder {
 }
 
 @media (max-width: 480px) {
+  .header {
+    padding: 96px 24px 0;
+  }
+
+  .work-footer {
+    padding: 0 24px 88px;
+  }
+
   .project {
     flex-direction: column;
     align-items: flex-start;
