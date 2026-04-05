@@ -59,10 +59,12 @@ body.modal-open {
 
 body.modal-open .page-transition,
 body.modal-open .music-scroll,
-body.modal-open .note-article,
-body.modal-open .page {
+body.modal-open .note-article {
   overflow: hidden !important;
   touch-action: none;
+}
+
+body.modal-open .page-content {
   pointer-events: none;
 }
 
