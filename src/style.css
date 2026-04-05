@@ -365,7 +365,7 @@ a.footer-item:hover {
 .manga-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px 16px;
+  gap: 16px;
   width: 100%;
 }
 
@@ -373,6 +373,14 @@ a.footer-item:hover {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  transition: transform 0.4s cubic-bezier(0.34, 2, 0.64, 1), filter 0.3s ease;
+  will-change: transform;
+  border-radius: 16px;
+}
+
+.manga-item:hover {
+  transform: scale(1.02);
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
 }
 
 .manga-cover {
@@ -458,6 +466,8 @@ a.footer-item:hover {
 .manga-panel-header {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
   margin-bottom: 12px;
 }
 
@@ -476,7 +486,9 @@ a.footer-item:hover {
 .manga-panel-close {
   background: none;
   border: none;
-  padding: 6px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
   cursor: pointer;
   color: var(--light);
   display: flex;
@@ -498,16 +510,20 @@ a.footer-item:hover {
 }
 .manga-panel-info {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-top: 12px;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 24px;
 }
 .manga-panel-title {
+  font-family: 'Gambetta', serif;
+  font-style: italic;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--dark);
 }
 .manga-panel-volume {
+  font-family: 'Gambetta', serif;
+  font-style: italic;
   font-size: 13px;
   font-weight: 400;
   color: var(--light);
@@ -518,7 +534,7 @@ a.footer-item:hover {
   color: var(--light);
 }
 .manga-panel-body {
-  margin-top: 24px;
+  margin-top: 12px;
   margin-bottom: 32px;
   font-size: 14px;
   line-height: 1.6;
@@ -1586,11 +1602,20 @@ img.note-image-placeholder {
 .sites-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   transition: opacity 0.15s ease, background 0.15s ease;
   cursor: pointer;
   padding: 8px;
   margin: 0 -8px;
   border-radius: 12px;
+}
+
+.sites-address {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--light);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 @media (hover: hover) {
@@ -2183,9 +2208,6 @@ img.note-image-placeholder {
     height: 42px;
   }
 
-  .manga-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
 .setup-modal {
     width: calc(100% - 48px);
@@ -2217,6 +2239,10 @@ img.note-image-placeholder {
 
   .work-links {
     padding: 0 24px 24px;
+  }
+
+  .manga-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .nav-cards {

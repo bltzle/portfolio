@@ -177,7 +177,7 @@ function playClick(intensity = 0.4) {
   src.start()
 }
 
-import { Post, ArrowDownLeft, NavArrowRight, Xmark, Plus, FilterList, Check, LongArrowUpLeft } from 'iconoir-react'
+import { Post, ArrowDownLeft, NavArrowRight, Xmark, Plus, FilterList, Check, LongArrowUpLeft, OpenNewWindow } from 'iconoir-react'
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate as motionAnimate } from 'motion/react'
 import './style.css'
 
@@ -669,21 +669,21 @@ function AboutPage({ setPage }) {
 }
 
 const mangaCovers = [
-  { title: 'Hell\'s Paradise: Jigokuraku', volume: 'Vol. 06', src: '/images/manga/hells-paradise-06.jpg', body: 'Set in the Edo period of Japan, the series follows the journey of ninja Gabimaru and executioner Yamada Asaemon Sagiri as they search for the elixir of immortality. Multiple pairs of people with unaligned interests are thrown into an enclosed space, forced to work together.' },
-  { title: 'Chainsaw Man', volume: 'Vol. 12', src: '/images/manga/chainsaw-man-12.jpg', body: 'Chainsaw Man follows the story of Denji, an impoverished teenager who makes a contract that fuses his body with that of Pochita, the dog-like Chainsaw Devil, granting him the ability to transform parts of his body into chainsaws. Denji eventually joins the Public Safety Devil Hunters, a government agency focused on combating Devils whenever they become a threat to Japan.' },
-  { title: 'The Apothecary Diaries', volume: 'Vol. 10', src: '/images/manga/apothecary-diaries-10.jpg', body: 'Set in a fictional country inspired by China in the Tang Dynasty, the series follows Maomao, a girl trained in medicine by her apothecary father. After being sold as a servant to the emperor\'s palace, she secretly uses her skills to solve mysteries and help others.' },
-  { title: 'Gachiakuta', volume: 'Vol. 08', src: '/images/manga/gachiakuta-08.jpg', body: 'A young teenage boy named Rudo lives in the slums of a wealthy society among the "tribesfolk", a population descended from criminals and exiled by society. Falsely charged with the murder of his foster father, Rudo is dumped into "the Pit," an endless landscape of trash below the floating city.' },
-  { title: 'Jujutsu Kaisen', volume: 'Vol. 00', src: '/images/manga/jujutsu-kaisen-00.jpg', body: 'The series follows Yuta Okkotsu, a young student who becomes a sorcerer and seeks to control the Cursed Spirit of his childhood friend Rika Orimoto.' },
-  { title: 'After the Rain', volume: 'Vol. 05', src: '/images/manga/after-the-rain-05.jpg', body: 'After the Rain tells the story of Akira Tachibana, a high school student working part-time at a family restaurant, who starts falling in love with the manager, Masami Kondo, a forty-five-year-old divorcee with a young son.' },
-  { title: 'Fly Me to the Moon', volume: 'Vol. 13', src: '/images/manga/fly-me-to-the-moon-13.jpg', body: 'The story centers around the teenage genius Nasa Yuzaki and his developing relationship with his new wife, Tsukasa, who saves him from a traffic accident during the beginning of the story.' },
-  { title: 'Frieren: Beyond Journey\'s End', volume: 'Vol. 07', src: '/images/manga/frieren-07.jpg', body: 'The series takes place in a fantasy world and follows Frieren, an elven mage on a journey to the resting place of souls to reunite with her former comrade Himmel, whose Hero Party slew the Demon King.' },
-  { title: 'My Hero Academia', volume: 'Vol. 29', src: '/images/manga/my-hero-academia-29.jpg', body: 'Set in a world where superpowers called "Quirks" have become commonplace, the story follows Izuku Midoriya, a boy who was born without a Quirk but still dreams of becoming a superhero. He is scouted by the world\'s greatest hero, All Might, who bestows his Quirk to Midoriya after recognizing his potential, and helps to enroll him in a prestigious high school for superheroes in training.' },
-  { title: 'Golden Kamuy', volume: 'Vol. 02', src: '/images/manga/golden-kamuy.jpg', body: 'Set in the early twentieth century, Golden Kamuy follows Saichi Sugimoto, a veteran of the Russo-Japanese War, as he searches for a hidden cache of Ainu gold in the wilderness of Hokkaido alongside a young Ainu girl named Asirpa.' },
-  { title: 'Kagurabachi', volume: 'Vol. 03', src: '/images/manga/kagurabachi.jpg', body: 'Kagurabachi follows Chihiro Rokuhira, a young swordsmith whose father is murdered by a criminal organization seeking enchanted blades. Armed with one of his father\'s legendary swords, Chihiro sets out for revenge.' },
-  { title: 'Fire Force', volume: 'Vol. 30', src: '/images/manga/fire-force.jpg', body: 'Set in a world where people spontaneously combust into flame-wreathed monsters called Infernals, Fire Force follows Shinra Kusakabe, a third-generation pyrokinetic who joins Special Fire Force Company 8 to uncover the truth behind the phenomenon.' },
-  { title: 'That Time I Got Reincarnated as a Slime', volume: 'Vol. 19', src: '/images/manga/slime.jpg', body: 'After being killed in a random street attack, thirty-seven-year-old Satoru Mikami is reincarnated in a fantasy world as a slime with unique abilities, eventually building a nation of monsters and forging alliances with humans and demons alike.' },
-  { title: 'Classroom of the Elite', volume: 'Vol. 09', src: '/images/manga/classroom-of-the-elite.jpg', body: 'Set in a prestigious high school where students are secretly ranked by ability, Classroom of the Elite follows Kiyotaka Ayanokoji, a seemingly indifferent student in the lowest-ranked class who harbors exceptional intelligence and quietly manipulates events around him.' },
-  { title: 'Overlord', volume: 'Vol. 03', src: '/images/manga/overlord.jpg', body: 'When a popular fantasy game shuts down, the player Momonga finds himself trapped inside as his skeletal undead avatar. Rather than panic, he assumes the name Ainz Ooal Gown and sets out to explore this new world, accompanied by the now-sentient NPCs of his former guild.' },
+  { title: 'Hell\'s Paradise: Jigokuraku', volume: 'Vol. 06', src: '/images/manga/hells-paradise-06.jpg', wiki: 'https://en.wikipedia.org/wiki/Hell%27s_Paradise:_Jigokuraku', body: 'Set in the Edo period of Japan, the series follows the journey of ninja Gabimaru and executioner Yamada Asaemon Sagiri as they search for the elixir of immortality. Multiple pairs of people with unaligned interests are thrown into an enclosed space, forced to work together.' },
+  { title: 'Chainsaw Man', volume: 'Vol. 12', src: '/images/manga/chainsaw-man-12.jpg', wiki: 'https://en.wikipedia.org/wiki/Chainsaw_Man', body: 'Chainsaw Man follows the story of Denji, an impoverished teenager who makes a contract that fuses his body with that of Pochita, the dog-like Chainsaw Devil, granting him the ability to transform parts of his body into chainsaws. Denji eventually joins the Public Safety Devil Hunters, a government agency focused on combating Devils whenever they become a threat to Japan.' },
+  { title: 'The Apothecary Diaries', volume: 'Vol. 10', src: '/images/manga/apothecary-diaries-10.jpg', wiki: 'https://en.wikipedia.org/wiki/The_Apothecary_Diaries', body: 'Set in a fictional country inspired by China in the Tang Dynasty, the series follows Maomao, a girl trained in medicine by her apothecary father. After being sold as a servant to the emperor\'s palace, she secretly uses her skills to solve mysteries and help others.' },
+  { title: 'Gachiakuta', volume: 'Vol. 08', src: '/images/manga/gachiakuta-08.jpg', wiki: 'https://en.wikipedia.org/wiki/Gachiakuta', body: 'A young teenage boy named Rudo lives in the slums of a wealthy society among the "tribesfolk", a population descended from criminals and exiled by society. Falsely charged with the murder of his foster father, Rudo is dumped into "the Pit," an endless landscape of trash below the floating city.' },
+  { title: 'Jujutsu Kaisen', volume: 'Vol. 00', src: '/images/manga/jujutsu-kaisen-00.jpg', wiki: 'https://en.wikipedia.org/wiki/Jujutsu_Kaisen', body: 'The series follows Yuta Okkotsu, a young student who becomes a sorcerer and seeks to control the Cursed Spirit of his childhood friend Rika Orimoto.' },
+  { title: 'After the Rain', volume: 'Vol. 05', src: '/images/manga/after-the-rain-05.jpg', wiki: 'https://en.wikipedia.org/wiki/After_the_Rain_(manga)', body: 'After the Rain tells the story of Akira Tachibana, a high school student working part-time at a family restaurant, who starts falling in love with the manager, Masami Kondo, a forty-five-year-old divorcee with a young son.' },
+  { title: 'Fly Me to the Moon', volume: 'Vol. 13', src: '/images/manga/fly-me-to-the-moon-13.jpg', wiki: 'https://en.wikipedia.org/wiki/Fly_Me_to_the_Moon_(manga)', body: 'The story centers around the teenage genius Nasa Yuzaki and his developing relationship with his new wife, Tsukasa, who saves him from a traffic accident during the beginning of the story.' },
+  { title: 'Frieren: Beyond Journey\'s End', volume: 'Vol. 07', src: '/images/manga/frieren-07.jpg', wiki: 'https://en.wikipedia.org/wiki/Frieren', body: 'The series takes place in a fantasy world and follows Frieren, an elven mage on a journey to the resting place of souls to reunite with her former comrade Himmel, whose Hero Party slew the Demon King.' },
+  { title: 'My Hero Academia', volume: 'Vol. 29', src: '/images/manga/my-hero-academia-29.jpg', wiki: 'https://en.wikipedia.org/wiki/My_Hero_Academia', body: 'Set in a world where superpowers called "Quirks" have become commonplace, the story follows Izuku Midoriya, a boy who was born without a Quirk but still dreams of becoming a superhero. He is scouted by the world\'s greatest hero, All Might, who bestows his Quirk to Midoriya after recognizing his potential, and helps to enroll him in a prestigious high school for superheroes in training.' },
+  { title: 'Golden Kamuy', volume: 'Vol. 02', src: '/images/manga/golden-kamuy.jpg', wiki: 'https://en.wikipedia.org/wiki/Golden_Kamuy', body: 'Set in the early twentieth century, Golden Kamuy follows Saichi Sugimoto, a veteran of the Russo-Japanese War, as he searches for a hidden cache of Ainu gold in the wilderness of Hokkaido alongside a young Ainu girl named Asirpa.' },
+  { title: 'Kagurabachi', volume: 'Vol. 03', src: '/images/manga/kagurabachi.jpg', wiki: 'https://en.wikipedia.org/wiki/Kagurabachi', body: 'Kagurabachi follows Chihiro Rokuhira, a young swordsmith whose father is murdered by a criminal organization seeking enchanted blades. Armed with one of his father\'s legendary swords, Chihiro sets out for revenge.' },
+  { title: 'Fire Force', volume: 'Vol. 30', src: '/images/manga/fire-force.jpg', wiki: 'https://en.wikipedia.org/wiki/Fire_Force', body: 'Set in a world where people spontaneously combust into flame-wreathed monsters called Infernals, Fire Force follows Shinra Kusakabe, a third-generation pyrokinetic who joins Special Fire Force Company 8 to uncover the truth behind the phenomenon.' },
+  { title: 'That Time I Got Reincarnated as a Slime', volume: 'Vol. 19', src: '/images/manga/slime.jpg', wiki: 'https://en.wikipedia.org/wiki/That_Time_I_Got_Reincarnated_as_a_Slime', body: 'After being killed in a random street attack, thirty-seven-year-old Satoru Mikami is reincarnated in a fantasy world as a slime with unique abilities, eventually building a nation of monsters and forging alliances with humans and demons alike.' },
+  { title: 'Classroom of the Elite', volume: 'Vol. 09', src: '/images/manga/classroom-of-the-elite.jpg', wiki: 'https://en.wikipedia.org/wiki/Classroom_of_the_Elite', body: 'Set in a prestigious high school where students are secretly ranked by ability, Classroom of the Elite follows Kiyotaka Ayanokoji, a seemingly indifferent student in the lowest-ranked class who harbors exceptional intelligence and quietly manipulates events around him.' },
+  { title: 'Overlord', volume: 'Vol. 03', src: '/images/manga/overlord.jpg', wiki: 'https://en.wikipedia.org/wiki/Overlord_(novel_series)', body: 'When a popular fantasy game shuts down, the player Momonga finds himself trapped inside as his skeletal undead avatar. Rather than panic, he assumes the name Ainz Ooal Gown and sets out to explore this new world, accompanied by the now-sentient NPCs of his former guild.' },
 ]
 
 const writings = [
@@ -1202,10 +1202,6 @@ function MangaPage({ note, onBack, setPage }) {
               <button className="manga-trigger" onClick={() => { if (!isMobile) setOpenIdx(i) }}>
                 <img src={cover.src} alt={`${cover.title} ${cover.volume}`} className="manga-cover" draggable="false" />
               </button>
-              <div className="manga-info">
-                <span className="manga-title">{cover.title}</span>
-                <span className="manga-volume">{cover.volume}</span>
-              </div>
             </div>
           ))}
         </div>
@@ -1229,6 +1225,11 @@ function MangaPage({ note, onBack, setPage }) {
               transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
             >
               <div className="manga-panel-header">
+                {activeCover?.wiki && (
+                  <button className="manga-panel-close" aria-label="Open wiki" onClick={() => window.open(activeCover.wiki, '_blank', 'noreferrer')}>
+                    <OpenNewWindow width={15} height={15} strokeWidth={1.75} />
+                  </button>
+                )}
                 <button className="manga-panel-close" aria-label="Close panel" onClick={() => setOpenIdx(null)}>
                   <Xmark width={18} height={18} strokeWidth={1.75} />
                 </button>
@@ -1268,11 +1269,11 @@ function MangaPage({ note, onBack, setPage }) {
 }
 
 const sites = [
-  { name: 'Gabriel Valdivia', href: 'https://www.gabrielvaldivia.com/', img: 'https://pub-0c00865d02c1476494008dbb74525b2a.r2.dev/favicon.png' },
-  { name: 'Eryc', href: 'https://eryc.cc/', img: 'https://eryc.cc/favicon.svg' },
-  { name: 'Luke', href: 'https://www.luke.boo/', img: '/images/sites/4.png' },
-  { name: 'Yiling', href: 'https://www.yiling.art/', img: 'https://www.yiling.art/favicon.jpg' },
-  { name: 'Todd Hamilton', href: 'https://toddham.com/', img: 'https://toddham.com/favicon.ico' },
+  { name: 'Gabriel Valdivia', site: 'gabrielvaldivia.com', href: 'https://www.gabrielvaldivia.com/', img: 'https://pub-0c00865d02c1476494008dbb74525b2a.r2.dev/favicon.png' },
+  { name: 'Eryc', site: 'eryc.cc', href: 'https://eryc.cc/', img: 'https://eryc.cc/favicon.svg' },
+  { name: 'Luke', site: 'luke.boo', href: 'https://www.luke.boo/', img: '/images/sites/4.png' },
+  { name: 'Yiling', site: 'yiling.art', href: 'https://www.yiling.art/', img: 'https://www.yiling.art/favicon.jpg' },
+  { name: 'Todd Hamilton', site: 'toddham.com', href: 'https://toddham.com/', img: 'https://toddham.com/favicon.ico' },
 ]
 
 function SitesPage({ note, onBack }) {
@@ -1292,6 +1293,7 @@ function SitesPage({ note, onBack }) {
                 </span>
                 <span className="sites-name">{site.name}</span>
               </span>
+              <span className="sites-address">{site.site}</span>
             </div>
           ))}
         </div>
