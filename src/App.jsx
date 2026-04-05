@@ -1039,33 +1039,24 @@ function MangaPage({ note, onBack, setPage }) {
   }, [isOpen])
 
   useEffect(() => {
+    if (!isOpen) return
     const pageTransition = document.querySelector('.page-transition')
-    if (isOpen) {
-      const scrollY = window.scrollY
-      const scrollbarWidth = pageTransition ? pageTransition.offsetWidth - pageTransition.clientWidth : 0
-      document.documentElement.style.setProperty('--scrollbar-compensation', `${scrollbarWidth}px`)
-      document.documentElement.classList.add('modal-open')
-      document.body.classList.add('modal-open')
-      document.body.style.top = `-${scrollY}px`
-      document.body.dataset.scrollY = scrollY
-      pageTransition?.classList.add('manga-page-blurred')
+    const scrollY = window.scrollY
+    const scrollbarWidth = pageTransition ? pageTransition.offsetWidth - pageTransition.clientWidth : 0
 
-      const preventScroll = (e) => {
-        if (!e.target.closest('.manga-panel')) e.preventDefault()
-      }
-      document.addEventListener('touchmove', preventScroll, { passive: false })
-      return () => document.removeEventListener('touchmove', preventScroll)
-    } else {
-      const scrollY = parseInt(document.body.dataset.scrollY || '0', 10)
-      document.documentElement.classList.remove('modal-open')
-      document.body.classList.remove('modal-open')
-      document.body.style.top = ''
-      document.documentElement.style.removeProperty('--scrollbar-compensation')
-      pageTransition?.classList.remove('manga-page-blurred')
-      window.scrollTo(0, scrollY)
+    document.documentElement.style.setProperty('--scrollbar-compensation', `${scrollbarWidth}px`)
+    document.documentElement.classList.add('modal-open')
+    document.body.classList.add('modal-open')
+    document.body.style.top = `-${scrollY}px`
+    pageTransition?.classList.add('manga-page-blurred')
+
+    const preventScroll = (e) => {
+      if (!e.target.closest('.manga-panel')) e.preventDefault()
     }
+    document.addEventListener('touchmove', preventScroll, { passive: false })
+
     return () => {
-      const scrollY = parseInt(document.body.dataset.scrollY || '0', 10)
+      document.removeEventListener('touchmove', preventScroll)
       document.documentElement.classList.remove('modal-open')
       document.body.classList.remove('modal-open')
       document.body.style.top = ''
