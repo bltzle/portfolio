@@ -1018,7 +1018,7 @@ function MangaPage({ note, onBack, setPage }) {
   const [openIdx, setOpenIdx] = useState(null)
   const activeCover = openIdx !== null ? mangaCovers[openIdx] : null
   const isOpen = openIdx !== null
-  const isMobile = window.matchMedia('(max-width: 1250px)').matches
+  const isMobile = window.matchMedia('(max-width: 480px)').matches
   const dragControls = useDragControls()
 
   useEffect(() => {
@@ -1067,7 +1067,7 @@ function MangaPage({ note, onBack, setPage }) {
         <div className="manga-grid">
           {mangaCovers.map((cover, i) => (
             <div key={i} className="manga-item">
-              <button className="manga-trigger" onClick={() => { if (!isMobile) setOpenIdx(i) }}>
+              <button className="manga-trigger" onClick={() => setOpenIdx(i)}>
                 <img src={cover.src} alt={`${cover.title} ${cover.volume}`} className="manga-cover" draggable="false" />
               </button>
             </div>
@@ -1420,8 +1420,8 @@ function HomePage({ setPage }) {
               </li>
             ))}
           </ul>
-          <WorkFooter setPage={setPage} />
         </div>
+        <WorkFooter setPage={setPage} />
       </div>
     </div>
   )
