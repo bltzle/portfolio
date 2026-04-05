@@ -156,7 +156,6 @@ html, body, #app {
 
 .animate {
   opacity: 0;
-  will-change: transform, opacity, filter;
   animation: itemIn 1s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
 }
 
@@ -336,7 +335,6 @@ a.footer-item:hover {
   aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: 16px;
-  border: 1px solid var(--border-light);
 }
 
 .manga-trigger {
@@ -409,6 +407,7 @@ a.footer-item:hover {
 }
 
 .manga-panel-close {
+  position: relative;
   background: none;
   border: none;
   width: 30px;
@@ -422,6 +421,13 @@ a.footer-item:hover {
   border-radius: 6px;
   transition: color 150ms ease, background 150ms ease;
 }
+.manga-panel-close::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  min-width: 40px;
+  min-height: 40px;
+}
 .manga-panel-close:hover {
   color: var(--dark);
   background: var(--hover-bg-strong);
@@ -431,7 +437,6 @@ a.footer-item:hover {
   aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: 16px;
-  border: 1px solid var(--border-light);
 }
 .manga-panel-info {
   display: flex;
@@ -521,6 +526,7 @@ a.footer-item:hover {
 }
 
 .back-btn {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -534,6 +540,13 @@ a.footer-item:hover {
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+}
+.back-btn::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  min-width: 40px;
+  min-height: 40px;
 }
 
 @media (hover: hover) and (min-width: 1251px) {
@@ -1077,7 +1090,6 @@ a.footer-item:hover {
   position: relative;
   width: 100%;
   border-radius: var(--radius);
-  outline: 1px solid var(--border-light);
 }
 
 .note-image-inner .grain-overlay {
@@ -1532,7 +1544,6 @@ img.note-image-placeholder {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  letter-spacing: 0.02em;
   vertical-align: middle;
 }
 
@@ -1562,6 +1573,13 @@ img.note-image-placeholder {
   align-items: center;
   border-radius: 50%;
   transition: color 0.15s ease, background 0.15s ease;
+}
+.setup-modal-close::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  min-width: 40px;
+  min-height: 40px;
 }
 
 
