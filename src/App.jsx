@@ -1291,7 +1291,10 @@ function SitesPage({ note, onBack }) {
                 <span className="sites-thumb-wrap">
                   <img src={site.img} alt="" className="sites-thumb" />
                 </span>
-                <span className="sites-name">{site.name}</span>
+                <span className="sites-text">
+                  <span className="sites-name">{site.name}</span>
+                  <span className="sites-address-sub">{site.site}</span>
+                </span>
               </span>
               <span className="sites-address">{site.site}</span>
             </div>

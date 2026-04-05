@@ -1661,6 +1661,12 @@ img.note-image-placeholder {
   min-width: 0;
 }
 
+.sites-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .sites-name {
   font-size: 13px;
   font-weight: 400;
@@ -1668,6 +1674,13 @@ img.note-image-placeholder {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.sites-address-sub {
+  display: none;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--light);
 }
 
 .sites-person {
@@ -2236,14 +2249,12 @@ img.note-image-placeholder {
     filter: none;
   }
 
-  .sites-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
+  .sites-address {
+    display: none;
   }
 
-  .sites-title-cell {
-    width: 100%;
+  .sites-address-sub {
+    display: block;
   }
 }
 
