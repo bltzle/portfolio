@@ -103,6 +103,7 @@ const projects = [
     year: '2024',
     img: '/images/ritual-dental/cover.png',
     href: 'https://ritualdental.com',
+    linkOnly: true,
     tagline: 'Personalized preventative oral care that sticks',
     role: 'Product Designer',
     tools: 'Figma',
@@ -177,9 +178,7 @@ function WorkFooter({ setPage }) {
     <footer className="work-footer" style={{ animation: 'page-fade 0.6s ease forwards', animationDelay: '0.5s', opacity: 0 }}>
       <div className="footer-row">
         <span className="footer-item visitor-time">{time}</span>
-        <div className="footer-left">
-          <a className="footer-item" onClick={() => setPage('colophon')}>Colophon</a>
-        </div>
+        <span className="footer-item">San Francisco, CA</span>
       </div>
     </footer>
   )
@@ -506,29 +505,6 @@ function WorkPage({ setPage, active }) {
 
 
 
-function ColophonPage({ setPage }) {
-  return (
-    <div className="page page-transition">
-      <div className="page-content" style={{ paddingTop: '156px' }}>
-        <button className="back-btn" onClick={() => setPage('home')} aria-label="Back">
-          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
-        </button>
-        <h1 className="page-heading">Colophon</h1>
-        <div className="about-text">
-          <p>Hi there. Welcome to the little behind the scenes area of my website.</p>
-          <h2 className="page-heading" style={{ marginTop: '48px' }}>Philosophy</h2>
-          <p>My personal style is deeply guided by restraint and minimalism. I admire design that remains timeless, but attempts to have a little bit of character. I think of a black derby by Jil Sander or a fragrance bottle from Diptyque. On the surface they may appear ordinary and insignificant, but I think they are beautiful. They exemplify the care and restraint that I hold myself to.</p>
-          <h2 className="page-heading" style={{ marginTop: '48px' }}>Typography</h2>
-          <p>This site is primarily set in <a href="https://displaay.net/typeface/matter/" target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>Matter by Displaay Type Foundry</a>. I purchased and licensed the Medium and Regular weights. The quotes page uses the open source typeface <a href="https://www.fontshare.com/fonts/gambetta" target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>Gambetta by Indian Type Foundry</a> in the Italic style.</p>
-          <h2 className="page-heading" style={{ marginTop: '48px' }}>Construction</h2>
-          <p>My previous site was built using Framer. This site is built with Claude Code. Things that I can visualize in my head can now be accomplished much quicker and with less friction. Framer is still a powerful and useful product, but I find more benefit with these new tools.</p>
-          <h2 className="page-heading" style={{ marginTop: '48px' }}>Domain</h2>
-          <p>I initially used my entire name as my domain, but that felt a bit too long. Only using my last name felt right. It's short and sweet.</p>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 function AboutPage({ setPage }) {
   return (
@@ -595,7 +571,7 @@ const writings = [
     type: 'manga',
   },
   {
-    title: 'Beautiful personal sites',
+    title: 'People and sites I think are really cool',
     category: 'Design',
     type: 'sites',
     sections: [],
@@ -1518,7 +1494,6 @@ export default function App() {
       {page === 'home'       && <HomePage       setPage={setPage} />}
       {page === 'about'      && <AboutPage      setPage={setPage} />}
       {page === 'writing'    && <WritingPage    setPage={setPage} tracks={spotifyTracks} loading={spotifyLoading} />}
-      {page === 'colophon'   && <ColophonPage   setPage={setPage} />}
       {page === 'prototypes' && <PrototypesPage setPage={setPage} />}
     </div>
   )
