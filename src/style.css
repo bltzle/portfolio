@@ -1604,17 +1604,23 @@ img.note-image-placeholder {
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
   }
 
+  .home-content {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
   .header {
-    padding: 96px 24px 0;
+    padding: 96px 0 0;
     margin-bottom: 32px;
   }
 
   .project {
-    padding: 0 24px;
+    padding: 0;
   }
 
   .work-footer {
-    padding: 0 24px 88px;
+    padding: 0 0 88px;
     margin-top: 120px;
   }
 
