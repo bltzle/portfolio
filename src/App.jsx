@@ -860,7 +860,7 @@ function AnimePage({ note, onBack, setPage }) {
   const pos = useRef({ x: 0, y: 0 })
   const raf = useRef(null)
   const quoteRefs = useRef([])
-  const isMobile = window.matchMedia('(max-width: 768px)').matches
+  const isMobile = window.matchMedia('(max-width: 1250px)').matches
 
   useEffect(() => {
     animeData.watching.filter(item => item.quoteImg).forEach(item => {
@@ -1018,7 +1018,7 @@ function MangaPage({ note, onBack, setPage }) {
   const [openIdx, setOpenIdx] = useState(null)
   const activeCover = openIdx !== null ? mangaCovers[openIdx] : null
   const isOpen = openIdx !== null
-  const isMobile = window.matchMedia('(max-width: 768px)').matches
+  const isMobile = window.matchMedia('(max-width: 1250px)').matches
   const dragControls = useDragControls()
 
   useEffect(() => {
