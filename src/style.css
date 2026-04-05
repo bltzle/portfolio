@@ -1677,6 +1677,53 @@ img.note-image-placeholder {
     width: calc(100% - 48px);
     padding: 32px 28px;
   }
+
+  /* Disable all hover interactions on tablet */
+  .project:hover {
+    background: none !important;
+  }
+  .project.disabled:hover {
+    background: none !important;
+  }
+  .no-bg-hover .project:hover {
+    background: none !important;
+  }
+  .projects:has(.project:hover) .project:not(:hover) {
+    opacity: 1 !important;
+  }
+  .manga-item:hover {
+    filter: none !important;
+  }
+  .manga-grid:has(.manga-item:hover) .manga-item:not(:hover) {
+    opacity: 1 !important;
+  }
+  .music-row:hover {
+    background: none !important;
+  }
+  .music-rows:has(.music-row:hover) .music-row:not(:hover) {
+    opacity: 1 !important;
+  }
+  .music-row:hover .music-artist,
+  .music-row:hover .music-col-album,
+  .music-row:hover .music-col-date {
+    color: inherit !important;
+  }
+  .sites-row:hover {
+    background: none !important;
+  }
+  .sites-rows:has(.sites-row:hover) .sites-row:not(:hover) {
+    opacity: 1 !important;
+  }
+  .home-nav-links a:hover {
+    color: inherit !important;
+  }
+  .back-btn:hover {
+    color: inherit !important;
+    background: none !important;
+  }
+  .back-nav:hover {
+    color: inherit !important;
+  }
 }
 
 @media (max-width: 480px) {
