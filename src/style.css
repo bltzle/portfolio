@@ -957,7 +957,7 @@ a.footer-item:hover {
   transform: translateY(0);
 }
 
-@media (max-width: 1250px) {
+@media (max-width: 480px) {
   .quote-avatar {
     opacity: 1;
     transform: none;
@@ -1173,7 +1173,7 @@ img.note-image-placeholder {
   display: none;
 }
 
-@media (max-width: 1250px) {
+@media (max-width: 480px) {
   .music-heading {
     display: block;
   }
@@ -1660,82 +1660,9 @@ img.note-image-placeholder {
     padding-top: 96px !important;
   }
 
-  .music-col-date,
-  .music-col-album {
-    display: none;
-  }
-
-  .music-col-headers {
-    display: none;
-  }
-
-  .music-page {
-    position: static;
-    overflow-y: auto;
-  }
-
-  .music-scroll {
-    overflow-y: visible;
-    flex: none;
-    padding-bottom: 20px !important;
-  }
-
-  .music-heading {
-    padding: 0;
-  }
-
-  .music-row {
-    grid-template-columns: 1fr;
-  }
-
-  .music-artist-col {
-    display: none;
-  }
-
-  .music-artist-sub {
-    display: block;
-  }
-
-  .music-track-info {
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .music-track-info span {
-    padding: 0;
-    line-height: 1.4;
-  }
-
-  .music-title-cell {
-    padding: 6px 0;
-  }
-
-  .music-thumb {
-    width: 42px;
-    height: 42px;
-  }
-
-
-.setup-modal {
+  .setup-modal {
     width: calc(100% - 48px);
     padding: 32px 28px;
-  }
-
-  .manga-item {
-    transition: none;
-  }
-
-  .manga-item:hover {
-    transform: none;
-    filter: none;
-  }
-
-  .sites-address {
-    display: none;
-  }
-
-  .sites-address-sub {
-    display: block;
   }
 }
 
@@ -1794,5 +1721,77 @@ img.note-image-placeholder {
 
   .setup-modal {
     padding: 28px 24px;
+  }
+
+  .music-col-date,
+  .music-col-album {
+    display: none;
+  }
+
+  .music-col-headers {
+    display: none;
+  }
+
+  .music-page {
+    position: static;
+    overflow-y: auto;
+  }
+
+  .music-scroll {
+    overflow-y: visible;
+    flex: none;
+    padding-bottom: 20px !important;
+  }
+
+  .music-heading {
+    padding: 0;
+  }
+
+  .music-row {
+    grid-template-columns: 1fr;
+  }
+
+  .music-artist-col {
+    display: none;
+  }
+
+  .music-artist-sub {
+    display: block;
+  }
+
+  .music-track-info {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .music-track-info span {
+    padding: 0;
+    line-height: 1.4;
+  }
+
+  .music-title-cell {
+    padding: 6px 0;
+  }
+
+  .music-thumb {
+    width: 42px;
+    height: 42px;
+  }
+
+  .manga-item {
+    transition: none;
+  }
+
+  .manga-item:hover {
+    transform: none;
+    filter: none;
+  }
+
+  .sites-address {
+    display: none;
+  }
+
+  .sites-address-sub {
+    display: block;
   }
 }

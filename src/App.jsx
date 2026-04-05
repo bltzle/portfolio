@@ -175,10 +175,10 @@ function useLocalTime() {
 function WorkFooter({ setPage }) {
   const time = useLocalTime()
   return (
-    <footer className="work-footer" style={{ animation: 'page-fade 0.6s ease forwards', animationDelay: '0.5s', opacity: 0 }}>
+    <footer className="work-footer">
       <div className="footer-row">
-        <span className="footer-item visitor-time">{time}</span>
-        <span className="footer-item">San Francisco, CA</span>
+        <span className="footer-item visitor-time animate" style={{ animationDelay: '0.5s' }}>{time}</span>
+        <span className="footer-item animate" style={{ animationDelay: '0.55s' }}>San Francisco, CA</span>
       </div>
     </footer>
   )
