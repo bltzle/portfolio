@@ -688,6 +688,11 @@ const mangaCovers = [
 
 const writings = [
   {
+    title: 'Recent listening',
+    category: 'Music',
+    type: 'music',
+  },
+  {
     title: 'Quotes from animations',
     category: 'Anime',
     type: 'anime',
@@ -703,11 +708,6 @@ const writings = [
     type: 'sites',
     sections: [],
     content: [],
-  },
-  {
-    title: 'Recent listening',
-    category: 'Music',
-    type: 'music',
   },
   {
     title: 'Being cracked at video games',
