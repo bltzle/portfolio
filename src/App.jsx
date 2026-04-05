@@ -205,11 +205,13 @@ const projects = [
       {
         id: 'problem',
         body: `Patients walk out of dental appointments with a treatment plan they didn't fully understand, from a conversation that felt one-sided. The clinical language, the time pressure, the authority dynamic — all of it conspires to leave people making decisions without adequate information.\n\nThe result is avoidance. People delay care, distrust recommendations, or simply disengage. The problem isn't that patients don't care about their health — it's that the system doesn't communicate with them on their terms.`,
+        img: '/images/ritual-dental/1.png',
       },
       {
         id: 'gum',
         heading: 'Gum Health',
         body: `Gum health is one of the most overlooked indicators of overall oral wellness. Patients rarely receive clear feedback about the state of their gum tissue — only that something is wrong after it's already progressed. We designed a view that communicates gum condition over time, making trends visible rather than waiting for the next appointment to surface a problem.\n\nThe goal was to make the invisible visible. Most people don't know what healthy gums look like compared to inflamed or receding tissue. By giving patients a consistent frame of reference, they can start to understand what their daily habits are actually doing.`,
+        img: '/images/ritual-dental/2.png',
       },
       {
         id: 'bacteria',
@@ -392,7 +394,7 @@ function ProjectDetailPage({ project, onBack, setPage }) {
                 scrollEl.scrollTo({ top: 0, behavior: 'smooth' })
                 setTimeout(() => { scrollingRef.current = false }, 1000)
               }}
-            >{project.name}</a>
+            >Intro</a>
             {project.sections.map(s => (
               <a
                 key={s.id}
@@ -411,11 +413,54 @@ function ProjectDetailPage({ project, onBack, setPage }) {
         </aside>
       )}
       <article className="note-article">
+        {(project.tagline || project.role || project.overview) && (
+          <div className="project-meta">
+            <div className="project-meta-header">
+              <h2 className="project-meta-title">{project.name}</h2>
+              {project.tagline && <p className="project-meta-tagline">{project.tagline}</p>}
+            </div>
+            <div className="project-meta-separator" />
+            <div className="project-meta-grid">
+              {project.role && (
+                <div className="project-meta-field">
+                  <span className="project-meta-label">Role</span>
+                  <span className="project-meta-value">{project.role}</span>
+                </div>
+              )}
+              {project.tools && (
+                <div className="project-meta-field">
+                  <span className="project-meta-label">Tools</span>
+                  <span className="project-meta-value">{project.tools}</span>
+                </div>
+              )}
+              {project.team && (
+                <div className="project-meta-field">
+                  <span className="project-meta-label">Team</span>
+                  <span className="project-meta-value">{project.team.map((name, i) => <span key={i}>{name}<br/></span>)}</span>
+                </div>
+              )}
+              {project.overview && (
+                <div className="project-meta-field">
+                  <span className="project-meta-label">Overview</span>
+                  <span className="project-meta-value">{project.overview}</span>
+                </div>
+              )}
+            </div>
+            {project.timeline && (
+              <>
+                <div className="project-meta-field" style={{ marginTop: '24px' }}>
+                  <span className="project-meta-label">Timeline</span>
+                  <span className="project-meta-value">{project.timeline}</span>
+                </div>
+              </>
+            )}
+          </div>
+        )}
         {project.content.map((section, si) => (
           <Fragment key={section.id}>
             {(section.heading || section.body) && (
               <section key={section.id} id={section.id} className={`note-section${section.sectionClass ? ` ${section.sectionClass}` : ''}`}>
-                {!section.noHeading && (section.heading || si === 0) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? project.name}</h2>}
+                {!section.noHeading && (section.heading || si === 0) && <h2 className={section.headingClass ?? 'note-section-heading'}>{section.heading ?? 'Intro'}</h2>}
                 {section.body && section.body.split('\n\n').map((p, i) => (
                   <p key={i} className={section.bodyClass ?? 'note-body'}>{p}</p>
                 ))}
@@ -424,8 +469,10 @@ function ProjectDetailPage({ project, onBack, setPage }) {
             {si < project.content.length - 1 && !section.noImageAfter && (
               <div key={`img-${section.id}`} className="note-image-wrap">
                 <div className="note-image-inner">
-                  <div className="note-image-placeholder" />
-                  <div className="grain-overlay" />
+                  {section.img
+                    ? <img src={section.img} alt="" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 'var(--radius)', outline: '1px solid var(--border-light)' }} />
+                    : <><div className="note-image-placeholder" /><div className="grain-overlay" /></>
+                  }
                 </div>
               </div>
             )}
@@ -663,7 +710,7 @@ const writings = [
     type: 'music',
   },
   {
-    title: 'Cracked',
+    title: 'Being cracked at video games',
     category: 'Gaming',
     type: 'cracked',
     disabled: true,
@@ -788,7 +835,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
                         <img key={i} src={src} alt="" style={{ flex: 1, minWidth: 0, height: 'auto', display: 'block', borderRadius: 'var(--radius)' }} />
                       ))
                     : section.img
-                    ? <img src={section.img} alt="" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 'var(--radius)', boxShadow: '0 0 0 1px rgba(0,0,0,0.07)' }} />
+                    ? <img src={section.img} alt="" style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 'var(--radius)', outline: '1px solid var(--border-light)' }} />
                     : si === 1
                     ? <img src="/tumblr_8b97eed4e22307c56b8c51612a492c87_8b2d8fbc_540.gif" alt="" className="note-image-placeholder" style={{ objectFit: 'cover' }} />
                     : si === 2
@@ -1556,6 +1603,7 @@ export default function App() {
 
   useEffect(() => {
     mangaCovers.forEach(c => { const img = new Image(); img.src = c.src })
+    sites.forEach(s => { if (s.img) { const img = new Image(); img.src = s.img } })
   }, [])
 
   useEffect(() => {
