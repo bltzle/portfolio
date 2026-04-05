@@ -1678,51 +1678,62 @@ img.note-image-placeholder {
     padding: 32px 28px;
   }
 
-  /* Disable all hover interactions on tablet */
-  .project:hover {
-    background: none !important;
-  }
-  .project.disabled:hover {
-    background: none !important;
-  }
+  /* Disable all hover interactions on tablet/mobile */
+  .project:hover,
+  .project.disabled:hover,
   .no-bg-hover .project:hover {
     background: none !important;
   }
-  .projects:has(.project:hover) .project:not(:hover) {
+  .projects:has(.project:hover) .project:not(:hover),
+  .manga-grid:has(.manga-item:hover) .manga-item:not(:hover),
+  .music-rows:has(.music-row:hover) .music-row:not(:hover),
+  .sites-rows:has(.sites-row:hover) .sites-row:not(:hover) {
     opacity: 1 !important;
   }
   .manga-item:hover {
     filter: none !important;
   }
-  .manga-grid:has(.manga-item:hover) .manga-item:not(:hover) {
-    opacity: 1 !important;
-  }
-  .music-row:hover {
-    background: none !important;
-  }
-  .music-rows:has(.music-row:hover) .music-row:not(:hover) {
-    opacity: 1 !important;
-  }
-  .music-row:hover .music-artist,
-  .music-row:hover .music-col-album,
-  .music-row:hover .music-col-date {
-    color: inherit !important;
-  }
+  .music-row:hover,
   .sites-row:hover {
     background: none !important;
   }
-  .sites-rows:has(.sites-row:hover) .sites-row:not(:hover) {
-    opacity: 1 !important;
+  .music-row:hover .music-artist,
+  .music-row:hover .music-col-album,
+  .music-row:hover .music-col-date,
+  .music-col-headers-row span:hover {
+    color: inherit !important;
   }
-  .home-nav-links a:hover {
+  .home-nav-links a:hover,
+  .nav a:hover,
+  .nav-home:hover,
+  .back-btn:hover,
+  .back-nav:hover,
+  .note-back:hover,
+  .note-toc-item:hover,
+  a.footer-item:hover {
     color: inherit !important;
   }
   .back-btn:hover {
+    background: none !important;
+  }
+  .about-links a:hover,
+  .bio-links a:hover,
+  .quote-attr a:hover,
+  .note-image-caption a:hover,
+  .setup-modal a:hover {
+    color: inherit !important;
+    text-decoration-color: inherit !important;
+  }
+  .manga-panel-close:hover,
+  .setup-modal-close:hover {
     color: inherit !important;
     background: none !important;
   }
-  .back-nav:hover {
+  .manga-panel-nav-btn:hover .manga-panel-nav-title {
     color: inherit !important;
+  }
+  .music-connect:hover {
+    border-color: inherit !important;
   }
 }
 
