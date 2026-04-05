@@ -93,64 +93,6 @@ function playClick(intensity = 0.4) {
 
 import { ArrowDownLeft, Xmark, LongArrowUpLeft, OpenNewWindow } from 'iconoir-react'
 
-const NAV_TABS = [
-  { label: 'Work', page: 'home' },
-  { label: 'About', page: 'about' },
-  { label: 'Notes', page: 'writing' },
-]
-
-function NavPill({ activePage, setPage, mobile }) {
-  const containerRef = useRef(null)
-  const tabRefs = useRef([])
-  const [clipPath, setClipPath] = useState(null)
-
-  useLayoutEffect(() => {
-    const container = containerRef.current
-    if (!container) return
-    const idx = NAV_TABS.findIndex(t => t.page === activePage)
-    const tab = tabRefs.current[idx]
-    if (!tab) return
-    const left = (tab.offsetLeft / container.offsetWidth) * 100
-    const right = 100 - ((tab.offsetLeft + tab.offsetWidth) / container.offsetWidth) * 100
-    setClipPath(`inset(0 ${right.toFixed(1)}% 0 ${left.toFixed(1)}% round 72px)`)
-  }, [activePage])
-
-  return (
-    <nav className={`home-nav${mobile ? ' home-nav--mobile' : ''}`}>
-      <div className="home-nav-wrap">
-        <div className="home-nav-links">
-          {NAV_TABS.map((t) => (
-            <a
-              key={t.page}
-              className={t.page === activePage ? 'active' : ''}
-              onClick={() => setPage(t.page)}
-            >
-              {t.label}
-            </a>
-          ))}
-        </div>
-        <div
-          className="home-nav-links home-nav-overlay"
-          ref={containerRef}
-          aria-hidden
-          style={{ clipPath }}
-        >
-          {NAV_TABS.map((t, i) => (
-            <a
-              key={t.page}
-              ref={el => tabRefs.current[i] = el}
-              className="active"
-              onClick={() => setPage(t.page)}
-              tabIndex={-1}
-            >
-              {t.label}
-            </a>
-          ))}
-        </div>
-      </div>
-    </nav>
-  )
-}
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate as motionAnimate } from 'motion/react'
 import './style.css'
 
@@ -591,7 +533,13 @@ function ColophonPage({ setPage }) {
 function AboutPage({ setPage }) {
   return (
     <div className="page">
-      <NavPill activePage="about" setPage={setPage} />
+      <nav className="home-nav">
+        <div className="home-nav-links">
+          <a onClick={() => setPage('home')}>Work</a>
+          <a className="active">About</a>
+          <a onClick={() => setPage('writing')}>Notes</a>
+        </div>
+      </nav>
       <div className="page-content" style={{ paddingTop: '96px' }}>
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>About</h1>
         <div className="about-text">
@@ -1366,7 +1314,13 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
   return (
     <>
       <div className="page">
-        <NavPill activePage="writing" setPage={setPage} />
+        <nav className="home-nav">
+          <div className="home-nav-links">
+            <a onClick={() => setPage('home')}>Work</a>
+            <a onClick={() => setPage('about')}>About</a>
+            <a className="active">Notes</a>
+          </div>
+        </nav>
         <div className="page-content" style={{ paddingTop: '96px' }}>
           <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
@@ -1462,7 +1416,13 @@ function HomePage({ setPage }) {
         </span>
       </div>
       <div className="right">
-        <NavPill activePage="home" setPage={setPage} />
+        <nav className="home-nav">
+          <div className="home-nav-links">
+            <a className="active">Work</a>
+            <a onClick={() => setPage('about')}>About</a>
+            <a onClick={() => setPage('writing')}>Notes</a>
+          </div>
+        </nav>
         <div className="home-content">
           <header className="header">
             <h1 className="animate" style={{ animationDelay: '0.1s' }}>Baltzelle</h1>
@@ -1554,8 +1514,6 @@ export default function App() {
     })
   }, [])
 
-  const isMainPage = page === 'home' || page === 'about' || page === 'writing'
-
   return (
     <div ref={scrollRef} style={{ minHeight: '100%' }}>
       {page === 'home'       && <HomePage       setPage={setPage} />}
@@ -1563,7 +1521,6 @@ export default function App() {
       {page === 'writing'    && <WritingPage    setPage={setPage} tracks={spotifyTracks} loading={spotifyLoading} />}
       {page === 'colophon'   && <ColophonPage   setPage={setPage} />}
       {page === 'prototypes' && <PrototypesPage setPage={setPage} />}
-      {isMainPage && <NavPill activePage={page} setPage={setPage} mobile />}
     </div>
   )
 }

@@ -553,21 +553,9 @@ a.footer-item:hover {
   padding: 40px 76px 0;
 }
 
-.home-nav--mobile {
-  display: none;
-}
-
-.home-nav-wrap {
-  position: relative;
-}
-
 .home-nav-links {
   display: flex;
   gap: 24px;
-}
-
-.home-nav-links.home-nav-overlay {
-  display: none;
 }
 
 .home-nav-links a {
@@ -1547,11 +1535,6 @@ img.note-image-placeholder {
   }
 
   .home-nav {
-    display: none;
-  }
-
-  .home-nav--mobile {
-    display: flex;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -1578,26 +1561,9 @@ img.note-image-placeholder {
     transition: color 0.15s ease, background 0.15s ease;
   }
 
-  .home-nav-links.home-nav-overlay {
-    display: flex;
-    position: absolute;
-    inset: 0;
-    transition: clip-path 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .home-nav-overlay a {
-    pointer-events: auto;
-  }
-
-  .home-nav-overlay a.active {
+  .home-nav-links a.active {
     background: #FDFDFD;
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
-  }
-
-  .home-nav-wrap {
-    position: relative;
   }
 
   .header {
