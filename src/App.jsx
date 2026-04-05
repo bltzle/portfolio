@@ -963,14 +963,14 @@ function AnimePage({ note, onBack, setPage }) {
           <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+        <div className="quote-list">
           {animeData.watching.filter(item => item.quote).map((item, i) => {
             const active = isMobile ? tapped : hovered
             const dimmed = active !== null && active !== i
             return (
               <div key={i} ref={el => quoteRefs.current[i] = el} className="quote-block" style={{ opacity: dimmed ? 0.3 : 1 }} onClick={isMobile ? () => handleTap(i) : undefined} onMouseEnter={!isMobile ? e => handleEnter(e, i) : undefined} onMouseMove={!isMobile ? handleMove : undefined} onMouseLeave={!isMobile ? () => setHovered(null) : undefined}>
-                <p style={{ fontFamily: "'Gambetta', serif", fontSize: '16px', fontStyle: 'italic', color: 'var(--dark)', lineHeight: 1.75, textWrap: 'pretty' }}>{item.quote}</p>
-                <p style={{ fontSize: '13px', color: 'var(--light)', marginTop: '10px' }}>— <span className="quote-name">{item.quoteAttr ?? item.title}</span>{item.quoteSource && <>, <a href={item.quoteHref} target="_blank" rel="noreferrer" style={{ color: 'var(--light)', textDecoration: 'underline', textDecorationColor: 'var(--border-light)', textUnderlineOffset: '2px', transition: 'color 0.15s ease, text-decoration-color 0.15s ease' }} onMouseEnter={e => { e.currentTarget.style.color = 'var(--dark)'; e.currentTarget.style.textDecorationColor = 'var(--dark)' }} onMouseLeave={e => { e.currentTarget.style.color = 'var(--light)'; e.currentTarget.style.textDecorationColor = 'var(--border-light)' }}>{item.quoteSource}</a></>}</p>
+                <p className="quote-text">{item.quote}</p>
+                <p className="quote-attr">— <span className="quote-name">{item.quoteAttr ?? item.title}</span>{item.quoteSource && <>, <a href={item.quoteHref} target="_blank" rel="noreferrer">{item.quoteSource}</a></>}</p>
               </div>
             )
           })}

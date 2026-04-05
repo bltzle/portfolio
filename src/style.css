@@ -899,8 +899,42 @@ a.footer-item:hover {
   color: var(--dark);
 }
 
+.quote-list {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
 .quote-block {
   transition: opacity 0.2s ease;
+}
+
+.quote-text {
+  font-family: 'Gambetta', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--dark);
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+.quote-attr {
+  font-size: 13px;
+  color: var(--light);
+  margin-top: 10px;
+}
+
+.quote-attr a {
+  color: var(--light);
+  text-decoration: underline;
+  text-decoration-color: var(--border-light);
+  text-underline-offset: 2px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.quote-attr a:hover {
+  color: var(--dark);
+  text-decoration-color: var(--dark);
 }
 
 
