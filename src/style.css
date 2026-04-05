@@ -321,7 +321,7 @@ a.footer-item:hover {
   border-radius: 16px;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (min-width: 1251px) {
   .manga-item:hover {
     filter: var(--shadow-manga-hover);
   }
@@ -536,7 +536,7 @@ a.footer-item:hover {
   -webkit-tap-highlight-color: transparent;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (min-width: 1251px) {
   .back-btn {
     transition: color 0.15s ease, background 0.15s ease;
   }
@@ -585,7 +585,7 @@ a.footer-item:hover {
   -webkit-tap-highlight-color: transparent;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (min-width: 1251px) {
   .home-nav-links a:hover {
     color: var(--dark);
   }
@@ -647,7 +647,7 @@ a.footer-item:hover {
   transition: background 0.15s ease, opacity 0.2s ease;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (min-width: 1251px) {
   .project:hover {
     background: var(--hover-bg);
   }
@@ -718,7 +718,7 @@ a.footer-item:hover {
   cursor: not-allowed;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (min-width: 1251px) {
   .projects:has(.project:hover) .project:not(:hover) {
     opacity: 0.2 !important;
   }
@@ -852,7 +852,7 @@ a.footer-item:hover {
   color: var(--light);
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (min-width: 1251px) {
   .back-nav {
     transition: color 0.15s ease, box-shadow 0.15s ease;
   }
@@ -1272,7 +1272,7 @@ img.note-image-placeholder {
   border-radius: 12px;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (min-width: 1251px) {
   .music-row:hover {
     background: var(--hover-bg);
   }
@@ -1317,7 +1317,7 @@ img.note-image-placeholder {
   padding-right: 24px;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (min-width: 1251px) {
   .music-row:hover .music-artist,
   .music-row:hover .music-col-album,
   .music-row:hover .music-col-date {
@@ -1384,7 +1384,7 @@ img.note-image-placeholder {
   flex-shrink: 0;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (min-width: 1251px) {
   .sites-row:hover {
     background: var(--hover-bg);
   }
@@ -1678,62 +1678,31 @@ img.note-image-placeholder {
     padding: 32px 28px;
   }
 
-  /* Disable all hover interactions on tablet/mobile */
-  .project:hover,
-  .project.disabled:hover,
-  .no-bg-hover .project:hover {
-    background: none !important;
-  }
-  .projects:has(.project:hover) .project:not(:hover),
-  .manga-grid:has(.manga-item:hover) .manga-item:not(:hover),
-  .music-rows:has(.music-row:hover) .music-row:not(:hover),
-  .sites-rows:has(.sites-row:hover) .sites-row:not(:hover) {
-    opacity: 1 !important;
-  }
-  .manga-item:hover {
-    filter: none !important;
-  }
-  .music-row:hover,
-  .sites-row:hover {
-    background: none !important;
-  }
-  .music-row:hover .music-artist,
-  .music-row:hover .music-col-album,
-  .music-row:hover .music-col-date,
-  .music-col-headers-row span:hover {
-    color: inherit !important;
-  }
-  .home-nav-links a:hover,
+  /* Disable all standalone hover interactions on tablet/mobile */
+  a.footer-item:hover,
   .nav a:hover,
   .nav-home:hover,
-  .back-btn:hover,
-  .back-nav:hover,
   .note-back:hover,
-  .note-toc-item:hover,
-  a.footer-item:hover {
-    color: inherit !important;
-  }
-  .back-btn:hover {
-    background: none !important;
+  .note-toc-item:hover:not(.active),
+  .music-col-headers-row span:hover,
+  .manga-panel-nav-btn:hover .manga-panel-nav-title {
+    color: var(--light) !important;
   }
   .about-links a:hover,
   .bio-links a:hover,
   .quote-attr a:hover,
   .note-image-caption a:hover,
   .setup-modal a:hover {
-    color: inherit !important;
-    text-decoration-color: inherit !important;
+    color: var(--light) !important;
+    text-decoration-color: var(--border-light) !important;
   }
   .manga-panel-close:hover,
   .setup-modal-close:hover {
-    color: inherit !important;
-    background: none !important;
-  }
-  .manga-panel-nav-btn:hover .manga-panel-nav-title {
-    color: inherit !important;
+    color: var(--light) !important;
+    background: transparent !important;
   }
   .music-connect:hover {
-    border-color: inherit !important;
+    border-color: var(--border-light) !important;
   }
 }
 
