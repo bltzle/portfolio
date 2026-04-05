@@ -1623,6 +1623,11 @@ img.note-image-placeholder {
     margin: 0;
   }
 
+  .writing-item {
+    padding: 14px 0 !important;
+    margin: 0;
+  }
+
   .work-footer {
     padding: 0;
     padding-bottom: 88px;
@@ -1634,7 +1639,7 @@ img.note-image-placeholder {
   }
 
   .page-content {
-    padding: 64px 24px 120px;
+    padding: 64px 0 120px;
   }
 
   .work-links {
