@@ -1051,12 +1051,24 @@ function MangaPage({ note, onBack, setPage }) {
     pageTransition?.classList.add('manga-page-blurred')
 
     const preventScroll = (e) => {
-      if (!e.target.closest('.manga-panel')) e.preventDefault()
+      const panel = e.target.closest('.manga-panel')
+      if (!panel) { e.preventDefault(); return }
+      const scrollable = panel.querySelector('.manga-panel-content') || panel
+      const { scrollTop, scrollHeight, clientHeight } = scrollable
+      const atTop = scrollTop <= 0
+      const atBottom = scrollTop + clientHeight >= scrollHeight
+      const touch = e.touches[0]
+      const dy = touch.clientY - (preventScroll.lastY || touch.clientY)
+      preventScroll.lastY = touch.clientY
+      if ((atTop && dy > 0) || (atBottom && dy < 0)) e.preventDefault()
     }
+    const resetLastY = () => { preventScroll.lastY = null }
     document.addEventListener('touchmove', preventScroll, { passive: false })
+    document.addEventListener('touchstart', resetLastY, { passive: true })
 
     return () => {
       document.removeEventListener('touchmove', preventScroll)
+      document.removeEventListener('touchstart', resetLastY)
       document.documentElement.classList.remove('modal-open')
       document.body.classList.remove('modal-open')
       document.body.style.top = ''
