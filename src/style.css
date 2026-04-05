@@ -1208,7 +1208,7 @@ img.note-image-placeholder {
 .music-rows {
   width: 100%;
   padding-top: 12px;
-  padding-bottom: 120px;
+  padding-bottom: 48px;
 }
 
 .music-row {
@@ -1653,7 +1653,7 @@ img.note-image-placeholder {
   .music-scroll {
     overflow-y: visible;
     flex: none;
-    padding-bottom: 120px !important;
+    padding-bottom: 48px !important;
   }
 
   .music-heading {
