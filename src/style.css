@@ -1578,12 +1578,7 @@ img.note-image-placeholder {
     transition: color 0.15s ease, background 0.15s ease;
   }
 
-  .home-nav-links a.active {
-    background: #FDFDFD;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
-  }
-
-  .home-nav-overlay {
+  .home-nav-links.home-nav-overlay {
     display: flex;
     position: absolute;
     inset: 0;
@@ -1594,6 +1589,11 @@ img.note-image-placeholder {
 
   .home-nav-overlay a {
     pointer-events: auto;
+  }
+
+  .home-nav-overlay a.active {
+    background: #FDFDFD;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
   }
 
   .home-nav-wrap {
