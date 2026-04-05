@@ -99,45 +99,24 @@ const NAV_TABS = [
   { label: 'Notes', page: 'writing' },
 ]
 
-function NavPill({ activePage, setPage, prevPage }) {
+function NavPill({ activePage, setPage, mobile }) {
   const containerRef = useRef(null)
   const tabRefs = useRef([])
   const [clipPath, setClipPath] = useState(null)
-  const hasAnimated = useRef(false)
 
   useLayoutEffect(() => {
     const container = containerRef.current
     if (!container) return
-
-    const getClip = (page) => {
-      const idx = NAV_TABS.findIndex(t => t.page === page)
-      const tab = tabRefs.current[idx]
-      if (!tab) return null
-      const left = (tab.offsetLeft / container.offsetWidth) * 100
-      const right = 100 - ((tab.offsetLeft + tab.offsetWidth) / container.offsetWidth) * 100
-      return `inset(0 ${right.toFixed(1)}% 0 ${left.toFixed(1)}% round 72px)`
-    }
-
-    if (!hasAnimated.current && prevPage && prevPage !== activePage) {
-      const fromClip = getClip(prevPage)
-      if (fromClip) {
-        setClipPath(fromClip)
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            setClipPath(getClip(activePage))
-          })
-        })
-        hasAnimated.current = true
-        return
-      }
-    }
-
-    setClipPath(getClip(activePage))
-    hasAnimated.current = true
-  }, [activePage, prevPage])
+    const idx = NAV_TABS.findIndex(t => t.page === activePage)
+    const tab = tabRefs.current[idx]
+    if (!tab) return
+    const left = (tab.offsetLeft / container.offsetWidth) * 100
+    const right = 100 - ((tab.offsetLeft + tab.offsetWidth) / container.offsetWidth) * 100
+    setClipPath(`inset(0 ${right.toFixed(1)}% 0 ${left.toFixed(1)}% round 72px)`)
+  }, [activePage])
 
   return (
-    <nav className="home-nav">
+    <nav className={`home-nav${mobile ? ' home-nav--mobile' : ''}`}>
       <div className="home-nav-wrap">
         <div className="home-nav-links">
           {NAV_TABS.map((t) => (
@@ -609,10 +588,10 @@ function ColophonPage({ setPage }) {
   )
 }
 
-function AboutPage({ setPage, prevPage }) {
+function AboutPage({ setPage }) {
   return (
     <div className="page">
-      <NavPill activePage="about" setPage={setPage} prevPage={prevPage} />
+      <NavPill activePage="about" setPage={setPage} />
       <div className="page-content" style={{ paddingTop: '96px' }}>
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>About</h1>
         <div className="about-text">
@@ -1336,7 +1315,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
   )
 }
 
-function WritingPage({ setPage, prevPage, initialNote, tracks, loading }) {
+function WritingPage({ setPage, initialNote, tracks, loading }) {
   const [activeNote, setActiveNote] = useState(() => initialNote ? writings.find(w => w.type === initialNote) ?? null : null)
   const [animateList, setAnimateList] = useState(true)
 
@@ -1387,7 +1366,7 @@ function WritingPage({ setPage, prevPage, initialNote, tracks, loading }) {
   return (
     <>
       <div className="page">
-        <NavPill activePage="writing" setPage={setPage} prevPage={prevPage} />
+        <NavPill activePage="writing" setPage={setPage} />
         <div className="page-content" style={{ paddingTop: '96px' }}>
           <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
@@ -1446,7 +1425,7 @@ function PrototypesPage({ setPage }) {
   )
 }
 
-function HomePage({ setPage, prevPage }) {
+function HomePage({ setPage }) {
   const [activeProject, setActiveProject] = useState(null)
   const [hoveredProject, setHoveredProject] = useState(null)
   const hoverLines = ['Hover a project', 'THIS IS THE NEBULA', 'DUSK SOAKED IN GREEN LIGHT', 'A GLOW THAT NEVER ENDS', 'AND STILL, IT DRIFTS ONWARD', 'FADING THE MOMENT YOU LOOK AWAY']
@@ -1483,7 +1462,7 @@ function HomePage({ setPage, prevPage }) {
         </span>
       </div>
       <div className="right">
-        <NavPill activePage="home" setPage={setPage} prevPage={prevPage} />
+        <NavPill activePage="home" setPage={setPage} />
         <div className="home-content">
           <header className="header">
             <h1 className="animate" style={{ animationDelay: '0.1s' }}>Baltzelle</h1>
@@ -1515,15 +1494,10 @@ function HomePage({ setPage, prevPage }) {
 
 export default function App() {
   const [page, setPageRaw] = useState('home')
-  const prevPageRef = useRef(null)
-
   const scrollRef = useRef(null)
 
   const setPage = useCallback((p) => {
-    setPageRaw(prev => {
-      prevPageRef.current = prev
-      return p
-    })
+    setPageRaw(p)
   }, [])
 
   useLayoutEffect(() => {
@@ -1580,13 +1554,16 @@ export default function App() {
     })
   }, [])
 
+  const isMainPage = page === 'home' || page === 'about' || page === 'writing'
+
   return (
     <div ref={scrollRef} style={{ minHeight: '100%' }}>
-      {page === 'home'       && <HomePage       setPage={setPage} prevPage={prevPageRef.current} />}
-      {page === 'about'      && <AboutPage      setPage={setPage} prevPage={prevPageRef.current} />}
-      {page === 'writing'    && <WritingPage    setPage={setPage} prevPage={prevPageRef.current} tracks={spotifyTracks} loading={spotifyLoading} />}
+      {page === 'home'       && <HomePage       setPage={setPage} />}
+      {page === 'about'      && <AboutPage      setPage={setPage} />}
+      {page === 'writing'    && <WritingPage    setPage={setPage} tracks={spotifyTracks} loading={spotifyLoading} />}
       {page === 'colophon'   && <ColophonPage   setPage={setPage} />}
       {page === 'prototypes' && <PrototypesPage setPage={setPage} />}
+      {isMainPage && <NavPill activePage={page} setPage={setPage} mobile />}
     </div>
   )
 }

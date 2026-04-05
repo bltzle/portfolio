@@ -553,6 +553,10 @@ a.footer-item:hover {
   padding: 40px 76px 0;
 }
 
+.home-nav--mobile {
+  display: none;
+}
+
 .home-nav-wrap {
   position: relative;
 }
@@ -1543,6 +1547,11 @@ img.note-image-placeholder {
   }
 
   .home-nav {
+    display: none;
+  }
+
+  .home-nav--mobile {
+    display: flex;
     position: fixed;
     bottom: 0;
     left: 0;
