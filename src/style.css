@@ -2226,6 +2226,25 @@ img.note-image-placeholder {
   .music-inner {
     padding: 0 24px;
   }
+
+  .manga-item {
+    transition: none;
+  }
+
+  .manga-item:hover {
+    transform: none;
+    filter: none;
+  }
+
+  .sites-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .sites-title-cell {
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
