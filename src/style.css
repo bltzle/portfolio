@@ -28,6 +28,8 @@
   --shadow-card: 0 24px 80px rgba(0,0,0,0.18), 0 8px 32px rgba(0,0,0,0.10);
   --hover-bg: rgba(0,0,0,0.03);
   --hover-bg-strong: rgba(0,0,0,0.05);
+  --shadow-quote: 0 4px 10px rgba(0, 0, 0, 0.05), 0 4px 15px rgba(0, 0, 0, 0.03);
+  --shadow-manga-hover: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.2));
   --hover-bg-disabled: rgba(0,0,0,0.06);
   --border-light: rgba(32,32,32,0.04);
   --z-base: 1;
@@ -302,14 +304,18 @@ a.footer-item:hover {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  transition: transform 0.4s cubic-bezier(0.34, 2, 0.64, 1), filter 0.3s ease;
-  will-change: transform;
+  transition: filter 0.3s ease, opacity 0.3s ease;
   border-radius: 16px;
 }
 
 .manga-item:hover {
-  transform: scale(1.02);
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+  filter: var(--shadow-manga-hover);
+}
+
+@media (hover: hover) {
+  .manga-grid:has(.manga-item:hover) .manga-item:not(:hover) {
+    opacity: 0.2 !important;
+  }
 }
 
 .manga-cover {
@@ -423,14 +429,11 @@ a.footer-item:hover {
 .manga-panel-title {
   font-family: 'Gambetta', serif;
   font-style: italic;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
   color: var(--dark);
 }
-.manga-panel-volume {
-  font-family: 'Gambetta', serif;
-  font-style: italic;
-  font-size: 13px;
+.manga-panel-vol {
   font-weight: 400;
   color: var(--light);
 }
@@ -905,7 +908,7 @@ a.footer-item:hover {
   max-width: 180px;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05), 0 4px 15px rgba(0, 0, 0, 0.03);
+  box-shadow: var(--shadow-quote);
   z-index: var(--z-overlay);
   pointer-events: none;
   opacity: 0;
@@ -1208,7 +1211,7 @@ img.note-image-placeholder {
 .music-rows {
   width: 100%;
   padding-top: 12px;
-  padding-bottom: 48px;
+  padding-bottom: 20px;
 }
 
 .music-row {
@@ -1653,7 +1656,7 @@ img.note-image-placeholder {
   .music-scroll {
     overflow-y: visible;
     flex: none;
-    padding-bottom: 48px !important;
+    padding-bottom: 20px !important;
   }
 
   .music-heading {
