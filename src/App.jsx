@@ -1420,8 +1420,8 @@ function HomePage({ setPage }) {
               </li>
             ))}
           </ul>
+          <WorkFooter setPage={setPage} />
         </div>
-        <WorkFooter setPage={setPage} />
       </div>
     </div>
   )
