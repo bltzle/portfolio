@@ -805,7 +805,7 @@ const animeData = {
       title: 'Hunter x Hunter', studio: 'Madhouse', episodes: 148,
       cover: 'https://image.tmdb.org/t/p/original/i2EEr2uBvRlAwJ8d8zTG2Y19mIa.jpg',
       quote: 'Gon, you are light. Sometimes you shine so brightly, I must look away. But even so, is it still okay if I stay by your side?',
-      quoteAttr: 'Killua Zoldyck',
+      quoteAttr: 'Killua',
       quoteSource: 'Hunter x Hunter',
       quoteHref: 'https://en.wikipedia.org/wiki/Hunter_%C3%97_Hunter',
       quoteImg: '/images/quotes/killua.gif',
