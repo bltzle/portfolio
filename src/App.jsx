@@ -1088,7 +1088,7 @@ function MangaPage({ note, onBack, setPage }) {
         <div className="manga-grid">
           {mangaCovers.map((cover, i) => (
             <div key={i} className="manga-item">
-              <button className="manga-trigger" onClick={() => setOpenIdx(i)}>
+              <button className="manga-trigger" onClick={() => { if (window.matchMedia('(hover: hover)').matches) setOpenIdx(i) }}>
                 <img src={cover.src} alt={`${cover.title} ${cover.volume}`} className="manga-cover" draggable="false" />
               </button>
             </div>
