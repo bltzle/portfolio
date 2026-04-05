@@ -658,8 +658,8 @@ const writings = [
     content: [],
   },
   {
-    title: 'Music',
-    category: 'Listening',
+    title: 'Recent listening',
+    category: 'Music',
     type: 'music',
   },
   {
