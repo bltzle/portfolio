@@ -1,6 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useRef, useCallback, Fragment, memo } from 'react'
 import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
-import { createPortal } from 'react-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCards } from 'swiper/modules'
 import 'swiper/css'
@@ -9,64 +8,6 @@ import 'swiper/css/effect-cards'
 const SPOTIFY_CLIENT_ID = '5ee9147feda6434aa4414c48c2a472bd'
 const SPOTIFY_REDIRECT  = `${window.location.origin}/callback`
 const SPOTIFY_SCOPES    = 'user-read-recently-played'
-
-function useMagnetRepel(radius = 80, strength = 0.4) {
-  const ref = useRef(null)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    let targetX = 0, targetY = 0, currentX = 0, currentY = 0
-    let raf = null
-    const lerp = 0.12
-
-    const tick = () => {
-      currentX += (targetX - currentX) * lerp
-      currentY += (targetY - currentY) * lerp
-      if (Math.abs(currentX - targetX) < 0.1 && Math.abs(currentY - targetY) < 0.1) {
-        currentX = targetX
-        currentY = targetY
-      }
-      el.style.transform = currentX === 0 && currentY === 0 ? '' : `translate(${currentX}px, ${currentY}px)`
-      if (currentX !== 0 || currentY !== 0 || targetX !== 0 || targetY !== 0) {
-        raf = requestAnimationFrame(tick)
-      } else {
-        raf = null
-        el.style.willChange = ''
-      }
-    }
-
-    const startLoop = () => { if (!raf) { el.style.willChange = 'transform'; raf = requestAnimationFrame(tick) } }
-
-    const onMove = (e) => {
-      const rect = el.getBoundingClientRect()
-      const cx = rect.left + rect.width / 2
-      const cy = rect.top + rect.height / 2
-      const dx = cx - e.clientX
-      const dy = cy - e.clientY
-      const dist = Math.sqrt(dx * dx + dy * dy)
-      if (dist < radius) {
-        const t = 1 - dist / radius
-        const force = t * t * strength
-        targetX = dx * force
-        targetY = dy * force
-      } else {
-        targetX = 0
-        targetY = 0
-      }
-      startLoop()
-    }
-    const onLeave = () => { targetX = 0; targetY = 0; startLoop() }
-    window.addEventListener('mousemove', onMove)
-    el.closest('.nav')?.addEventListener('mouseleave', onLeave)
-    return () => {
-      window.removeEventListener('mousemove', onMove)
-      el.closest('.nav')?.removeEventListener('mouseleave', onLeave)
-      if (raf) cancelAnimationFrame(raf)
-      el.style.willChange = ''
-    }
-  }, [radius, strength])
-  return ref
-}
 
 function formatDate(str) {
   const d = new Date(str)
@@ -125,33 +66,6 @@ async function exchangeCode(code) {
   return res.json()
 }
 
-async function refreshToken(token) {
-  const res = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      client_id: SPOTIFY_CLIENT_ID,
-      grant_type: 'refresh_token',
-      refresh_token: token,
-    })
-  })
-  return res.json()
-}
-
-async function getValidToken() {
-  const stored = JSON.parse(localStorage.getItem('spotify_tokens') || 'null')
-  if (!stored) return null
-  if (Date.now() < stored.expires_at) return stored.access_token
-  const data = await refreshToken(stored.refresh_token)
-  if (!data.access_token) { localStorage.removeItem('spotify_tokens'); return null }
-  const tokens = {
-    access_token: data.access_token,
-    refresh_token: data.refresh_token ?? stored.refresh_token,
-    expires_at: Date.now() + data.expires_in * 1000 - 60000,
-  }
-  localStorage.setItem('spotify_tokens', JSON.stringify(tokens))
-  return tokens.access_token
-}
 let _audioCtx = null, _audioFilter = null, _audioGain = null
 
 function playClick(intensity = 0.4) {
@@ -177,7 +91,87 @@ function playClick(intensity = 0.4) {
   src.start()
 }
 
-import { Post, ArrowDownLeft, NavArrowRight, Xmark, Plus, FilterList, Check, LongArrowUpLeft, OpenNewWindow } from 'iconoir-react'
+import { ArrowDownLeft, Xmark, LongArrowUpLeft, OpenNewWindow } from 'iconoir-react'
+
+const NAV_TABS = [
+  { label: 'Work', page: 'home' },
+  { label: 'About', page: 'about' },
+  { label: 'Notes', page: 'writing' },
+]
+
+function NavPill({ activePage, setPage, prevPage }) {
+  const containerRef = useRef(null)
+  const tabRefs = useRef([])
+  const [clipPath, setClipPath] = useState(null)
+  const hasAnimated = useRef(false)
+
+  useLayoutEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const getClip = (page) => {
+      const idx = NAV_TABS.findIndex(t => t.page === page)
+      const tab = tabRefs.current[idx]
+      if (!tab) return null
+      const left = (tab.offsetLeft / container.offsetWidth) * 100
+      const right = 100 - ((tab.offsetLeft + tab.offsetWidth) / container.offsetWidth) * 100
+      return `inset(0 ${right.toFixed(1)}% 0 ${left.toFixed(1)}% round 72px)`
+    }
+
+    if (!hasAnimated.current && prevPage && prevPage !== activePage) {
+      const fromClip = getClip(prevPage)
+      if (fromClip) {
+        setClipPath(fromClip)
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setClipPath(getClip(activePage))
+          })
+        })
+        hasAnimated.current = true
+        return
+      }
+    }
+
+    setClipPath(getClip(activePage))
+    hasAnimated.current = true
+  }, [activePage, prevPage])
+
+  return (
+    <nav className="home-nav">
+      <div className="home-nav-wrap">
+        <div className="home-nav-links">
+          {NAV_TABS.map((t) => (
+            <a
+              key={t.page}
+              className={t.page === activePage ? 'active' : ''}
+              onClick={() => setPage(t.page)}
+            >
+              {t.label}
+            </a>
+          ))}
+        </div>
+        <div
+          className="home-nav-links home-nav-overlay"
+          ref={containerRef}
+          aria-hidden
+          style={{ clipPath }}
+        >
+          {NAV_TABS.map((t, i) => (
+            <a
+              key={t.page}
+              ref={el => tabRefs.current[i] = el}
+              className="active"
+              onClick={() => setPage(t.page)}
+              tabIndex={-1}
+            >
+              {t.label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </nav>
+  )
+}
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate as motionAnimate } from 'motion/react'
 import './style.css'
 
@@ -246,17 +240,6 @@ const projects = [
   { name: 'Underline',             desc: 'An investment platform for alternative assets',              year: '2023', img: '/images/underline/Referral View.png' },
 ]
 
-function useVisitorLocation() {
-  const [location, setLocation] = useState(null)
-  useEffect(() => {
-    fetch('https://ipinfo.io/json')
-      .then(r => r.json())
-      .then(d => { if (d.city && d.region) setLocation(`${d.city}, ${d.region}`) })
-      .catch(() => {})
-  }, [])
-  return location
-}
-
 function useLocalTime() {
   const fmt = () => { const d = new Date(); return `${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}` }
   const [time, setTime] = useState(fmt)
@@ -267,7 +250,7 @@ function useLocalTime() {
   return time
 }
 
-function WorkFooter({ color, setPage }) {
+function WorkFooter({ setPage }) {
   const time = useLocalTime()
   return (
     <footer className="work-footer" style={{ animation: 'page-fade 0.6s ease forwards', animationDelay: '0.5s', opacity: 0 }}>
@@ -505,19 +488,7 @@ function ProjectDetailPage({ project, onBack, setPage }) {
   )
 }
 
-const SHADER_START = Date.now()
 
-function getShaderColor() {
-  const t = (Date.now() - SHADER_START) / 1000 * 0.018
-  const ping = Math.abs(((t * 0.5) % 1) * 2 - 1)
-  const h = 0.228 + ping * 0.01
-  const s = 0.75, l = 0.45
-  const f = (o) => {
-    const c = Math.min(Math.max(Math.abs(((h * 6 + o) % 6) - 3) - 1, 0), 1)
-    return l + s * (c - 0.5) * (1 - Math.abs(2 * l - 1))
-  }
-  return `rgb(${Math.round(f(0)*255)},${Math.round(f(4)*255)},${Math.round(f(2)*255)})`
-}
 
 const WorkShader = memo(() => (
   <ShaderGradientCanvas style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
@@ -638,16 +609,10 @@ function ColophonPage({ setPage }) {
   )
 }
 
-function AboutPage({ setPage }) {
+function AboutPage({ setPage, prevPage }) {
   return (
     <div className="page">
-      <nav className="home-nav">
-        <div className="home-nav-links">
-          <a onClick={() => setPage('home')}>Work</a>
-          <a className="active">About</a>
-          <a onClick={() => setPage('writing')}>Notes</a>
-        </div>
-      </nav>
+      <NavPill activePage="about" setPage={setPage} prevPage={prevPage} />
       <div className="page-content" style={{ paddingTop: '96px' }}>
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>About</h1>
         <div className="about-text">
@@ -1371,7 +1336,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
   )
 }
 
-function WritingPage({ setPage, initialNote, tracks, loading }) {
+function WritingPage({ setPage, prevPage, initialNote, tracks, loading }) {
   const [activeNote, setActiveNote] = useState(() => initialNote ? writings.find(w => w.type === initialNote) ?? null : null)
   const [animateList, setAnimateList] = useState(true)
 
@@ -1422,13 +1387,7 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
   return (
     <>
       <div className="page">
-        <nav className="home-nav">
-          <div className="home-nav-links">
-            <a onClick={() => setPage('home')}>Work</a>
-            <a onClick={() => setPage('about')}>About</a>
-            <a className="active">Notes</a>
-          </div>
-        </nav>
+        <NavPill activePage="writing" setPage={setPage} prevPage={prevPage} />
         <div className="page-content" style={{ paddingTop: '96px' }}>
           <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
           <ul className="projects no-bg-hover" style={{ width: '100%' }}>
@@ -1487,17 +1446,12 @@ function PrototypesPage({ setPage }) {
   )
 }
 
-function HomePage({ setPage }) {
-  const [footerColor, setFooterColor] = useState(() => getShaderColor())
+function HomePage({ setPage, prevPage }) {
   const [activeProject, setActiveProject] = useState(null)
   const [hoveredProject, setHoveredProject] = useState(null)
   const hoverLines = ['Hover a project', 'THIS IS THE NEBULA', 'DUSK SOAKED IN GREEN LIGHT', 'A GLOW THAT NEVER ENDS', 'AND STILL, IT DRIFTS ONWARD', 'FADING THE MOMENT YOU LOOK AWAY']
   const hoverIndexRef = useRef(0)
   const [lastHoverText, setLastHoverText] = useState(null)
-  useEffect(() => {
-    const id = setInterval(() => setFooterColor(getShaderColor()), 500)
-    return () => clearInterval(id)
-  }, [])
   useEffect(() => {
     projects.forEach(p => { if (p.img) { const img = new Image(); img.src = p.img } })
   }, [])
@@ -1529,13 +1483,7 @@ function HomePage({ setPage }) {
         </span>
       </div>
       <div className="right">
-        <nav className="home-nav">
-          <div className="home-nav-links">
-            <a className="active">Work</a>
-            <a onClick={() => setPage('about')}>About</a>
-            <a onClick={() => setPage('writing')}>Notes</a>
-          </div>
-        </nav>
+        <NavPill activePage="home" setPage={setPage} prevPage={prevPage} />
         <div className="home-content">
           <header className="header">
             <h1 className="animate" style={{ animationDelay: '0.1s' }}>Baltzelle</h1>
@@ -1559,7 +1507,7 @@ function HomePage({ setPage }) {
             ))}
           </ul>
         </div>
-        <WorkFooter color={footerColor} setPage={setPage} />
+        <WorkFooter setPage={setPage} />
       </div>
     </div>
   )
@@ -1567,11 +1515,15 @@ function HomePage({ setPage }) {
 
 export default function App() {
   const [page, setPageRaw] = useState('home')
+  const prevPageRef = useRef(null)
 
   const scrollRef = useRef(null)
 
   const setPage = useCallback((p) => {
-    setPageRaw(p)
+    setPageRaw(prev => {
+      prevPageRef.current = prev
+      return p
+    })
   }, [])
 
   useLayoutEffect(() => {
@@ -1630,9 +1582,9 @@ export default function App() {
 
   return (
     <div ref={scrollRef} style={{ minHeight: '100%' }}>
-      {page === 'home'       && <HomePage       setPage={setPage} />}
-      {page === 'about'      && <AboutPage      setPage={setPage} />}
-      {page === 'writing'    && <WritingPage    setPage={setPage} tracks={spotifyTracks} loading={spotifyLoading} />}
+      {page === 'home'       && <HomePage       setPage={setPage} prevPage={prevPageRef.current} />}
+      {page === 'about'      && <AboutPage      setPage={setPage} prevPage={prevPageRef.current} />}
+      {page === 'writing'    && <WritingPage    setPage={setPage} prevPage={prevPageRef.current} tracks={spotifyTracks} loading={spotifyLoading} />}
       {page === 'colophon'   && <ColophonPage   setPage={setPage} />}
       {page === 'prototypes' && <PrototypesPage setPage={setPage} />}
     </div>
