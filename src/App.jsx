@@ -521,7 +521,7 @@ function AboutPage({ setPage }) {
         <div className="about-text">
           <p className="animate" style={{ animationDelay: '0.15s' }}>I am a designer currently helping craft software experiences for pre-seed and seed companies.</p>
           <p className="animate" style={{ animationDelay: '0.2s' }}>In middle school I began making designs for my online gaming profile. Eventually, this would lead me to design school, but I've really grown by building things and being exposed to others who are exceptional at their craft.</p>
-          <p className="animate" style={{ animationDelay: '0.25s' }}>Currently I'm interested in code and glyph dithers. Outside of work I'm interested in baroque art, competitive CoD, and collecting niche fragrances.</p>
+          <p className="animate" style={{ animationDelay: '0.25s' }}>Outside of work, I spend a lot of time at my computer still. I'm interested in sports, competitive CoD, listening to music, and collecting niche fragrances.</p>
         </div>
         <div className="animate" style={{ animationDelay: '0.3s' }}>
           <h2 className="page-heading" style={{ marginBottom: '16px' }}>Connect</h2>
