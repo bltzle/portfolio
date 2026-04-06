@@ -1407,20 +1407,13 @@ img.note-image-placeholder {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease, background 0.15s ease;
   cursor: pointer;
-  padding: 8px 0;
-  border-top: 1px solid var(--border-light);
+  padding: 8px;
+  margin: 0 -8px;
+  border-radius: 12px;
   text-decoration: none;
   color: inherit;
-}
-
-.sites-row:first-child {
-  border-top: none;
-}
-
-.sites-row:last-child {
-  border-bottom: none;
 }
 
 .sites-address {
@@ -1733,7 +1726,6 @@ img.note-image-placeholder {
   .nav-home:hover,
   .note-back:hover,
   .note-toc-item:hover:not(.active),
-  .music-col-headers-row button:hover,
   .manga-panel-nav-btn:hover .manga-panel-nav-title {
     color: var(--light) !important;
   }
