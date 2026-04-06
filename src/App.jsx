@@ -1203,7 +1203,7 @@ function AudioPage({ note, onBack }) {
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         {note?.date && <p className="note-date">{note.date}</p>}
-        <p className="note-body">I really love listening to music. I listen to a wide variety of genres. I'm not really concerned with critical listening or using the highest fidelity audio file. After much testing I couldn't really discern much difference between music streaming platforms. Gear for me has been the most notable influence on how music sounds. Growing up playing video games competitively was my sort of introduction to seeking better audio. Sound cues provide an edge. For headphones I use for music I've found that I enjoy a more fun sound and less about technicality. Currently I alternate between the ZMF Bokeh Open and Meze 109 Pro with the Fiio K11 R2R.</p>
+        <p className="note-body">I really love listening to music and I'm always listening to music. I'm not really concerned with critical listening or using the highest fidelity audio file. I just want it to sound good. After much testing I couldn't really discern much difference between music streaming platforms. The ethics behind these platforms is another topic, but I digress. Gear for me has been the most notable influence on how music sounds. Growing up playing video games competitively was my sort of introduction to seeking better audio. Sound queues provide an edge. For headphones I use for music I've found that I enjoy a more fun sound and less about technicality. Currently I alternate between the ZMF Bokeh Open and Meze 109 Pro with the Fiio K11 R2R.</p>
       </div>
     </div>
   )
