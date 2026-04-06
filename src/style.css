@@ -44,7 +44,7 @@
 }
 
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 
 ::selection { background-color: #e8e8e8; color: inherit; }
@@ -1160,7 +1160,7 @@ a.footer-item:hover {
   border-radius: 4px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), 0 4px 30px rgba(0, 0, 0, 0.03);
   overflow: hidden;
-  touch-action: none;
+  touch-action: pan-y;
   cursor: default;
   user-select: none;
 }
