@@ -157,6 +157,7 @@ html, body, #app {
 .animate {
   opacity: 0;
   animation: itemIn 1s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+  will-change: opacity, transform, filter;
 }
 
 @keyframes musicItemIn {
