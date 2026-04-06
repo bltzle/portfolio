@@ -1090,6 +1090,10 @@ a.footer-item:hover {
   text-wrap: pretty;
 }
 
+.note-body + .note-body {
+  margin-top: -24px;
+}
+
 
 .note-image-wrap {
   display: flex;
