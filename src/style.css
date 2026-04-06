@@ -674,6 +674,23 @@ a.footer-item:hover {
   transition: background 0.15s ease, opacity 0.2s ease;
 }
 
+.project:has(.project-link) {
+  padding: 0;
+  height: auto;
+}
+
+.project-link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  height: 56px;
+  padding: 0 76px;
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+}
+
 @media (hover: hover) and (min-width: 1251px) {
   .project:hover {
     background: var(--hover-bg);
@@ -714,6 +731,12 @@ a.footer-item:hover {
   padding: 14px 16px !important;
   margin: 0 -16px;
   border-radius: 12px;
+}
+
+.writing-item .project-link {
+  height: auto;
+  padding: 14px 16px;
+  justify-content: space-between;
 }
 
 .writing-item.padded {
