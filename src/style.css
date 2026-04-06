@@ -1065,6 +1065,10 @@ a.footer-item:hover {
   color: var(--light);
 }
 
+.note-date + * {
+  margin-top: -24px;
+}
+
 .note-section {
   display: flex;
   flex-direction: column;

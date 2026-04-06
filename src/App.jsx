@@ -942,7 +942,7 @@ function AnimePage({ note, onBack, setPage }) {
       const pad = 16
       const vw = window.innerWidth
       const startX = vw - 180 - pad
-      const startY = pad + 60
+      const startY = pad
       pipX.set(startX)
       pipY.set(startY)
       pipInitialized.current = true
@@ -1487,13 +1487,6 @@ export default function App() {
   }, [page])
 
 
-  useEffect(() => {
-    const handler = (e) => {
-      if (getComputedStyle(e.target).cursor === 'pointer') playClick(0.3)
-    }
-    document.addEventListener('pointerdown', handler)
-    return () => document.removeEventListener('pointerdown', handler)
-  }, [])
 
   const [spotifyTracks, setSpotifyTracks] = useState(() => {
     try { return JSON.parse(sessionStorage.getItem('spotify_tracks')) || [] } catch { return [] }
