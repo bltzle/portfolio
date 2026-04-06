@@ -514,25 +514,46 @@ const NAV_TABS = [
 
 let lastNavClip = null
 
+function getClipForBtn(container, btn) {
+  const cRect = container.getBoundingClientRect()
+  const bRect = btn.getBoundingClientRect()
+  const left = bRect.left - cRect.left
+  const right = cRect.width - (left + bRect.width)
+  const top = bRect.top - cRect.top
+  const bottom = cRect.height - (top + bRect.height)
+  return `inset(${top}px ${right}px ${bottom}px ${left}px round 72px)`
+}
+
 function SegmentedNav({ active, setPage }) {
   const containerRef = useRef(null)
   const btnRefs = useRef({})
   const [clip, setClip] = useState(null)
+  const switching = useRef(false)
 
   useLayoutEffect(() => {
+    if (switching.current) return
     const container = containerRef.current
     const btn = btnRefs.current[active]
     if (!container || !btn) return
-    const cRect = container.getBoundingClientRect()
-    const bRect = btn.getBoundingClientRect()
-    const left = bRect.left - cRect.left
-    const right = cRect.width - (left + bRect.width)
-    const top = bRect.top - cRect.top
-    const bottom = cRect.height - (top + bRect.height)
-    const c = `inset(${top}px ${right}px ${bottom}px ${left}px round 72px)`
+    const c = getClipForBtn(container, btn)
     setClip(c)
     lastNavClip = c
   }, [active])
+
+  const handleTab = (key) => {
+    if (key === active || switching.current) return
+    const container = containerRef.current
+    const btn = btnRefs.current[key]
+    if (!container || !btn) return
+    switching.current = true
+    const c = getClipForBtn(container, btn)
+    setClip(c)
+    lastNavClip = c
+    setTimeout(() => {
+      switching.current = false
+      setPage(key)
+    }, 300)
+  }
 
   const from = lastNavClip || clip
 
@@ -544,7 +565,7 @@ function SegmentedNav({ active, setPage }) {
             key={tab.key}
             ref={el => btnRefs.current[tab.key] = el}
             className={active === tab.key ? 'active' : ''}
-            onClick={active !== tab.key ? () => setPage(tab.key) : undefined}
+            onClick={() => handleTab(tab.key)}
           >
             {tab.label}
           </button>
@@ -561,7 +582,7 @@ function SegmentedNav({ active, setPage }) {
             <button
               key={tab.key}
               className="active"
-              onClick={active !== tab.key ? () => setPage(tab.key) : undefined}
+              onClick={() => handleTab(tab.key)}
             >
               {tab.label}
             </button>
