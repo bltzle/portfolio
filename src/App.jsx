@@ -571,7 +571,7 @@ const writings = [
     type: 'manga',
   },
   {
-    title: 'People and sites I think are really cool',
+    title: 'Really cool people',
     category: 'Design',
     type: 'sites',
     sections: [],
@@ -1192,6 +1192,7 @@ function SitesPage({ note, onBack }) {
     </div>
   )
 }
+
 
 function MusicPage({ setPage, tracks, loading, onBack }) {
   const [sort, setSort] = useState({ col: null, dir: null })
