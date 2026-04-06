@@ -552,7 +552,7 @@ function SegmentedNav({ active, setPage }) {
     setTimeout(() => {
       switching.current = false
       setPage(key)
-    }, 300)
+    }, 150)
   }
 
   const from = lastNavClip || clip

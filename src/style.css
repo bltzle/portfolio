@@ -1686,7 +1686,6 @@ img.note-image-placeholder {
   .nav-active-layer button {
     color: var(--dark);
     background: #FDFDFD;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
     pointer-events: auto;
   }
 
