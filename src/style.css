@@ -1283,8 +1283,10 @@ img.note-image-placeholder {
   transition: color 0.15s ease;
 }
 
-.music-col-headers-row button:hover {
-  color: var(--dark);
+@media (hover: hover) and (min-width: 1251px) {
+  .music-col-headers-row button:hover {
+    color: var(--dark);
+  }
 }
 
 .music-scroll {
