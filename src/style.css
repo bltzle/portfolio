@@ -2087,6 +2087,32 @@ img.note-image-placeholder {
   .music-connect:hover {
     border-color: var(--border-light) !important;
   }
+
+  .flower-canvas-wrap {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .flower-canvas {
+    max-width: 320px;
+  }
+
+  .flower-sidebar {
+    width: 100%;
+  }
+
+  .flower-palette {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .flower-palette-label {
+    display: none;
+  }
+
+  .bookmark-gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -2236,5 +2262,23 @@ img.note-image-placeholder {
 
   .sites-address-sub {
     display: block;
+  }
+
+  .flower-canvas {
+    max-width: 100%;
+  }
+
+  .flower-top-bar {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .flower-palette {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .bookmark-gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 }

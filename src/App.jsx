@@ -1657,6 +1657,7 @@ function FlowersPage({ note, onBack }) {
   const [paperColor, setPaperColor] = useState('cream')
   const [gallery, setGallery] = useState([])
   const [sharing, setSharing] = useState(false)
+  const [view, setView] = useState('composer')
   const canvasRef = useRef(null)
   const dragRef = useRef(null)
 
@@ -1732,6 +1733,26 @@ function FlowersPage({ note, onBack }) {
   }
 
   const selected = placed.find(f => f.id === selectedId)
+
+  if (view === 'gallery') return (
+    <div className="page">
+      <div className="page-content" style={{ paddingTop: '156px' }}>
+        <button className="back-btn" onClick={() => setView('composer')} aria-label="Back">
+          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+        </button>
+        <h1 className="page-heading">Community bookmarks</h1>
+        {gallery.length === 0 ? (
+          <p className="note-body" style={{ color: 'var(--light)' }}>No bookmarks shared yet. Be the first.</p>
+        ) : (
+          <div className="bookmark-gallery-grid">
+            {gallery.map(b => (
+              <BookmarkThumb key={b.id} bookmark={b} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  )
 
   return (
     <div className="page">
@@ -1823,6 +1844,7 @@ function FlowersPage({ note, onBack }) {
                   .then(() => fetch('/api/bookmarks').then(r => r.json()).then(setGallery))
                   .finally(() => setSharing(false))
               }}>{sharing ? 'Sharing...' : 'Share'}</button>
+              <button onClick={() => { fetch('/api/bookmarks').then(r => r.json()).then(setGallery).catch(() => {}); setView('gallery') }}>Gallery</button>
             </div>
           </div>
           <div className="flower-canvas-wrap">
@@ -1898,17 +1920,6 @@ function FlowersPage({ note, onBack }) {
             </div>
           </div>
         </div>
-
-        {gallery.length > 0 && (
-          <div className="bookmark-gallery">
-            <h2 className="bookmark-gallery-heading">Community bookmarks</h2>
-            <div className="bookmark-gallery-grid">
-              {gallery.map(b => (
-                <BookmarkThumb key={b.id} bookmark={b} />
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   )
