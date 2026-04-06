@@ -442,10 +442,9 @@ a.footer-item:hover {
   margin-top: 24px;
 }
 .manga-panel-title {
-  font-family: 'Gambetta', serif;
-  font-style: italic;
+  font-family: 'Matter', sans-serif;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--dark);
 }
 .manga-panel-vol {
@@ -462,7 +461,7 @@ a.footer-item:hover {
   margin-bottom: 32px;
   font-size: 14px;
   line-height: 1.6;
-  color: var(--light);
+  color: var(--dark);
   text-wrap: pretty;
 }
 .manga-panel-nav {
@@ -1855,7 +1854,6 @@ img.note-image-placeholder {
     width: 42px;
     height: 42px;
   }
-
 
   .sites-address {
     display: none;
