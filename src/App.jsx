@@ -512,11 +512,12 @@ const NAV_TABS = [
   { key: 'writing', label: 'Notes' },
 ]
 
+let lastNavIndicator = null
+
 function SegmentedNav({ active, setPage }) {
   const containerRef = useRef(null)
   const btnRefs = useRef({})
   const [indicator, setIndicator] = useState(null)
-  const hasAnimated = useRef(false)
 
   useLayoutEffect(() => {
     const container = containerRef.current
@@ -524,24 +525,24 @@ function SegmentedNav({ active, setPage }) {
     if (!container || !btn) return
     const containerRect = container.getBoundingClientRect()
     const btnRect = btn.getBoundingClientRect()
-    setIndicator({
+    const pos = {
       left: btnRect.left - containerRect.left,
       width: btnRect.width,
-    })
+    }
+    setIndicator(pos)
+    lastNavIndicator = pos
   }, [active])
 
-  useEffect(() => {
-    if (indicator) hasAnimated.current = true
-  }, [indicator])
+  const from = lastNavIndicator || indicator
 
   return (
     <div className="home-nav-links" ref={containerRef}>
       {indicator && (
         <motion.div
           className="nav-indicator"
-          initial={{ left: indicator.left, width: indicator.width }}
+          initial={from ? { left: from.left, width: from.width } : false}
           animate={{ left: indicator.left, width: indicator.width }}
-          transition={hasAnimated.current ? { type: 'spring', duration: 0.35, bounce: 0 } : { duration: 0 }}
+          transition={{ type: 'spring', duration: 0.35, bounce: 0 }}
         />
       )}
       {NAV_TABS.map(tab => (
