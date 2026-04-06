@@ -557,30 +557,31 @@ const mangaCovers = [
 const writings = [
   {
     title: 'Recent listening',
-    category: 'Music',
+    category: 'List',
     type: 'music',
   },
   {
     title: 'Quotes from animations',
-    category: 'Anime',
+    category: 'Collection',
     type: 'anime',
   },
   {
     title: 'Collection of my favorite manga covers',
-    category: 'Manga',
+    category: 'Gallery',
     type: 'manga',
   },
   {
     title: 'Really cool people',
-    category: 'Design',
+    category: 'List',
     type: 'sites',
     sections: [],
     content: [],
   },
   {
-    title: 'Audio gear',
-    category: 'Audio',
+    title: 'For the love of sound',
+    category: 'Writing',
     type: 'audio',
+    date: 'Apr 6, 2026',
   },
 ]
 
@@ -1201,6 +1202,7 @@ function AudioPage({ note, onBack }) {
           <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
+        {note?.date && <p className="note-date">{note.date}</p>}
         <p className="note-body">I really love listening to music. I listen to a wide variety of genres. I'm not really concerned with critical listening or using the highest fidelity audio file. After much testing I couldn't really discern much difference between music streaming platforms. Gear for me has been the most notable influence on how music sounds. Growing up playing video games competitively was my sort of introduction to seeking better audio. Sound cues provide an edge. For headphones I use for music I've found that I enjoy a more fun sound and less about technicality. Currently I alternate between the ZMF Bokeh Open and Meze 109 Pro with the Fiio K11 R2R.</p>
       </div>
     </div>

@@ -443,8 +443,9 @@ a.footer-item:hover {
 }
 .manga-panel-title {
   font-family: 'Matter', sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
+  line-height: 1.6;
   color: var(--dark);
 }
 .manga-panel-vol {
@@ -457,7 +458,7 @@ a.footer-item:hover {
   color: var(--light);
 }
 .manga-panel-body {
-  margin-top: 12px;
+  margin-top: 6px;
   margin-bottom: 32px;
   font-size: 14px;
   line-height: 1.6;
@@ -1053,6 +1054,15 @@ a.footer-item:hover {
 
 .page-content > .page-heading + * {
   margin-top: -24px;
+}
+
+.page-content > .page-heading + .note-date {
+  margin-top: -36px;
+}
+
+.note-date {
+  font-size: 14px;
+  color: var(--light);
 }
 
 .note-section {
