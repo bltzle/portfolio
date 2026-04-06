@@ -528,10 +528,12 @@ function SegmentedNav({ active, setPage }) {
   const containerRef = useRef(null)
   const btnRefs = useRef({})
   const [clip, setClip] = useState(null)
+  const [visualActive, setVisualActive] = useState(active)
   const switching = useRef(false)
 
   useLayoutEffect(() => {
     if (switching.current) return
+    setVisualActive(active)
     const container = containerRef.current
     const btn = btnRefs.current[active]
     if (!container || !btn) return
@@ -546,6 +548,7 @@ function SegmentedNav({ active, setPage }) {
     const btn = btnRefs.current[key]
     if (!container || !btn) return
     switching.current = true
+    setVisualActive(key)
     const c = getClipForBtn(container, btn)
     setClip(c)
     lastNavClip = c
@@ -564,7 +567,7 @@ function SegmentedNav({ active, setPage }) {
           <button
             key={tab.key}
             ref={el => btnRefs.current[tab.key] = el}
-            className={active === tab.key ? 'active' : ''}
+            className={visualActive === tab.key ? 'active' : ''}
             onClick={() => handleTab(tab.key)}
           >
             {tab.label}
