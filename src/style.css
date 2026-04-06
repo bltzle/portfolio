@@ -1407,13 +1407,20 @@ img.note-image-placeholder {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: opacity 0.15s ease, background 0.15s ease;
+  transition: opacity 0.15s ease;
   cursor: pointer;
-  padding: 8px;
-  margin: 0 -8px;
-  border-radius: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border-light);
   text-decoration: none;
   color: inherit;
+}
+
+.sites-row:first-child {
+  border-top: none;
+}
+
+.sites-row:last-child {
+  border-bottom: none;
 }
 
 .sites-address {
@@ -1425,10 +1432,6 @@ img.note-image-placeholder {
 }
 
 @media (hover: hover) and (min-width: 1251px) {
-  .sites-row:hover {
-    background: var(--hover-bg);
-  }
-
   .sites-rows:has(.sites-row:hover) .sites-row:not(:hover) {
     opacity: 0.2;
   }
