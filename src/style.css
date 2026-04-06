@@ -582,6 +582,11 @@ a.footer-item:hover {
 .home-nav-links {
   display: flex;
   gap: 24px;
+  position: relative;
+}
+
+.nav-indicator {
+  display: none;
 }
 
 .home-nav-links button {
@@ -1653,12 +1658,20 @@ img.note-image-placeholder {
     padding: 10px 22px;
     border-radius: 72px;
     font-size: 13px;
-    transition: color 0.15s ease, background 0.15s ease;
+    transition: color 0.15s ease;
+    position: relative;
+    z-index: 1;
   }
 
-  .home-nav-links button.active {
+  .nav-indicator {
+    display: block;
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    border-radius: 72px;
     background: #FDFDFD;
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
+    z-index: 0;
   }
 
   .home-content {

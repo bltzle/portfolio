@@ -506,15 +506,56 @@ function WorkPage({ setPage, active }) {
 
 
 
+const NAV_TABS = [
+  { key: 'home', label: 'Work' },
+  { key: 'about', label: 'About' },
+  { key: 'writing', label: 'Notes' },
+]
+
+function SegmentedNav({ active, setPage }) {
+  const containerRef = useRef(null)
+  const [indicator, setIndicator] = useState({ x: 0, width: 0 })
+  const initialized = useRef(false)
+
+  useLayoutEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+    const activeBtn = container.querySelector('.active')
+    if (!activeBtn) return
+    const containerRect = container.getBoundingClientRect()
+    const btnRect = activeBtn.getBoundingClientRect()
+    setIndicator({
+      x: btnRect.left - containerRect.left,
+      width: btnRect.width,
+    })
+    initialized.current = true
+  }, [active])
+
+  return (
+    <div className="home-nav-links" ref={containerRef}>
+      <motion.div
+        className="nav-indicator"
+        animate={{ x: indicator.x, width: indicator.width }}
+        transition={initialized.current ? { type: 'spring', duration: 0.35, bounce: 0 } : { duration: 0 }}
+      />
+      {NAV_TABS.map(tab => (
+        <button
+          key={tab.key}
+          className={active === tab.key ? 'active' : ''}
+          onClick={active !== tab.key ? () => setPage(tab.key) : undefined}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
 function AboutPage({ setPage }) {
   return (
     <div className="page">
       <nav className="home-nav">
-        <div className="home-nav-links">
-          <button onClick={() => setPage('home')}>Work</button>
-          <button className="active">About</button>
-          <button onClick={() => setPage('writing')}>Notes</button>
-        </div>
+        <SegmentedNav active="about" setPage={setPage} />
       </nav>
       <div className="page-content" style={{ paddingTop: '96px' }}>
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>About</h1>
@@ -1336,11 +1377,7 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
     <>
       <div className="page">
         <nav className="home-nav">
-          <div className="home-nav-links">
-            <button onClick={() => setPage('home')}>Work</button>
-            <button onClick={() => setPage('about')}>About</button>
-            <button className="active">Notes</button>
-          </div>
+          <SegmentedNav active="writing" setPage={setPage} />
         </nav>
         <div className="page-content" style={{ paddingTop: '96px' }}>
           <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
@@ -1438,11 +1475,7 @@ function HomePage({ setPage }) {
       </div>
       <div className="right">
         <nav className="home-nav">
-          <div className="home-nav-links">
-            <button className="active">Work</button>
-            <button onClick={() => setPage('about')}>About</button>
-            <button onClick={() => setPage('writing')}>Notes</button>
-          </div>
+          <SegmentedNav active="home" setPage={setPage} />
         </nav>
         <div className="home-content">
           <header className="header">
