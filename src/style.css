@@ -1159,9 +1159,7 @@ a.footer-item:hover {
   aspect-ratio: 3 / 4.4;
   background: #F7F6F2;
   border-radius: 4px;
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.06),
-    0 4px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), 0 4px 30px rgba(0, 0, 0, 0.03);
   overflow: hidden;
   touch-action: none;
   cursor: default;
@@ -1186,6 +1184,23 @@ a.footer-item:hover {
   border-radius: 50%;
 }
 
+.placed-flower-remove {
+  position: absolute;
+  z-index: 11;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--light);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .placed-flower svg {
   display: block;
   width: 100%;
@@ -1196,9 +1211,8 @@ a.footer-item:hover {
 .flower-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  min-width: 120px;
-  padding-top: 4px;
+  flex: 1;
+  min-width: 0;
 }
 
 .flower-sidebar-group {
@@ -1232,14 +1246,19 @@ a.footer-item:hover {
   cursor: pointer;
 }
 
-.flower-sidebar-actions {
+.flower-top-bar {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 4px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.flower-sidebar-actions button {
+.flower-actions-row {
+  display: flex;
+  gap: 6px;
+}
+
+.flower-actions-row button {
   border: none;
   background: rgba(0, 0, 0, 0.04);
   color: var(--dark);
@@ -1247,31 +1266,93 @@ a.footer-item:hover {
   font-size: 12px;
   padding: 8px 12px;
   border-radius: 6px;
+  white-space: nowrap;
   cursor: pointer;
-  text-align: left;
+  text-align: center;
   transition-property: background;
   transition-duration: 150ms;
   -webkit-tap-highlight-color: transparent;
 }
 
-.flower-sidebar-actions button:hover {
+.flower-actions-row button:hover {
   background: rgba(0, 0, 0, 0.08);
+}
+
+.flower-paper-swatches {
+  display: flex;
+  gap: 6px;
+}
+
+.flower-paper-swatch {
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  transition-property: border-color;
+  transition-duration: 150ms;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.flower-paper-swatch.active {
+  border-color: var(--light);
+}
+
+.flower-paper-swatch:hover:not(.active) {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.bookmark-gallery {
+  width: 100%;
+}
+
+.bookmark-gallery-heading {
+  font-family: 'Gambetta', serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 20px;
+  text-wrap: balance;
+}
+
+.bookmark-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.bookmark-thumb {
+  position: relative;
+  aspect-ratio: 3 / 4.4;
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05), 0 4px 30px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+}
+
+.bookmark-thumb svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 .flower-palette {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
   width: 100%;
-  max-width: 360px;
+  flex: 1;
+  align-content: stretch;
 }
 
 .flower-palette-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 14px 10px;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 4px;
   border: none;
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.02);
@@ -1285,11 +1366,31 @@ a.footer-item:hover {
 }
 
 .flower-palette-preview {
+  position: relative;
   width: 40px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.flower-palette-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--light);
+  font-family: 'Matter', sans-serif;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  box-shadow: var(--shadow-quote);
 }
 
 .flower-palette-preview svg {

@@ -685,7 +685,7 @@ const writings = [
   },
   {
     title: 'Flower bookmarks',
-    category: 'Writing',
+    category: 'Tinkering',
     type: 'flowers',
     date: 'Apr 6, 2026',
   },
@@ -1460,15 +1460,209 @@ const FLOWERS = [
       </svg>
     ),
   },
+  {
+    id: 'daisy',
+    name: 'Daisy',
+    size: 64,
+    render: () => (
+      <svg viewBox="-8 -8 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(10)}
+        <g filter="url(#wc10)">
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((a, i) => (
+            <g key={i} transform={`rotate(${a} 32 32)`}>
+              <ellipse cx="32" cy="14" rx="6" ry="14" fill="#f0ece4" opacity="0.85" />
+              <ellipse cx="33" cy="15" rx="4" ry="11" fill="#fff" opacity="0.4" />
+            </g>
+          ))}
+          <circle cx="32" cy="32" r="8" fill="#e8c840" opacity="0.8" />
+          <circle cx="32" cy="32" r="5" fill="#d4b030" opacity="0.5" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'lavender',
+    name: 'Lavender',
+    size: 60,
+    render: () => (
+      <svg viewBox="-8 -8 56 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(11)}
+        <g filter="url(#wc11)">
+          {[0, 6, 12, 18, 24, 30].map((y, i) => (
+            <g key={i}>
+              <ellipse cx={18 + (i % 2 === 0 ? -2 : 2)} cy={8 + y * 1.4} rx="6" ry="4" fill="#9878b0" opacity={0.7 - i * 0.04} />
+              <ellipse cx={22 + (i % 2 === 0 ? 2 : -2)} cy={8 + y * 1.4} rx="6" ry="4" fill="#b090c8" opacity={0.5 - i * 0.03} />
+            </g>
+          ))}
+          <line x1="20" y1="48" x2="20" y2="70" stroke="#6a7c5a" strokeWidth="1.5" opacity="0.5" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'forget-me-not',
+    name: 'Forget-me-not',
+    size: 40,
+    render: () => (
+      <svg viewBox="-8 -8 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(12)}
+        <g filter="url(#wc12)">
+          {[0, 72, 144, 216, 288].map((a, i) => (
+            <g key={i} transform={`rotate(${a} 20 20)`}>
+              <ellipse cx="20" cy="10" rx="7" ry="8" fill="#7aaad4" opacity="0.75" />
+              <ellipse cx="21" cy="11" rx="5" ry="6" fill="#a0c4e0" opacity="0.4" />
+            </g>
+          ))}
+          <circle cx="20" cy="20" r="4" fill="#e8d860" opacity="0.7" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'poppy',
+    name: 'Poppy',
+    size: 80,
+    render: () => (
+      <svg viewBox="-10 -10 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(13)}
+        <g filter="url(#wc13)">
+          {[0, 72, 144, 216, 288].map((a, i) => (
+            <g key={i} transform={`rotate(${a} 40 40)`}>
+              <ellipse cx="40" cy="18" rx="16" ry="20" fill="#d45030" opacity="0.7" />
+              <ellipse cx="42" cy="20" rx="12" ry="16" fill="#e07050" opacity="0.35" />
+            </g>
+          ))}
+          <circle cx="40" cy="40" r="7" fill="#1a1a1a" opacity="0.5" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'cherry-blossom',
+    name: 'Cherry Blossom',
+    size: 52,
+    render: () => (
+      <svg viewBox="-8 -8 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(14)}
+        <g filter="url(#wc14)">
+          {[0, 72, 144, 216, 288].map((a, i) => (
+            <g key={i} transform={`rotate(${a} 26 26)`}>
+              <ellipse cx="26" cy="12" rx="9" ry="12" fill="#f0b8c8" opacity="0.75" />
+              <ellipse cx="27" cy="13" rx="6" ry="9" fill="#f8d0dc" opacity="0.4" />
+            </g>
+          ))}
+          <circle cx="26" cy="26" r="4" fill="#c87090" opacity="0.6" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'fern',
+    name: 'Fern',
+    size: 64,
+    render: () => (
+      <svg viewBox="-8 -8 56 86" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(15)}
+        <g filter="url(#wc15)">
+          <line x1="20" y1="5" x2="20" y2="68" stroke="#5a7a4a" strokeWidth="1.5" opacity="0.6" />
+          {[0, 1, 2, 3, 4, 5, 6, 7].map(i => (
+            <g key={i}>
+              <ellipse cx={12} cy={10 + i * 8} rx="8" ry="3" fill="#6a8c5a" opacity={0.6 - i * 0.03} transform={`rotate(${-20 + i * 2} 12 ${10 + i * 8})`} />
+              <ellipse cx={28} cy={10 + i * 8} rx="8" ry="3" fill="#7a9c6a" opacity={0.55 - i * 0.03} transform={`rotate(${20 - i * 2} 28 ${10 + i * 8})`} />
+            </g>
+          ))}
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'eucalyptus',
+    name: 'Eucalyptus',
+    size: 48,
+    render: () => (
+      <svg viewBox="-8 -8 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(16)}
+        <g filter="url(#wc16)">
+          <ellipse cx="24" cy="24" rx="18" ry="20" fill="#8aaa9a" opacity="0.6" />
+          <ellipse cx="26" cy="22" rx="14" ry="16" fill="#a0c0b0" opacity="0.35" />
+          <line x1="24" y1="32" x2="24" y2="48" stroke="#6a8a7a" strokeWidth="1.5" opacity="0.5" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'baby-breath',
+    name: 'Baby\'s Breath',
+    size: 56,
+    render: () => {
+      const dots = []
+      for (let i = 0; i < 18; i++) {
+        const angle = (i / 18) * Math.PI * 2 + (i % 3) * 0.5
+        const r = 5 + (i % 3) * 7
+        dots.push({ cx: 28 + Math.cos(angle) * r, cy: 28 + Math.sin(angle) * r, r: 1.8 + (i % 3) * 0.4, o: 0.6 + (i % 3) * 0.08 })
+      }
+      return (
+        <svg viewBox="-8 -8 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {WC_FILTER(17)}
+          <g filter="url(#wc17)">
+            {dots.map((d, i) => <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill="#f0ece8" opacity={d.o} />)}
+            {dots.filter((_, i) => i % 3 === 0).map((d, i) => (
+              <line key={`s${i}`} x1="28" y1="28" x2={d.cx} y2={d.cy} stroke="#a0b090" strokeWidth="0.5" opacity="0.3" />
+            ))}
+          </g>
+        </svg>
+      )
+    },
+  },
 ]
 
 let flowerId = 0
 
+const PAPER_COLORS = [
+  { id: 'cream', name: 'Cream', color: '#F7F6F2' },
+  { id: 'white', name: 'White', color: '#FFFFFF' },
+  { id: 'kraft', name: 'Kraft', color: '#d4c4a8' },
+  { id: 'blush', name: 'Blush', color: '#f0ddd5' },
+  { id: 'sage', name: 'Sage', color: '#d5dcd2' },
+  { id: 'slate', name: 'Slate', color: '#d0d3d6' },
+]
+
+function BookmarkThumb({ bookmark }) {
+  const bg = PAPER_COLORS.find(p => p.id === bookmark.paper)?.color || '#F7F6F2'
+  return (
+    <div className="bookmark-thumb" style={{ background: bg }}>
+      {bookmark.flowers.map((f, i) => {
+        const type = FLOWERS.find(t => t.id === f.type)
+        if (!type) return null
+        return (
+          <div key={i} style={{
+            position: 'absolute',
+            left: `${f.x}%`,
+            top: `${f.y}%`,
+            width: type.size * 0.45,
+            height: type.size * 0.45,
+            transform: `translate(-50%, -50%) rotate(${f.rotation}deg) scale(${f.scale})${f.flipped ? ' scaleX(-1)' : ''}`,
+          }}>
+            {type.render()}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 function FlowersPage({ note, onBack }) {
   const [placed, setPlaced] = useState([])
   const [selectedId, setSelectedId] = useState(null)
+  const [paperColor, setPaperColor] = useState('cream')
+  const [gallery, setGallery] = useState([])
+  const [sharing, setSharing] = useState(false)
   const canvasRef = useRef(null)
   const dragRef = useRef(null)
+
+  useEffect(() => {
+    fetch('/api/bookmarks').then(r => r.json()).then(setGallery).catch(() => {})
+  }, [])
 
   const addFlower = (typeId) => {
     const type = FLOWERS.find(f => f.id === typeId)
@@ -1528,8 +1722,8 @@ function FlowersPage({ note, onBack }) {
     const dx = ((e.clientX - d.startX) / d.w) * 100
     const dy = ((e.clientY - d.startY) / d.h) * 100
     if (Math.abs(dx) > 1 || Math.abs(dy) > 1) d.moved = true
-    const x = Math.max(-10, Math.min(110, d.originX + dx))
-    const y = Math.max(-10, Math.min(110, d.originY + dy))
+    const x = Math.max(5, Math.min(95, d.originX + dx))
+    const y = Math.max(5, Math.min(95, d.originY + dy))
     setPlaced(prev => prev.map(f => f.id === d.id ? { ...f, x, y } : f))
   }
 
@@ -1549,10 +1743,93 @@ function FlowersPage({ note, onBack }) {
         {note?.date && <p className="note-date">{note.date}</p>}
 
         <div className="flower-composer">
+          <div className="flower-top-bar">
+            <div className="flower-paper-swatches">
+              {PAPER_COLORS.map(p => (
+                <button
+                  key={p.id}
+                  className={`flower-paper-swatch${paperColor === p.id ? ' active' : ''}`}
+                  style={{ background: p.color }}
+                  onClick={() => setPaperColor(p.id)}
+                  aria-label={p.name}
+                  title={p.name}
+                />
+              ))}
+            </div>
+            <div className="flower-actions-row">
+              <button onClick={() => { setPlaced([]); setSelectedId(null) }}>Clear</button>
+              <button onClick={() => {
+                const canvas = canvasRef.current
+                if (!canvas) return
+                const rect = canvas.getBoundingClientRect()
+                const scale = 2
+                const c = document.createElement('canvas')
+                c.width = rect.width * scale
+                c.height = rect.height * scale
+                const ctx = c.getContext('2d')
+                ctx.scale(scale, scale)
+                const bg = PAPER_COLORS.find(p => p.id === paperColor)?.color || '#F7F6F2'
+                const r = 4
+                ctx.beginPath()
+                ctx.roundRect(0, 0, rect.width, rect.height, r)
+                ctx.clip()
+                ctx.fillStyle = bg
+                ctx.fillRect(0, 0, rect.width, rect.height)
+                const draws = placed.map(flower => {
+                  const type = FLOWERS.find(f => f.id === flower.type)
+                  const wrapper = document.createElement('div')
+                  wrapper.innerHTML = new XMLSerializer().serializeToString(
+                    canvas.querySelectorAll('.placed-flower')[placed.indexOf(flower)]?.querySelector('svg')
+                  )
+                  const svgStr = wrapper.innerHTML
+                  const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' })
+                  const url = URL.createObjectURL(blob)
+                  const img = new Image()
+                  return new Promise(resolve => {
+                    img.onload = () => {
+                      const x = (flower.x / 100) * rect.width
+                      const y = (flower.y / 100) * rect.height
+                      ctx.save()
+                      ctx.translate(x, y)
+                      ctx.rotate((flower.rotation * Math.PI) / 180)
+                      ctx.scale(flower.scale * (flower.flipped ? -1 : 1), flower.scale)
+                      ctx.drawImage(img, -type.size / 2, -type.size / 2, type.size, type.size)
+                      ctx.restore()
+                      URL.revokeObjectURL(url)
+                      resolve()
+                    }
+                    img.onerror = () => { URL.revokeObjectURL(url); resolve() }
+                    img.src = url
+                  })
+                })
+                Promise.all(draws).then(() => {
+                  const a = document.createElement('a')
+                  a.download = 'flower-bookmark.png'
+                  a.href = c.toDataURL('image/png')
+                  a.click()
+                })
+              }}>Download</button>
+              <button disabled={sharing || placed.length === 0} onClick={() => {
+                setSharing(true)
+                fetch('/api/bookmarks', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    paper: paperColor,
+                    flowers: placed.map(f => ({ type: f.type, x: f.x, y: f.y, rotation: f.rotation, scale: f.scale, flipped: f.flipped })),
+                  }),
+                })
+                  .then(r => r.json())
+                  .then(() => fetch('/api/bookmarks').then(r => r.json()).then(setGallery))
+                  .finally(() => setSharing(false))
+              }}>{sharing ? 'Sharing...' : 'Share'}</button>
+            </div>
+          </div>
           <div className="flower-canvas-wrap">
             <div
               className="flower-canvas"
               ref={canvasRef}
+              style={{ background: PAPER_COLORS.find(p => p.id === paperColor)?.color }}
               onPointerMove={onPointerMove}
               onPointerUp={onPointerUp}
               onClick={() => setSelectedId(null)}
@@ -1577,35 +1854,61 @@ function FlowersPage({ note, onBack }) {
                   </div>
                 )
               })}
+              {selected && (() => {
+                const type = FLOWERS.find(f => f.id === selected.type)
+                const offset = (type.size * selected.scale) / 2 + 8
+                const nearRight = selected.x > 75
+                const nearTop = selected.y < 25
+                const mx = nearRight ? -(offset + 4) : offset + 4
+                const my = nearTop ? offset + 4 : -(offset + 4)
+                return (
+                  <button
+                    className="placed-flower-remove"
+                    style={{
+                      left: `${selected.x}%`,
+                      top: `${selected.y}%`,
+                      marginLeft: mx,
+                      marginTop: my,
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={(e) => { e.stopPropagation(); removeFlower(selectedId) }}
+                    aria-label="Remove"
+                  >
+                    <Xmark width={14} height={14} strokeWidth={1.75} />
+                  </button>
+                )
+              })()}
             </div>
 
-            {selected && (
-              <div className="flower-sidebar">
-                <div className="flower-sidebar-group">
-                  <label className="flower-sidebar-label">Rotate</label>
-                  <input type="range" min="0" max="360" value={selected.rotation % 360} onChange={(e) => updateFlower(selectedId, () => ({ rotation: +e.target.value }))} />
-                </div>
-                <div className="flower-sidebar-group">
-                  <label className="flower-sidebar-label">Size</label>
-                  <input type="range" min="30" max="250" value={Math.round(selected.scale * 100)} onChange={(e) => updateFlower(selectedId, () => ({ scale: +e.target.value / 100 }))} />
-                </div>
-                <div className="flower-sidebar-actions">
-                  <button onClick={() => updateFlower(selectedId, f => ({ flipped: !f.flipped }))} aria-label="Flip">Flip</button>
-                  <button onClick={() => removeFlower(selectedId)} aria-label="Delete">Remove</button>
-                </div>
+            <div className="flower-sidebar">
+              <div className="flower-palette">
+                {FLOWERS.map(f => {
+                  const count = placed.filter(p => p.type === f.id).length
+                  return (
+                    <button key={f.id} className="flower-palette-item" onClick={() => addFlower(f.id)}>
+                      <span className="flower-palette-preview">
+                        {f.render()}
+                        {count > 0 && <span className="flower-palette-count">{count}</span>}
+                      </span>
+                      <span className="flower-palette-label">{f.name}</span>
+                    </button>
+                  )
+                })}
               </div>
-            )}
-          </div>
-
-          <div className="flower-palette">
-            {FLOWERS.map(f => (
-              <button key={f.id} className="flower-palette-item" onClick={() => addFlower(f.id)}>
-                <span className="flower-palette-preview">{f.render()}</span>
-                <span className="flower-palette-label">{f.name}</span>
-              </button>
-            ))}
+            </div>
           </div>
         </div>
+
+        {gallery.length > 0 && (
+          <div className="bookmark-gallery">
+            <h2 className="bookmark-gallery-heading">Community bookmarks</h2>
+            <div className="bookmark-gallery-grid">
+              {gallery.map(b => (
+                <BookmarkThumb key={b.id} bookmark={b} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
