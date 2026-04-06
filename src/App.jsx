@@ -511,9 +511,9 @@ function AboutPage({ setPage }) {
     <div className="page">
       <nav className="home-nav">
         <div className="home-nav-links">
-          <a onClick={() => setPage('home')}>Work</a>
-          <a className="active">About</a>
-          <a onClick={() => setPage('writing')}>Notes</a>
+          <button onClick={() => setPage('home')}>Work</button>
+          <button className="active">About</button>
+          <button onClick={() => setPage('writing')}>Notes</button>
         </div>
       </nav>
       <div className="page-content" style={{ paddingTop: '96px' }}>
@@ -1174,7 +1174,7 @@ function SitesPage({ note, onBack }) {
         <h1 className="page-heading">{note?.title}</h1>
         <div className="sites-rows">
           {sites.map((site, i) => (
-            <div key={i} className="sites-row" onClick={() => window.open(site.href, '_blank', 'noreferrer')} onMouseEnter={() => playClick(0.4)}>
+            <a key={i} className="sites-row" href={site.href} target="_blank" rel="noreferrer" onMouseEnter={() => playClick(0.4)}>
               <span className="sites-title-cell">
                 <span className="sites-thumb-wrap">
                   <img src={site.img} alt="" className="sites-thumb" />
@@ -1185,7 +1185,7 @@ function SitesPage({ note, onBack }) {
                 </span>
               </span>
               <span className="sites-address">{site.site}</span>
-            </div>
+            </a>
           ))}
         </div>
       </div>
@@ -1223,9 +1223,9 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
           {!loading && tracks.length > 0 && (
             <div className="music-col-headers-row">
               {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
-                <span key={col} onClick={() => cycleSort(col)} style={{ cursor: 'pointer', userSelect: 'none', color: sort.col === col ? 'var(--dark)' : '' }}>
+                <button key={col} onClick={() => cycleSort(col)} style={{ color: sort.col === col ? 'var(--dark)' : '' }}>
                   {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
-                </span>
+                </button>
               ))}
             </div>
           )}
@@ -1238,7 +1238,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
           ) : (
             <div className="music-rows">
               {displayedTracks.map(({ track, played_at }, i) => (
-                <div key={i} className="music-row" onClick={() => window.open(track.external_urls.spotify, '_blank')} onMouseEnter={() => playClick(0.4)}>
+                <a key={i} className="music-row" href={track.external_urls.spotify} target="_blank" rel="noreferrer" onMouseEnter={() => playClick(0.4)}>
                   <span className="music-title-cell">
                     {track.album?.images?.[1]?.url && <img src={track.album.images[1].url} alt="" className="music-thumb" />}
                     <span className="music-track-info">
@@ -1248,7 +1248,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
                   </span>
                   <span className="music-artist music-artist-col">{track.artists.map(a => a.name).join(', ')}</span>
                   <span className="music-col-date">{formatDate(played_at)}</span>
-                </div>
+                </a>
               ))}
             </div>
           )}
@@ -1312,9 +1312,9 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
       <div className="page">
         <nav className="home-nav">
           <div className="home-nav-links">
-            <a onClick={() => setPage('home')}>Work</a>
-            <a onClick={() => setPage('about')}>About</a>
-            <a className="active">Notes</a>
+            <button onClick={() => setPage('home')}>Work</button>
+            <button onClick={() => setPage('about')}>About</button>
+            <button className="active">Notes</button>
           </div>
         </nav>
         <div className="page-content" style={{ paddingTop: '96px' }}>
@@ -1414,9 +1414,9 @@ function HomePage({ setPage }) {
       <div className="right">
         <nav className="home-nav">
           <div className="home-nav-links">
-            <a className="active">Work</a>
-            <a onClick={() => setPage('about')}>About</a>
-            <a onClick={() => setPage('writing')}>Notes</a>
+            <button className="active">Work</button>
+            <button onClick={() => setPage('about')}>About</button>
+            <button onClick={() => setPage('writing')}>Notes</button>
           </div>
         </nav>
         <div className="home-content">

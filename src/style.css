@@ -587,24 +587,27 @@ a.footer-item:hover {
   gap: 24px;
 }
 
-.home-nav-links a {
+.home-nav-links button {
+  font-family: inherit;
   font-size: 14px;
   font-weight: 500;
   color: var(--light);
   cursor: pointer;
-  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
   transition: color 0.15s ease;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
 
 @media (hover: hover) and (min-width: 1251px) {
-  .home-nav-links a:hover {
+  .home-nav-links button:hover {
     color: var(--dark);
   }
 }
 
-.home-nav-links a.active {
+.home-nav-links button.active {
   color: var(--dark);
   font-weight: 500;
 }
@@ -1252,14 +1255,21 @@ img.note-image-placeholder {
   color: var(--light);
 }
 
-.music-col-headers-row span {
+.music-col-headers-row button {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  background: none;
+  border: none;
   padding: 0;
   margin: 0;
   width: fit-content;
+  cursor: pointer;
   transition: color 0.15s ease;
 }
 
-.music-col-headers-row span:hover {
+.music-col-headers-row button:hover {
   color: var(--dark);
 }
 
@@ -1282,6 +1292,8 @@ img.note-image-placeholder {
   padding: 8px;
   margin: 0 -8px;
   border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
 }
 
 @media (hover: hover) and (min-width: 1251px) {
@@ -1386,6 +1398,8 @@ img.note-image-placeholder {
   padding: 8px;
   margin: 0 -8px;
   border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .sites-address {
@@ -1622,14 +1636,14 @@ img.note-image-placeholder {
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
   }
 
-  .home-nav-links a {
+  .home-nav-links button {
     padding: 10px 22px;
     border-radius: 72px;
     font-size: 13px;
     transition: color 0.15s ease, background 0.15s ease;
   }
 
-  .home-nav-links a.active {
+  .home-nav-links button.active {
     background: #FDFDFD;
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
   }
@@ -1702,7 +1716,7 @@ img.note-image-placeholder {
   .nav-home:hover,
   .note-back:hover,
   .note-toc-item:hover:not(.active),
-  .music-col-headers-row span:hover,
+  .music-col-headers-row button:hover,
   .manga-panel-nav-btn:hover .manga-panel-nav-title {
     color: var(--light) !important;
   }
