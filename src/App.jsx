@@ -578,10 +578,9 @@ const writings = [
     content: [],
   },
   {
-    title: 'Being cracked at video games',
-    category: 'Gaming',
-    type: 'cracked',
-    disabled: true,
+    title: 'Audio gear',
+    category: 'Audio',
+    type: 'audio',
   },
 ]
 
@@ -1194,6 +1193,20 @@ function SitesPage({ note, onBack }) {
 }
 
 
+function AudioPage({ note, onBack }) {
+  return (
+    <div className="page">
+      <div className="page-content" style={{ paddingTop: '156px' }}>
+        <button className="back-btn" onClick={onBack} aria-label="Back">
+          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+        </button>
+        <h1 className="page-heading">{note?.title}</h1>
+        <p className="note-body">I really love listening to music. I listen to a wide variety of genres. I'm not really concerned with critical listening or using the highest fidelity audio file. After much testing I couldn't really discern much difference between music streaming platforms. Gear for me has been the most notable influence on how music sounds. Growing up playing video games competitively was my sort of introduction to seeking better audio. Sound cues provide an edge. For headphones I use for music I've found that I enjoy a more fun sound and less about technicality. Currently I alternate between the ZMF Bokeh Open and Meze 109 Pro with the Fiio K11 R2R.</p>
+      </div>
+    </div>
+  )
+}
+
 function MusicPage({ setPage, tracks, loading, onBack }) {
   const [sort, setSort] = useState({ col: null, dir: null })
   const cycleSort = (col) => setSort(s => {
@@ -1282,6 +1295,14 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
     return (
       <div key={activeNote.title} className="page-transition">
         <MangaPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} />
+      </div>
+    )
+  }
+
+  if (activeNote?.type === 'audio') {
+    return (
+      <div key={activeNote.title} className="page-transition">
+        <AudioPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
       </div>
     )
   }
