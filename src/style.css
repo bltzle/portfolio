@@ -1281,6 +1281,7 @@ img.note-image-placeholder {
   width: fit-content;
   cursor: pointer;
   transition: color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (hover: hover) and (min-width: 1251px) {
