@@ -1681,11 +1681,14 @@ img.note-image-placeholder {
     inset: 0;
     padding: 6px;
     pointer-events: none;
+    background: #FDFDFD;
+    border-radius: 72px;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
   }
 
   .nav-active-layer button {
     color: var(--dark);
-    background: #FDFDFD;
+    background: none;
     pointer-events: auto;
   }
 
