@@ -323,10 +323,7 @@ a.footer-item:hover {
 @media (hover: hover) and (min-width: 1251px) {
   .manga-item:hover {
     filter: var(--shadow-manga-hover);
-  }
-
-  .manga-grid:has(.manga-item:hover) .manga-item:not(:hover) {
-    opacity: 0.2 !important;
+    opacity: 0.6;
   }
 }
 
