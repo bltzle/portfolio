@@ -683,6 +683,12 @@ const writings = [
     type: 'audio',
     date: 'Apr 6, 2026',
   },
+  {
+    title: 'Flower bookmarks',
+    category: 'Writing',
+    type: 'flowers',
+    date: 'Apr 6, 2026',
+  },
 ]
 
 function TopFade() {
@@ -850,7 +856,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
 function dedupeTracks(items) {
   const seen = new Set()
   return items.filter(({ track, played_at }) => {
-    const key = `${track.id}_${played_at}`
+    const key = `${track.id}_${played_at?.slice(0, 10)}`
     if (seen.has(key)) return false
     seen.add(key)
     return true
@@ -1294,6 +1300,317 @@ function SitesPage({ note, onBack }) {
 }
 
 
+const WC_FILTER = (seed = 2) => (
+  <defs>
+    <filter id={`wc${seed}`} x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence baseFrequency="0.04" numOctaves="3" seed={seed} result="n" />
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3" />
+    </filter>
+  </defs>
+)
+
+const FLOWERS = [
+  {
+    id: 'clematis',
+    name: 'Clematis',
+    size: 100,
+    render: () => (
+      <svg viewBox="-10 -10 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(2)}
+        <g filter="url(#wc2)">
+          {[0, 60, 120, 180, 240, 300].map((a, i) => (
+            <g key={i} transform={`rotate(${a} 50 50)`}>
+              <ellipse cx="50" cy="22" rx="14" ry="26" fill={i % 2 === 0 ? '#d4a574' : '#c9a0b4'} opacity="0.75" />
+              <ellipse cx="52" cy="25" rx="10" ry="20" fill="#e8d4b8" opacity="0.35" />
+            </g>
+          ))}
+          <circle cx="50" cy="50" r="8" fill="#c4956a" opacity="0.7" />
+          <circle cx="50" cy="50" r="4" fill="#a67c52" opacity="0.5" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'buttercup',
+    name: 'Buttercup',
+    size: 56,
+    render: () => (
+      <svg viewBox="-8 -8 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(3)}
+        <g filter="url(#wc3)">
+          {[0, 72, 144, 216, 288].map((a, i) => (
+            <g key={i} transform={`rotate(${a} 28 28)`}>
+              <ellipse cx="28" cy="14" rx="9" ry="13" fill="#e0b832" opacity="0.8" />
+              <ellipse cx="29" cy="15" rx="7" ry="10" fill="#f0d060" opacity="0.45" />
+            </g>
+          ))}
+          <circle cx="28" cy="28" r="5" fill="#8b7320" opacity="0.6" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'pansy',
+    name: 'Pansy',
+    size: 72,
+    render: () => (
+      <svg viewBox="-8 -8 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(4)}
+        <g filter="url(#wc4)">
+          <ellipse cx="28" cy="20" rx="14" ry="16" fill="#5c3d6e" opacity="0.8" transform="rotate(-12 28 20)" />
+          <ellipse cx="44" cy="20" rx="14" ry="16" fill="#6b4d7e" opacity="0.75" transform="rotate(12 44 20)" />
+          <ellipse cx="20" cy="38" rx="12" ry="14" fill="#7a5a8e" opacity="0.65" transform="rotate(-8 20 38)" />
+          <ellipse cx="52" cy="38" rx="12" ry="14" fill="#7a5a8e" opacity="0.65" transform="rotate(8 52 38)" />
+          <ellipse cx="36" cy="50" rx="16" ry="14" fill="#4a2d5e" opacity="0.8" />
+          <circle cx="36" cy="34" r="6" fill="#2d1b3d" opacity="0.5" />
+          <circle cx="36" cy="34" r="3" fill="#e8c840" opacity="0.45" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'hydrangea',
+    name: 'Hydrangea',
+    size: 48,
+    render: () => (
+      <svg viewBox="-8 -8 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(5)}
+        <g filter="url(#wc5)">
+          {[0, 90, 180, 270].map((a, i) => (
+            <g key={i} transform={`rotate(${a} 24 24)`}>
+              <ellipse cx="24" cy="12" rx="9" ry="11" fill="#c4889e" opacity="0.7" />
+              <ellipse cx="25" cy="13" rx="7" ry="8" fill="#d4a0b4" opacity="0.35" />
+            </g>
+          ))}
+          <circle cx="24" cy="24" r="3" fill="#a06878" opacity="0.55" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'lace',
+    name: 'Queen Anne\'s Lace',
+    size: 64,
+    render: () => {
+      const dots = []
+      for (let ring = 0; ring < 3; ring++) {
+        const count = ring === 0 ? 5 : ring === 1 ? 8 : 12
+        const r = ring === 0 ? 4 : ring === 1 ? 11 : 20
+        for (let i = 0; i < count; i++) {
+          const angle = (i / count) * Math.PI * 2 + ring * 0.3
+          dots.push({ cx: 32 + Math.cos(angle) * r, cy: 32 + Math.sin(angle) * r, r: 2.2 - ring * 0.3, o: 0.65 - ring * 0.05 })
+        }
+      }
+      return (
+        <svg viewBox="-8 -8 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {WC_FILTER(6)}
+          <g filter="url(#wc6)">
+            {dots.map((d, i) => <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill="#e0d8c0" opacity={d.o} />)}
+          </g>
+        </svg>
+      )
+    },
+  },
+  {
+    id: 'rose',
+    name: 'Rose Petal',
+    size: 60,
+    render: () => (
+      <svg viewBox="-8 -8 76 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(7)}
+        <g filter="url(#wc7)">
+          <ellipse cx="30" cy="28" rx="22" ry="26" fill="#c45a6a" opacity="0.65" />
+          <ellipse cx="32" cy="26" rx="18" ry="22" fill="#d47a8a" opacity="0.35" />
+          <ellipse cx="28" cy="30" rx="16" ry="20" fill="#b44a5a" opacity="0.25" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'fan-leaf',
+    name: 'Fan Leaf',
+    size: 64,
+    render: () => (
+      <svg viewBox="-8 -8 80 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(8)}
+        <g filter="url(#wc8)">
+          {[-28, -14, 0, 14, 28].map((a, i) => (
+            <g key={i} transform={`rotate(${a} 32 62)`}>
+              <ellipse cx="32" cy="30" rx="9" ry="28" fill="#7a8c6a" opacity={0.55 + i * 0.04} />
+            </g>
+          ))}
+          <line x1="32" y1="50" x2="32" y2="72" stroke="#6a7c5a" strokeWidth="2" opacity="0.5" />
+        </g>
+      </svg>
+    ),
+  },
+  {
+    id: 'clover',
+    name: 'Clover Leaf',
+    size: 52,
+    render: () => (
+      <svg viewBox="-8 -8 68 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {WC_FILTER(9)}
+        <g filter="url(#wc9)">
+          <ellipse cx="26" cy="16" rx="12" ry="14" fill="#6a7a5a" opacity="0.65" />
+          <ellipse cx="16" cy="30" rx="12" ry="12" fill="#7a8a6a" opacity="0.6" />
+          <ellipse cx="36" cy="30" rx="12" ry="12" fill="#6a8060" opacity="0.65" />
+          <line x1="26" y1="38" x2="26" y2="58" stroke="#5a6a4a" strokeWidth="2" opacity="0.5" />
+        </g>
+      </svg>
+    ),
+  },
+]
+
+let flowerId = 0
+
+function FlowersPage({ note, onBack }) {
+  const [placed, setPlaced] = useState([])
+  const [selectedId, setSelectedId] = useState(null)
+  const canvasRef = useRef(null)
+  const dragRef = useRef(null)
+
+  const addFlower = (typeId) => {
+    const type = FLOWERS.find(f => f.id === typeId)
+    const id = ++flowerId
+    setPlaced(prev => [...prev, {
+      id,
+      type: typeId,
+      x: 40 + Math.random() * 20,
+      y: 35 + Math.random() * 20,
+      rotation: Math.round(Math.random() * 360),
+      scale: 1,
+      flipped: false,
+    }])
+    setSelectedId(id)
+  }
+
+  const updateFlower = (id, updater) => {
+    setPlaced(prev => prev.map(f => f.id === id ? { ...f, ...updater(f) } : f))
+  }
+
+  const removeFlower = (id) => {
+    setPlaced(prev => prev.filter(f => f.id !== id))
+    setSelectedId(null)
+  }
+
+  const bringToFront = (id) => {
+    setPlaced(prev => {
+      const flower = prev.find(f => f.id === id)
+      if (!flower) return prev
+      return [...prev.filter(f => f.id !== id), flower]
+    })
+  }
+
+  const onPointerDown = (e, flower) => {
+    e.preventDefault()
+    e.stopPropagation()
+    e.currentTarget.setPointerCapture(e.pointerId)
+    bringToFront(flower.id)
+    setSelectedId(flower.id)
+    const canvas = canvasRef.current
+    const rect = canvas.getBoundingClientRect()
+    dragRef.current = {
+      id: flower.id,
+      originX: flower.x,
+      originY: flower.y,
+      startX: e.clientX,
+      startY: e.clientY,
+      w: rect.width,
+      h: rect.height,
+      moved: false,
+    }
+  }
+
+  const onPointerMove = (e) => {
+    const d = dragRef.current
+    if (!d) return
+    const dx = ((e.clientX - d.startX) / d.w) * 100
+    const dy = ((e.clientY - d.startY) / d.h) * 100
+    if (Math.abs(dx) > 1 || Math.abs(dy) > 1) d.moved = true
+    const x = Math.max(-10, Math.min(110, d.originX + dx))
+    const y = Math.max(-10, Math.min(110, d.originY + dy))
+    setPlaced(prev => prev.map(f => f.id === d.id ? { ...f, x, y } : f))
+  }
+
+  const onPointerUp = () => {
+    dragRef.current = null
+  }
+
+  const selected = placed.find(f => f.id === selectedId)
+
+  return (
+    <div className="page">
+      <div className="page-content" style={{ paddingTop: '156px' }}>
+        <button className="back-btn" onClick={onBack} aria-label="Back">
+          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+        </button>
+        <h1 className="page-heading">{note?.title}</h1>
+        {note?.date && <p className="note-date">{note.date}</p>}
+
+        <div className="flower-composer">
+          <div className="flower-canvas-wrap">
+            <div
+              className="flower-canvas"
+              ref={canvasRef}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onClick={() => setSelectedId(null)}
+            >
+              {placed.map((flower) => {
+                const type = FLOWERS.find(f => f.id === flower.type)
+                return (
+                  <div
+                    key={flower.id}
+                    className={`placed-flower${selectedId === flower.id ? ' selected' : ''}`}
+                    style={{
+                      left: `${flower.x}%`,
+                      top: `${flower.y}%`,
+                      width: type.size,
+                      height: type.size,
+                      transform: `translate(-50%, -50%) rotate(${flower.rotation}deg) scale(${flower.scale})${flower.flipped ? ' scaleX(-1)' : ''}`,
+                    }}
+                    onPointerDown={(e) => onPointerDown(e, flower)}
+                    onClick={(e) => { e.stopPropagation(); setSelectedId(flower.id) }}
+                  >
+                    {type.render()}
+                  </div>
+                )
+              })}
+            </div>
+
+            {selected && (
+              <div className="flower-sidebar">
+                <div className="flower-sidebar-group">
+                  <label className="flower-sidebar-label">Rotate</label>
+                  <input type="range" min="0" max="360" value={selected.rotation % 360} onChange={(e) => updateFlower(selectedId, () => ({ rotation: +e.target.value }))} />
+                </div>
+                <div className="flower-sidebar-group">
+                  <label className="flower-sidebar-label">Size</label>
+                  <input type="range" min="30" max="250" value={Math.round(selected.scale * 100)} onChange={(e) => updateFlower(selectedId, () => ({ scale: +e.target.value / 100 }))} />
+                </div>
+                <div className="flower-sidebar-actions">
+                  <button onClick={() => updateFlower(selectedId, f => ({ flipped: !f.flipped }))} aria-label="Flip">Flip</button>
+                  <button onClick={() => removeFlower(selectedId)} aria-label="Delete">Remove</button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="flower-palette">
+            {FLOWERS.map(f => (
+              <button key={f.id} className="flower-palette-item" onClick={() => addFlower(f.id)}>
+                <span className="flower-palette-preview">{f.render()}</span>
+                <span className="flower-palette-label">{f.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function AudioPage({ note, onBack }) {
   return (
     <div className="page">
@@ -1398,6 +1715,14 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
     return (
       <div key={activeNote.title} className="page-transition">
         <MangaPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} />
+      </div>
+    )
+  }
+
+  if (activeNote?.type === 'flowers') {
+    return (
+      <div key={activeNote.title} className="page-transition">
+        <FlowersPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
       </div>
     )
   }
