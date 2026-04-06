@@ -91,7 +91,7 @@ function playClick(intensity = 0.4) {
   src.start()
 }
 
-import { ArrowDownLeft, Xmark, LongArrowUpLeft, OpenNewWindow } from 'iconoir-react'
+import { ArrowDownLeft, Xmark, LongArrowUpLeft, OpenNewWindow, Redo } from 'iconoir-react'
 
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate as motionAnimate } from 'motion/react'
 import './style.css'
@@ -1398,14 +1398,14 @@ const FLOWERS = [
         const r = ring === 0 ? 4 : ring === 1 ? 11 : 20
         for (let i = 0; i < count; i++) {
           const angle = (i / count) * Math.PI * 2 + ring * 0.3
-          dots.push({ cx: 32 + Math.cos(angle) * r, cy: 32 + Math.sin(angle) * r, r: 2.2 - ring * 0.3, o: 0.65 - ring * 0.05 })
+          dots.push({ cx: 32 + Math.cos(angle) * r, cy: 32 + Math.sin(angle) * r, r: 2.5 - ring * 0.3, o: 0.85 - ring * 0.08 })
         }
       }
       return (
         <svg viewBox="-8 -8 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
           {WC_FILTER(6)}
           <g filter="url(#wc6)">
-            {dots.map((d, i) => <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill="#e0d8c0" opacity={d.o} />)}
+            {dots.map((d, i) => <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill="#c4b896" opacity={d.o} />)}
           </g>
         </svg>
       )
@@ -1599,15 +1599,15 @@ const FLOWERS = [
       for (let i = 0; i < 18; i++) {
         const angle = (i / 18) * Math.PI * 2 + (i % 3) * 0.5
         const r = 5 + (i % 3) * 7
-        dots.push({ cx: 28 + Math.cos(angle) * r, cy: 28 + Math.sin(angle) * r, r: 1.8 + (i % 3) * 0.4, o: 0.6 + (i % 3) * 0.08 })
+        dots.push({ cx: 28 + Math.cos(angle) * r, cy: 28 + Math.sin(angle) * r, r: 2.2 + (i % 3) * 0.5, o: 0.8 + (i % 3) * 0.06 })
       }
       return (
         <svg viewBox="-8 -8 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
           {WC_FILTER(17)}
           <g filter="url(#wc17)">
-            {dots.map((d, i) => <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill="#f0ece8" opacity={d.o} />)}
+            {dots.map((d, i) => <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill="#d4cfc4" opacity={d.o} />)}
             {dots.filter((_, i) => i % 3 === 0).map((d, i) => (
-              <line key={`s${i}`} x1="28" y1="28" x2={d.cx} y2={d.cy} stroke="#a0b090" strokeWidth="0.5" opacity="0.3" />
+              <line key={`s${i}`} x1="28" y1="28" x2={d.cx} y2={d.cy} stroke="#8a9a7a" strokeWidth="0.6" opacity="0.4" />
             ))}
           </g>
         </svg>
@@ -1655,15 +1655,19 @@ function FlowersPage({ note, onBack }) {
   const [placed, setPlaced] = useState([])
   const [selectedId, setSelectedId] = useState(null)
   const [paperColor, setPaperColor] = useState('cream')
-  const [gallery, setGallery] = useState([])
-  const [sharing, setSharing] = useState(false)
-  const [view, setView] = useState('composer')
   const canvasRef = useRef(null)
   const dragRef = useRef(null)
 
   useEffect(() => {
-    fetch('/api/bookmarks').then(r => r.json()).then(setGallery).catch(() => {})
-  }, [])
+    const onKey = (e) => {
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId) {
+        e.preventDefault()
+        removeFlower(selectedId)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [selectedId])
 
   const addFlower = (typeId) => {
     const type = FLOWERS.find(f => f.id === typeId)
@@ -1697,6 +1701,20 @@ function FlowersPage({ note, onBack }) {
     })
   }
 
+  const pinchRef = useRef(null)
+  const lastTapRef = useRef({ id: null, time: 0 })
+
+  const onDoubleTap = (flower) => {
+    const now = Date.now()
+    const last = lastTapRef.current
+    if (last.id === flower.id && now - last.time < 300) {
+      removeFlower(flower.id)
+      lastTapRef.current = { id: null, time: 0 }
+      return
+    }
+    lastTapRef.current = { id: flower.id, time: now }
+  }
+
   const onPointerDown = (e, flower) => {
     e.preventDefault()
     e.stopPropagation()
@@ -1717,9 +1735,65 @@ function FlowersPage({ note, onBack }) {
     }
   }
 
+  const onResizeDown = (e, flower) => {
+    e.preventDefault()
+    e.stopPropagation()
+    e.currentTarget.setPointerCapture(e.pointerId)
+    const canvas = canvasRef.current
+    const rect = canvas.getBoundingClientRect()
+    const type = FLOWERS.find(f => f.id === flower.type)
+    const cx = rect.left + (flower.x / 100) * rect.width
+    const cy = rect.top + (flower.y / 100) * rect.height
+    const startDist = Math.hypot(e.clientX - cx, e.clientY - cy)
+    dragRef.current = {
+      resize: true,
+      id: flower.id,
+      originScale: flower.scale,
+      startDist,
+      baseSize: type.size,
+    }
+  }
+
+  const onRotateDown = (e, flower) => {
+    e.preventDefault()
+    e.stopPropagation()
+    e.currentTarget.setPointerCapture(e.pointerId)
+    const canvas = canvasRef.current
+    const rect = canvas.getBoundingClientRect()
+    const cx = rect.left + (flower.x / 100) * rect.width
+    const cy = rect.top + (flower.y / 100) * rect.height
+    const startAngle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180 / Math.PI)
+    dragRef.current = {
+      rotate: true,
+      id: flower.id,
+      originRotation: flower.rotation,
+      startAngle,
+      cx, cy,
+    }
+  }
+
   const onPointerMove = (e) => {
     const d = dragRef.current
     if (!d) return
+    if (d.resize) {
+      const flower = placed.find(f => f.id === d.id)
+      if (!flower) return
+      const canvas = canvasRef.current
+      const rect = canvas.getBoundingClientRect()
+      const cx = rect.left + (flower.x / 100) * rect.width
+      const cy = rect.top + (flower.y / 100) * rect.height
+      const dist = Math.hypot(e.clientX - cx, e.clientY - cy)
+      const ratio = dist / d.startDist
+      const scale = Math.max(0.3, Math.min(2.5, d.originScale * ratio))
+      setPlaced(prev => prev.map(f => f.id === d.id ? { ...f, scale } : f))
+      return
+    }
+    if (d.rotate) {
+      const angle = Math.atan2(e.clientY - d.cy, e.clientX - d.cx) * (180 / Math.PI)
+      const rotation = Math.round(d.originRotation + (angle - d.startAngle))
+      setPlaced(prev => prev.map(f => f.id === d.id ? { ...f, rotation } : f))
+      return
+    }
     const dx = ((e.clientX - d.startX) / d.w) * 100
     const dy = ((e.clientY - d.startY) / d.h) * 100
     if (Math.abs(dx) > 1 || Math.abs(dy) > 1) d.moved = true
@@ -1729,30 +1803,44 @@ function FlowersPage({ note, onBack }) {
   }
 
   const onPointerUp = () => {
+    const d = dragRef.current
+    if (d && !d.resize && !d.rotate && !d.moved) {
+      const flower = placed.find(f => f.id === d.id)
+      if (flower) onDoubleTap(flower)
+    }
     dragRef.current = null
   }
 
-  const selected = placed.find(f => f.id === selectedId)
+  const onTouchStart = (e, flower) => {
+    if (e.touches.length === 2) {
+      e.preventDefault()
+      const dx = e.touches[0].clientX - e.touches[1].clientX
+      const dy = e.touches[0].clientY - e.touches[1].clientY
+      const dist = Math.hypot(dx, dy)
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI)
+      pinchRef.current = { id: flower.id, startDist: dist, originScale: flower.scale, startAngle: angle, originRotation: flower.rotation }
+      dragRef.current = null
+    }
+  }
 
-  if (view === 'gallery') return (
-    <div className="page">
-      <div className="page-content" style={{ paddingTop: '156px' }}>
-        <button className="back-btn" onClick={() => setView('composer')} aria-label="Back">
-          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
-        </button>
-        <h1 className="page-heading">Community bookmarks</h1>
-        {gallery.length === 0 ? (
-          <p className="note-body" style={{ color: 'var(--light)' }}>No bookmarks shared yet. Be the first.</p>
-        ) : (
-          <div className="bookmark-gallery-grid">
-            {gallery.map(b => (
-              <BookmarkThumb key={b.id} bookmark={b} />
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  )
+  const onTouchMove = (e) => {
+    const p = pinchRef.current
+    if (!p || e.touches.length !== 2) return
+    e.preventDefault()
+    const dx = e.touches[0].clientX - e.touches[1].clientX
+    const dy = e.touches[0].clientY - e.touches[1].clientY
+    const dist = Math.hypot(dx, dy)
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI)
+    const scale = Math.max(0.3, Math.min(2.5, p.originScale * (dist / p.startDist)))
+    const rotation = Math.round(p.originRotation + (angle - p.startAngle))
+    setPlaced(prev => prev.map(f => f.id === p.id ? { ...f, scale, rotation } : f))
+  }
+
+  const onTouchEnd = () => {
+    pinchRef.current = null
+  }
+
+  const selected = placed.find(f => f.id === selectedId)
 
   return (
     <div className="page">
@@ -1830,21 +1918,6 @@ function FlowersPage({ note, onBack }) {
                   a.click()
                 })
               }}>Download</button>
-              <button disabled={sharing || placed.length === 0} onClick={() => {
-                setSharing(true)
-                fetch('/api/bookmarks', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    paper: paperColor,
-                    flowers: placed.map(f => ({ type: f.type, x: f.x, y: f.y, rotation: f.rotation, scale: f.scale, flipped: f.flipped })),
-                  }),
-                })
-                  .then(r => r.json())
-                  .then(() => fetch('/api/bookmarks').then(r => r.json()).then(setGallery))
-                  .finally(() => setSharing(false))
-              }}>{sharing ? 'Sharing...' : 'Share'}</button>
-              <button onClick={() => { fetch('/api/bookmarks').then(r => r.json()).then(setGallery).catch(() => {}); setView('gallery') }}>Gallery</button>
             </div>
           </div>
           <div className="flower-canvas-wrap">
@@ -1870,6 +1943,9 @@ function FlowersPage({ note, onBack }) {
                       transform: `translate(-50%, -50%) rotate(${flower.rotation}deg) scale(${flower.scale})${flower.flipped ? ' scaleX(-1)' : ''}`,
                     }}
                     onPointerDown={(e) => onPointerDown(e, flower)}
+                    onTouchStart={(e) => onTouchStart(e, flower)}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={onTouchEnd}
                     onClick={(e) => { e.stopPropagation(); setSelectedId(flower.id) }}
                   >
                     {type.render()}
@@ -1878,27 +1954,35 @@ function FlowersPage({ note, onBack }) {
               })}
               {selected && (() => {
                 const type = FLOWERS.find(f => f.id === selected.type)
-                const offset = (type.size * selected.scale) / 2 + 8
-                const nearRight = selected.x > 75
-                const nearTop = selected.y < 25
-                const mx = nearRight ? -(offset + 4) : offset + 4
-                const my = nearTop ? offset + 4 : -(offset + 4)
-                return (
+                const half = (type.size * selected.scale) / 2 + 6
+                const corners = [[-1, -1], [1, -1], [1, 1], [-1, 1]]
+                const rotateOffset = half + 20
+                return <>
+                  {corners.map(([cx, cy], i) => (
+                    <div
+                      key={`handle-${i}`}
+                      className="flower-resize-handle"
+                      style={{
+                        left: `${selected.x}%`,
+                        top: `${selected.y}%`,
+                        marginLeft: cx * half,
+                        marginTop: cy * half,
+                        cursor: i % 2 === 0 ? 'nwse-resize' : 'nesw-resize',
+                      }}
+                      onPointerDown={(e) => onResizeDown(e, selected)}
+                    />
+                  ))}
                   <button
-                    className="placed-flower-remove"
+                    className="flower-rotate-handle"
                     style={{
                       left: `${selected.x}%`,
                       top: `${selected.y}%`,
-                      marginLeft: mx,
-                      marginTop: my,
+                      marginTop: -rotateOffset - 12,
                     }}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    onClick={(e) => { e.stopPropagation(); removeFlower(selectedId) }}
-                    aria-label="Remove"
-                  >
-                    <Xmark width={14} height={14} strokeWidth={1.75} />
-                  </button>
-                )
+                    onPointerDown={(e) => onRotateDown(e, selected)}
+                    aria-label="Rotate"
+                  ><Redo width={12} height={12} strokeWidth={1.75} /></button>
+                </>
               })()}
             </div>
 

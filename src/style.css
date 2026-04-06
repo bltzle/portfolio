@@ -17,7 +17,6 @@
   font-display: swap;
 }
 
-
 :root {
   --dark: #333333;
   --light: #a3a3a3;
@@ -1184,9 +1183,22 @@ a.footer-item:hover {
   border-radius: 50%;
 }
 
-.placed-flower-remove {
+.flower-resize-handle {
   position: absolute;
-  z-index: 11;
+  z-index: 12;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1.5px solid rgba(0, 0, 0, 0.25);
+  transform: translate(-50%, -50%);
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.flower-rotate-handle {
+  position: absolute;
+  z-index: 12;
   width: 24px;
   height: 24px;
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -1198,6 +1210,8 @@ a.footer-item:hover {
   align-items: center;
   justify-content: center;
   padding: 0;
+  transform: translate(-50%, -50%);
+  touch-action: none;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -2106,6 +2120,11 @@ img.note-image-placeholder {
   }
 
   .flower-palette-label {
+    display: none;
+  }
+
+  .flower-resize-handle,
+  .flower-rotate-handle {
     display: none;
   }
 
