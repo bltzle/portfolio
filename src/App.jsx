@@ -1259,7 +1259,6 @@ function MangaPage({ note, onBack, setPage }) {
 const sites = [
   { name: 'Gabriel Valdivia', site: 'gabrielvaldivia.com', href: 'https://www.gabrielvaldivia.com/', img: 'https://pub-0c00865d02c1476494008dbb74525b2a.r2.dev/favicon.png' },
   { name: 'Eryc', site: 'eryc.cc', href: 'https://eryc.cc/', img: 'https://eryc.cc/favicon.svg' },
-  { name: 'Luke', site: 'luke.boo', href: 'https://www.luke.boo/', img: '/images/sites/4.png' },
   { name: 'Yiling', site: 'yiling.art', href: 'https://www.yiling.art/', img: 'https://www.yiling.art/favicon.jpg' },
   { name: 'Todd Hamilton', site: 'toddham.com', href: 'https://toddham.com/', img: 'https://toddham.com/favicon.ico' },
 ]
