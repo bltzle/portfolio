@@ -514,33 +514,40 @@ const NAV_TABS = [
 
 function SegmentedNav({ active, setPage }) {
   const containerRef = useRef(null)
-  const [indicator, setIndicator] = useState({ x: 0, width: 0 })
-  const initialized = useRef(false)
+  const btnRefs = useRef({})
+  const [indicator, setIndicator] = useState(null)
+  const hasAnimated = useRef(false)
 
   useLayoutEffect(() => {
     const container = containerRef.current
-    if (!container) return
-    const activeBtn = container.querySelector('.active')
-    if (!activeBtn) return
+    const btn = btnRefs.current[active]
+    if (!container || !btn) return
     const containerRect = container.getBoundingClientRect()
-    const btnRect = activeBtn.getBoundingClientRect()
+    const btnRect = btn.getBoundingClientRect()
     setIndicator({
-      x: btnRect.left - containerRect.left,
+      left: btnRect.left - containerRect.left,
       width: btnRect.width,
     })
-    initialized.current = true
   }, [active])
+
+  useEffect(() => {
+    if (indicator) hasAnimated.current = true
+  }, [indicator])
 
   return (
     <div className="home-nav-links" ref={containerRef}>
-      <motion.div
-        className="nav-indicator"
-        animate={{ x: indicator.x, width: indicator.width }}
-        transition={initialized.current ? { type: 'spring', duration: 0.35, bounce: 0 } : { duration: 0 }}
-      />
+      {indicator && (
+        <motion.div
+          className="nav-indicator"
+          initial={{ left: indicator.left, width: indicator.width }}
+          animate={{ left: indicator.left, width: indicator.width }}
+          transition={hasAnimated.current ? { type: 'spring', duration: 0.35, bounce: 0 } : { duration: 0 }}
+        />
+      )}
       {NAV_TABS.map(tab => (
         <button
           key={tab.key}
+          ref={el => btnRefs.current[tab.key] = el}
           className={active === tab.key ? 'active' : ''}
           onClick={active !== tab.key ? () => setPage(tab.key) : undefined}
         >
