@@ -589,6 +589,15 @@ a.footer-item:hover {
   display: none;
 }
 
+.nav-active-layer {
+  display: none;
+}
+
+.nav-inactive-layer {
+  display: flex;
+  gap: 24px;
+}
+
 .home-nav-links button {
   font-family: inherit;
   font-size: 14px;
@@ -1658,20 +1667,27 @@ img.note-image-placeholder {
     padding: 10px 22px;
     border-radius: 72px;
     font-size: 13px;
-    transition: color 0.15s ease;
-    position: relative;
-    z-index: 1;
   }
 
-  .nav-indicator {
-    display: block;
+  .nav-inactive-layer {
+    display: flex;
+    gap: 8px;
+  }
+
+  .nav-active-layer {
+    display: flex;
+    gap: 8px;
     position: absolute;
-    top: 6px;
-    bottom: 6px;
-    border-radius: 72px;
+    inset: 0;
+    padding: 6px;
+    pointer-events: none;
+  }
+
+  .nav-active-layer button {
+    color: var(--dark);
     background: #FDFDFD;
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
-    z-index: 0;
+    pointer-events: auto;
   }
 
   .home-content {

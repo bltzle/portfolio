@@ -512,49 +512,62 @@ const NAV_TABS = [
   { key: 'writing', label: 'Notes' },
 ]
 
-let lastNavIndicator = null
+let lastNavClip = null
 
 function SegmentedNav({ active, setPage }) {
   const containerRef = useRef(null)
   const btnRefs = useRef({})
-  const [indicator, setIndicator] = useState(null)
+  const [clip, setClip] = useState(null)
 
   useLayoutEffect(() => {
     const container = containerRef.current
     const btn = btnRefs.current[active]
     if (!container || !btn) return
-    const containerRect = container.getBoundingClientRect()
-    const btnRect = btn.getBoundingClientRect()
-    const pos = {
-      left: btnRect.left - containerRect.left,
-      width: btnRect.width,
-    }
-    setIndicator(pos)
-    lastNavIndicator = pos
+    const cRect = container.getBoundingClientRect()
+    const bRect = btn.getBoundingClientRect()
+    const left = bRect.left - cRect.left
+    const right = cRect.width - (left + bRect.width)
+    const top = bRect.top - cRect.top
+    const bottom = cRect.height - (top + bRect.height)
+    const c = `inset(${top}px ${right}px ${bottom}px ${left}px round 72px)`
+    setClip(c)
+    lastNavClip = c
   }, [active])
 
-  const from = lastNavIndicator || indicator
+  const from = lastNavClip || clip
 
   return (
     <div className="home-nav-links" ref={containerRef}>
-      {indicator && (
+      <div className="nav-inactive-layer">
+        {NAV_TABS.map(tab => (
+          <button
+            key={tab.key}
+            ref={el => btnRefs.current[tab.key] = el}
+            className={active === tab.key ? 'active' : ''}
+            onClick={active !== tab.key ? () => setPage(tab.key) : undefined}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+      {clip && (
         <motion.div
-          className="nav-indicator"
-          initial={from ? { left: from.left, width: from.width } : false}
-          animate={{ left: indicator.left, width: indicator.width }}
-          transition={{ type: 'spring', duration: 0.35, bounce: 0 }}
-        />
-      )}
-      {NAV_TABS.map(tab => (
-        <button
-          key={tab.key}
-          ref={el => btnRefs.current[tab.key] = el}
-          className={active === tab.key ? 'active' : ''}
-          onClick={active !== tab.key ? () => setPage(tab.key) : undefined}
+          className="nav-active-layer"
+          initial={{ clipPath: from || clip }}
+          animate={{ clipPath: clip }}
+          transition={{ type: 'spring', duration: 0.4, bounce: 0 }}
         >
-          {tab.label}
-        </button>
-      ))}
+          {NAV_TABS.map(tab => (
+            <button
+              key={tab.key}
+              className="active"
+              onClick={active !== tab.key ? () => setPage(tab.key) : undefined}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </motion.div>
+      )}
     </div>
   )
 }
