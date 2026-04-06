@@ -1562,6 +1562,8 @@ function HomePage({ setPage }) {
                 key={p.name}
                 className={`project animate dim disabled`}
                 style={{ animationDelay: `${0.2 + i * 0.04}s`, '--end-opacity': 0.3 }}
+                onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
+                onMouseLeave={() => { setLastHoverText(hoverLines[hoverIndexRef.current % hoverLines.length]); hoverIndexRef.current++; setHoveredProject(null) }}
               >
                 <span className="project-name">{p.name}</span>
                 <span className="project-desc">{p.desc}</span>
