@@ -576,7 +576,7 @@ function SegmentedNav({ active, setPage }) {
           className="nav-active-layer"
           initial={{ clipPath: from || clip }}
           animate={{ clipPath: clip }}
-          transition={{ type: 'spring', duration: 0.4, bounce: 0 }}
+          transition={{ type: 'spring', duration: 0.3, bounce: 0 }}
         >
           {NAV_TABS.map(tab => (
             <button
