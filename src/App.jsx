@@ -656,32 +656,26 @@ const mangaCovers = [
 
 const writings = [
   {
-    title: 'Recent listening',
-    category: 'List',
-    type: 'music',
-  },
-  {
     title: 'Quotes from animations',
     category: 'Collection',
     type: 'anime',
   },
+  // {
+  //   title: 'Collection of my favorite manga covers',
+  //   category: 'Gallery',
+  //   type: 'manga',
+  // },
   {
-    title: 'Collection of my favorite manga covers',
-    category: 'Gallery',
-    type: 'manga',
-  },
-  {
-    title: 'Really cool people',
+    title: 'Designers',
     category: 'List',
     type: 'sites',
     sections: [],
     content: [],
   },
   {
-    title: 'For the love of sound',
-    category: 'Writing',
-    type: 'audio',
-    date: 'Apr 6, 2026',
+    title: 'Music',
+    category: 'List',
+    type: 'music',
   },
   // {
   //   title: 'Flower bookmarks',
@@ -689,6 +683,12 @@ const writings = [
   //   type: 'flowers',
   //   date: 'Apr 6, 2026',
   // },
+  {
+    title: 'For the love of sound',
+    category: 'Writing',
+    type: 'audio',
+    date: 'Apr 6, 2026',
+  },
 ]
 
 function TopFade() {
