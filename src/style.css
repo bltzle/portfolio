@@ -806,7 +806,7 @@ a.footer-item:hover {
 }
 
 @media (hover: hover) and (min-width: 1251px) {
-  .notes-group-item:hover .notes-group-title {
+  .notes-group-item:not(.disabled):hover .notes-group-title {
     color: var(--dark);
   }
 }
