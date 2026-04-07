@@ -1975,57 +1975,6 @@ function FlowersPage({ note, onBack }) {
             </div>
             <div className="flower-actions-row">
               <button onClick={() => { setPlaced([]); setSelectedId(null) }}>Clear</button>
-              <button className="flower-download-btn" onClick={() => {
-                const canvas = canvasRef.current
-                if (!canvas) return
-                const rect = canvas.getBoundingClientRect()
-                const scale = 2
-                const c = document.createElement('canvas')
-                c.width = rect.width * scale
-                c.height = rect.height * scale
-                const ctx = c.getContext('2d')
-                ctx.scale(scale, scale)
-                const bg = PAPER_COLORS.find(p => p.id === paperColor)?.color || '#F7F6F2'
-                const r = 4
-                ctx.beginPath()
-                ctx.roundRect(0, 0, rect.width, rect.height, r)
-                ctx.clip()
-                ctx.fillStyle = bg
-                ctx.fillRect(0, 0, rect.width, rect.height)
-                const draws = placed.map(flower => {
-                  const type = FLOWERS.find(f => f.id === flower.type)
-                  const wrapper = document.createElement('div')
-                  wrapper.innerHTML = new XMLSerializer().serializeToString(
-                    canvas.querySelectorAll('.placed-flower')[placed.indexOf(flower)]?.querySelector('svg')
-                  )
-                  const svgStr = wrapper.innerHTML
-                  const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' })
-                  const url = URL.createObjectURL(blob)
-                  const img = new Image()
-                  return new Promise(resolve => {
-                    img.onload = () => {
-                      const x = (flower.x / 100) * rect.width
-                      const y = (flower.y / 100) * rect.height
-                      ctx.save()
-                      ctx.translate(x, y)
-                      ctx.rotate((flower.rotation * Math.PI) / 180)
-                      ctx.scale(flower.scale * (flower.flipped ? -1 : 1), flower.scale)
-                      ctx.drawImage(img, -type.size / 2, -type.size / 2, type.size, type.size)
-                      ctx.restore()
-                      URL.revokeObjectURL(url)
-                      resolve()
-                    }
-                    img.onerror = () => { URL.revokeObjectURL(url); resolve() }
-                    img.src = url
-                  })
-                })
-                Promise.all(draws).then(() => {
-                  const a = document.createElement('a')
-                  a.download = 'flower-bookmark.png'
-                  a.href = c.toDataURL('image/png')
-                  a.click()
-                })
-              }}>Download</button>
             </div>
           </div>
           <div className="flower-canvas-wrap">
