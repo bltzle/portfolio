@@ -1890,7 +1890,7 @@ function FlowersPage({ note, onBack }) {
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         {note?.date && <p className="note-date">{note.date}</p>}
-        <p className="note-body">In 2021, I was house and cat sitting for some family members. They went to Asia for a few weeks, making stops in Japan and Taiwan. On their dining table they had these hand made <span className="hover-trigger" onMouseEnter={onHoverEnter} onMouseMove={onHoverMove} onMouseLeave={onHoverLeave}>dried flower bookmarks</span> that I thought were extremely beautiful. Now I'm not the most active book reader. When I do read physical books they tend to be more visual. Things like fashion, architecture, or comics. I wanted to make something that reminded me of these bookmarks.</p>
+        <p className="note-body">In 2021, I was house and cat sitting for some family members. They went to Asia for a few weeks, making stops in Japan and Taiwan. On their dining table they had these hand made <span className="hover-trigger" onMouseEnter={onHoverEnter} onMouseMove={onHoverMove} onMouseLeave={onHoverLeave}>pressed flower bookmarks</span> that I thought were extremely beautiful. Now I'm not the most active book reader. When I do read physical books they tend to be more visual. Things like fashion, architecture, or comics. I wanted to make something that reminded me of these bookmarks.</p>
         {hoverImg && (
           <div ref={imgRef} className="quote-avatar visible" style={{ left: imgPos.current.x + 16, top: imgPos.current.y }}>
             <img src="/bookmark.png" alt="" className="quote-avatar-img" />
