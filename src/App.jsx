@@ -96,7 +96,6 @@ const BackArrow = ({ width = 24, height = 24, strokeWidth = 2, ...props }) => (
 )
 
 import { motion, AnimatePresence, useMotionValue, animate as motionAnimate } from 'motion/react'
-import './style.css'
 
 const projects = [
   {
@@ -595,22 +594,11 @@ const writings = [
     sections: [],
     content: [],
   },
-  // {
-  //   title: 'Collection of my favorite manga covers',
-  //   category: 'Gallery',
-  //   type: 'manga',
-  // },
   {
     title: 'Quotes from animations',
     category: 'Collection',
     type: 'anime',
   },
-  // {
-  //   title: 'Flower bookmarks',
-  //   category: 'Writing',
-  //   type: 'flowers',
-  //   date: 'Apr 6, 2026',
-  // },
   {
     title: 'For the love of sound',
     category: 'Writing',
@@ -2212,47 +2200,6 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
   )
 }
 
-const prototypes = [
-  { title: 'Drag-to-reorder list', date: '2026-03-15' },
-  { title: 'Animated page transitions', date: '2026-03-01' },
-  { title: 'Scroll-linked parallax', date: '2026-02-20' },
-]
-
-function PrototypesPage({ setPage }) {
-  const [activeItem, setActiveItem] = useState(null)
-  const [animateList, setAnimateList] = useState(true)
-  useEffect(() => {
-    if (!animateList) return
-    const t = setTimeout(() => setAnimateList(false), 1200)
-    return () => clearTimeout(t)
-  }, [animateList])
-
-  if (activeItem) {
-    return (
-      <div key={activeItem.title} className="page-transition">
-        <NoteDetailPage note={activeItem} onBack={() => { setAnimateList(true); setActiveItem(null) }} setPage={setPage} />
-      </div>
-    )
-  }
-
-  return (
-    <>
-      <div className="page">
-        <div className="page-content" style={{ paddingTop: '156px' }}>
-          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Play</h1>
-          <ul className="projects no-bg-hover" style={{ width: '100%' }}>
-            {prototypes.map((p, i) => (
-              <li key={p.title} className={`project writing-item${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: 'pointer' }} onClick={() => setActiveItem(p)} onMouseEnter={() => playClick(0.4)}>
-                <span className="project-name">{p.title}</span>
-                {p.date && <span className="writing-category">{`${new Date(p.date + 'T00:00').getMonth() + 1}.${new Date(p.date + 'T00:00').getDate()}.${new Date(p.date + 'T00:00').getFullYear()}`}</span>}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </>
-  )
-}
 
 function HomePage({ setPage }) {
   const [activeProject, setActiveProject] = useState(null)
@@ -2347,7 +2294,7 @@ export default function App() {
   }, [])
 
   useLayoutEffect(() => {
-    const titles = { home: 'Baltzelle', about: 'About', writing: 'Notes', prototypes: 'Play' }
+    const titles = { home: 'Baltzelle', about: 'About', writing: 'Notes' }
     document.title = titles[page] ?? 'Baltzelle'
     scrollRef.current?.scrollIntoView(true)
   }, [page])
@@ -2398,7 +2345,6 @@ export default function App() {
       {page === 'home'       && <HomePage       setPage={setPage} />}
       {page === 'about'      && <AboutPage      setPage={setPage} />}
       {page === 'writing'    && <WritingPage    setPage={setPage} tracks={spotifyTracks} loading={spotifyLoading} />}
-      {page === 'prototypes' && <PrototypesPage setPage={setPage} />}
     </div>
   )
 }

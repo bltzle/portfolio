@@ -134,23 +134,6 @@ html, body, #app {
   to   { opacity: var(--end-opacity, 1); transform: translateY(0); filter: blur(0px); }
 }
 
-@keyframes dropdown-enter {
-  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes dropdown-exit {
-  from { opacity: 1; transform: translateY(0) scale(1); }
-  to   { opacity: 0; transform: translateY(-4px) scale(0.98); }
-}
-
-.dropdown-enter {
-  animation: dropdown-enter 0.2s cubic-bezier(0, 0, 0.2, 1) forwards;
-}
-
-.dropdown-exit {
-  animation: dropdown-exit 0.15s cubic-bezier(0.4, 0, 1, 1) forwards;
-}
 
 .animate {
   opacity: 0;
@@ -170,9 +153,7 @@ html, body, #app {
 
 @media (prefers-reduced-motion: reduce) {
   .animate,
-  .page-transition,
-  .dropdown-enter,
-  .dropdown-exit {
+  .page-transition {
     animation: none;
     opacity: var(--end-opacity, 1);
     transform: none;
@@ -269,15 +250,6 @@ html, body, #app {
 }
 
 
-a.footer-item {
-  cursor: pointer;
-  transition: color 0.15s ease;
-}
-
-a.footer-item:hover {
-  color: var(--dark);
-}
-
 .footer-item {
   font-size: 12px;
   font-weight: 400;
@@ -288,13 +260,6 @@ a.footer-item:hover {
 .visitor-time {
   font-variant-numeric: tabular-nums;
 }
-
-
-@keyframes blur-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
 
 
 /* Manga */
@@ -487,35 +452,6 @@ a.footer-item:hover {
   color: var(--light);
 }
 
-/* Nav */
-.nav {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 40px 0 0;
-  flex-shrink: 0;
-}
-
-.nav-home {
-  background: none;
-  border: none;
-  padding: 0;
-  font-family: 'Matter', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--dark);
-  cursor: pointer;
-  transition: color 0.15s ease;
-}
-
-.nav-home:hover {
-  color: var(--light);
-}
-
 .back-btn {
   position: relative;
   display: flex;
@@ -548,22 +484,6 @@ a.footer-item:hover {
     color: var(--dark);
     background: rgba(0, 0, 0, 0.08);
   }
-}
-
-.nav a {
-  text-decoration: none;
-  font-weight: 400;
-  color: var(--light);
-  transition: color 0.15s ease;
-}
-
-.nav a.active {
-  color: var(--dark);
-}
-
-
-.nav a:hover {
-  color: var(--dark);
 }
 
 /* Home nav */
@@ -691,69 +611,8 @@ a.footer-item:hover {
     background: var(--hover-bg-disabled);
   }
 
-  .no-bg-hover .project:hover {
-    background: var(--hover-bg);
-  }
 }
 
-
-.no-bg-hover .project {
-  position: relative;
-  padding: 14px 16px;
-  margin: 0 -16px;
-  height: auto;
-  border-radius: 12px;
-}
-
-.no-bg-hover .project::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -2px;
-  bottom: -2px;
-}
-
-.writing-item {
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  height: auto;
-  padding: 14px 16px !important;
-  margin: 0 -16px;
-  border-radius: 12px;
-}
-
-.writing-item .project-link {
-  height: auto;
-  padding: 14px 16px;
-  justify-content: space-between;
-}
-
-.writing-item.padded {
-  padding: 14px 76px !important;
-}
-
-.writing-item-main {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  flex: 1;
-}
-
-.writing-meta {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--light);
-}
-
-.writing-category {
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--light);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
 
 
 /* Notes grouped layout */
@@ -923,43 +782,6 @@ a.footer-item:hover {
   color: var(--dark);
   text-decoration-color: var(--dark);
 }
-
-/* Back nav */
-.back-nav {
-  background: var(--bg-elevated);
-  border-radius: 999px;
-  border: 1px solid var(--border-light);
-  box-shadow:
-    0 12px 36px rgba(0,0,0,0.22),
-    0 2px 8px rgba(0,0,0,0.12);
-  font-family: 'Matter', sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--dark);
-  cursor: pointer;
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  line-height: 1;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.back-nav svg {
-  display: block;
-  color: var(--light);
-}
-
-@media (hover: hover) and (min-width: 1251px) {
-  .back-nav {
-    transition: color 0.15s ease, box-shadow 0.15s ease;
-  }
-  .back-nav:hover {
-    color: var(--light);
-  }
-}
-
 
 
 
@@ -1698,18 +1520,8 @@ img.note-image-placeholder {
   padding-right: 24px;
 }
 
-.music-row .music-col-album,
-.music-col-headers-row .music-col-album {
-  color: var(--light);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding-right: 24px;
-}
-
 @media (hover: hover) and (min-width: 1251px) {
   .music-row:hover .music-artist,
-  .music-row:hover .music-col-album,
   .music-row:hover .music-col-date {
     color: var(--dark);
   }
@@ -2052,29 +1864,11 @@ img.note-image-placeholder {
     padding: 0;
   }
 
-  .no-bg-hover .project {
-    padding: 14px 0;
-    margin: 0;
-  }
-
-  .writing-item {
-    padding: 14px 0 !important;
-    margin: 0;
-  }
-
-  .writing-item .project-link {
-    padding: 14px 0;
-  }
-
   .work-footer {
     width: 100%;
     max-width: 640px;
     margin: auto auto 0;
     padding: 0 0 88px;
-  }
-
-  .nav {
-    padding: 36px 24px 0;
   }
 
   .page-content {
@@ -2114,9 +1908,6 @@ img.note-image-placeholder {
   }
 
   /* Disable all standalone hover interactions on tablet/mobile */
-  a.footer-item:hover,
-  .nav a:hover,
-  .nav-home:hover,
   .note-back:hover,
   .note-toc-item:hover:not(.active),
   .manga-panel-nav-btn:hover .manga-panel-nav-title {
@@ -2207,30 +1998,6 @@ img.note-image-placeholder {
     display: none;
   }
 
-  .no-bg-hover .project {
-    padding: 14px 0;
-    margin: 0;
-    border-radius: 0;
-  }
-
-  .no-bg-hover .project-link {
-    padding: 14px 0;
-  }
-
-  .writing-item {
-    padding: 14px 0 !important;
-    margin: 0 !important;
-    border-radius: 0;
-  }
-
-  .writing-item .project-link {
-    padding: 14px 0;
-  }
-
-  .nav {
-    padding: 28px 24px 0;
-  }
-
   .page-content {
     padding: 60px 24px 100px;
   }
@@ -2247,8 +2014,7 @@ img.note-image-placeholder {
     padding: 28px 24px;
   }
 
-  .music-col-date,
-  .music-col-album {
+  .music-col-date {
     display: none;
   }
 
