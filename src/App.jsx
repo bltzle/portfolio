@@ -685,7 +685,7 @@ const writings = [
   },
   {
     title: 'Flower bookmarks',
-    category: 'Tinkering',
+    category: 'Writing',
     type: 'flowers',
     date: 'Apr 6, 2026',
   },
