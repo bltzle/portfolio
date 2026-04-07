@@ -1656,12 +1656,15 @@ function FlowersPage({ note, onBack }) {
   const [selectedId, setSelectedId] = useState(null)
   const [paperColor, setPaperColor] = useState('cream')
   const [hoverImg, setHoverImg] = useState(false)
+  const [pipOpen, setPipOpen] = useState(false)
   const canvasRef = useRef(null)
   const dragRef = useRef(null)
   const imgRef = useRef(null)
   const imgMouse = useRef({ x: 0, y: 0 })
   const imgPos = useRef({ x: 0, y: 0 })
   const imgRaf = useRef(null)
+  const pipX = useMotionValue(0)
+  const pipY = useMotionValue(0)
 
   useEffect(() => {
     const onKey = (e) => {
@@ -1708,6 +1711,45 @@ function FlowersPage({ note, onBack }) {
   }
   const onHoverMove = (e) => { imgMouse.current = { x: e.clientX, y: e.clientY } }
   const onHoverLeave = () => setHoverImg(false)
+
+  const getPipCorners = () => {
+    const pad = 16, w = 180, h = 140
+    const vw = window.innerWidth, vh = window.innerHeight
+    return [
+      { x: pad, y: pad },
+      { x: vw - w - pad, y: pad },
+      { x: pad, y: vh - h - pad },
+      { x: vw - w - pad, y: vh - h - pad },
+    ]
+  }
+
+  const snapPipToCorner = (cx, cy) => {
+    const corners = getPipCorners()
+    let closest = corners[0], best = Infinity
+    for (const c of corners) {
+      const d = Math.hypot(cx - c.x, cy - c.y)
+      if (d < best) { best = d; closest = c }
+    }
+    const spring = { type: 'spring', stiffness: 400, damping: 30 }
+    motionAnimate(pipX, closest.x, spring)
+    motionAnimate(pipY, closest.y, spring)
+  }
+
+  const onTriggerTap = () => {
+    if (!isMobile) return
+    if (pipOpen) { setPipOpen(false); return }
+    const pad = 16
+    const startX = window.innerWidth - 180 - pad
+    pipX.set(startX)
+    pipY.set(pad)
+    setPipOpen(true)
+  }
+
+  const onPipDragEnd = (_, info) => {
+    const elX = pipX.get() + info.velocity.x * 0.12
+    const elY = pipY.get() + info.velocity.y * 0.12
+    snapPipToCorner(elX, elY)
+  }
 
   const addFlower = (typeId) => {
     const type = FLOWERS.find(f => f.id === typeId)
@@ -1890,8 +1932,28 @@ function FlowersPage({ note, onBack }) {
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         {note?.date && <p className="note-date">{note.date}</p>}
-        <p className="note-body">In 2021, I was house and cat sitting for some family members. They went to Asia for a few weeks, making stops in Japan and Taiwan. On their dining table they had these hand made <span className="hover-trigger" onMouseEnter={onHoverEnter} onMouseMove={onHoverMove} onMouseLeave={onHoverLeave}>pressed flower bookmarks</span> that I thought were extremely beautiful. Now I'm not the most active book reader. When I do read physical books they tend to be more visual. Things like fashion, architecture, or comics. I wanted to make something that reminded me of these bookmarks.</p>
-        {hoverImg && (
+        <p className="note-body">In 2021, I was house and cat sitting for some family members. They went to Asia for a few weeks, making stops in Japan and Taiwan. On their dining table they had these hand made <span className="hover-trigger" onMouseEnter={onHoverEnter} onMouseMove={onHoverMove} onMouseLeave={onHoverLeave} onClick={onTriggerTap}>pressed flower bookmarks</span> that I thought were extremely beautiful. Now I'm not the most active book reader. When I do read physical books they tend to be more visual. Things like fashion, architecture, or comics. I wanted to make something that reminded me of these bookmarks.</p>
+        {isMobile ? (
+          <AnimatePresence>
+            {pipOpen && (
+              <motion.div
+                key="pip"
+                className="quote-avatar visible"
+                style={{ position: 'fixed', top: 0, left: 0, x: pipX, y: pipY, pointerEvents: 'auto' }}
+                drag
+                dragElastic={0.18}
+                dragMomentum={false}
+                onDragEnd={onPipDragEnd}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+              >
+                <img src="/bookmark.png" alt="" className="quote-avatar-img" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        ) : hoverImg && (
           <div ref={imgRef} className="quote-avatar visible" style={{ left: imgPos.current.x + 16, top: imgPos.current.y }}>
             <img src="/bookmark.png" alt="" className="quote-avatar-img" />
           </div>
