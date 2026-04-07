@@ -2144,6 +2144,10 @@ img.note-image-placeholder {
     display: none;
   }
 
+  .flower-download-btn {
+    display: none;
+  }
+
   .bookmark-gallery-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;

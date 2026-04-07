@@ -1913,7 +1913,7 @@ function FlowersPage({ note, onBack }) {
             </div>
             <div className="flower-actions-row">
               <button onClick={() => { setPlaced([]); setSelectedId(null) }}>Clear</button>
-              <button onClick={() => {
+              <button className="flower-download-btn" onClick={() => {
                 const canvas = canvasRef.current
                 if (!canvas) return
                 const rect = canvas.getBoundingClientRect()
