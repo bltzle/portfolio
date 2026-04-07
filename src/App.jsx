@@ -91,7 +91,13 @@ function playClick(intensity = 0.4) {
   src.start()
 }
 
-import { ArrowDownLeft, Xmark, LongArrowUpLeft, OpenNewWindow, Redo } from 'iconoir-react'
+import { ArrowDownLeft, Xmark, OpenNewWindow, Redo } from 'iconoir-react'
+
+const BackArrow = ({ width = 24, height = 24, strokeWidth = 2, ...props }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M10 16l-6-6 6-6"/><path d="M20 21v-7a4 4 0 0 0-4-4H5"/>
+  </svg>
+)
 
 import { motion, AnimatePresence, useDragControls, useMotionValue, animate as motionAnimate } from 'motion/react'
 import './style.css'
@@ -283,7 +289,7 @@ function ProjectDetailPage({ project, onBack, setPage }) {
       {hasSections && (
         <aside className="note-sidebar">
           <button className="back-btn" onClick={onBack} aria-label="Back">
-            <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+            <BackArrow width={16} height={16} strokeWidth={1.75} />
           </button>
           <nav className="note-toc">
             <a
@@ -620,8 +626,8 @@ function AboutPage({ setPage }) {
         <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>About</h1>
         <div className="about-text">
           <p className="animate" style={{ animationDelay: '0.15s' }}>I am a designer currently helping craft software experiences for pre-seed and seed companies.</p>
-          <p className="animate" style={{ animationDelay: '0.2s' }}>In middle school I began making designs for my online gaming profile. Eventually, this would lead me to design school, but I've really grown by building things and being exposed to others who are exceptional at their craft.</p>
-          <p className="animate" style={{ animationDelay: '0.25s' }}>Outside of work, I spend a lot of time at my computer still. I'm interested in sports, competitive CoD, listening to music, and collecting niche fragrances.</p>
+          <p className="animate" style={{ animationDelay: '0.2s' }}>In middle school I began making designs for my online gaming profile. Eventually, this would lead me to study Design at UC Davis, but I've really grown by building things and being exposed to others who are exceptional at their craft. I've been fortunate to work and learn alongside some really humble and talented people.</p>
+          <p className="animate" style={{ animationDelay: '0.25s' }}>Outside of work you'll find me playing competitive CoD, binging YouTube videos, and listening to a lot of R&B. My interests range from design, fashion, gaming, fragrances, and music.</p>
         </div>
         <div className="animate" style={{ animationDelay: '0.3s' }}>
           <h2 className="page-heading" style={{ marginBottom: '16px' }}>Connect</h2>
@@ -787,7 +793,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
       <article className="note-article" style={!hasSections ? { paddingBottom: '80px' } : undefined}>
         <div className="note-breadcrumb" ref={breadcrumbRef}>
           <button className="back-btn" onClick={onBack} aria-label="Back">
-            <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+            <BackArrow width={16} height={16} strokeWidth={1.75} />
           </button>
           <h1 className="page-heading">{note.title}</h1>
         </div>
@@ -1067,7 +1073,7 @@ function AnimePage({ note, onBack, setPage }) {
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={onBack} aria-label="Back">
-          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+          <BackArrow width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         <div className="quote-list">
@@ -1189,7 +1195,7 @@ function MangaPage({ note, onBack, setPage }) {
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={onBack} aria-label="Back">
-          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+          <BackArrow width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         <div className="manga-grid">
@@ -1275,7 +1281,7 @@ function SitesPage({ note, onBack }) {
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={onBack} aria-label="Back">
-          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+          <BackArrow width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         <div className="sites-rows">
@@ -1928,7 +1934,7 @@ function FlowersPage({ note, onBack }) {
     <div className="page" onClick={isMobile && selectedId ? () => setSelectedId(null) : undefined}>
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={onBack} aria-label="Back">
-          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+          <BackArrow width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         {note?.date && <p className="note-date">{note.date}</p>}
@@ -2071,7 +2077,7 @@ function AudioPage({ note, onBack }) {
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={onBack} aria-label="Back">
-          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+          <BackArrow width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         {note?.date && <p className="note-date">{note.date}</p>}
@@ -2105,7 +2111,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
       <TopFade />
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={onBack || (() => setPage('home'))} aria-label="Back">
-          <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
+          <BackArrow width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading music-heading">Music</h1>
         <div className="music-col-headers">
