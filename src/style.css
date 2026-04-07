@@ -1130,6 +1130,10 @@ a.footer-item:hover {
   margin-top: -24px;
 }
 
+.hover-trigger {
+  color: var(--light);
+  cursor: default;
+}
 
 /* Flower Composer */
 
@@ -1171,6 +1175,18 @@ a.footer-item:hover {
   touch-action: none;
   transition-property: box-shadow;
   transition-duration: 150ms;
+}
+
+.placed-flower::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 56px;
+  min-height: 56px;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
 }
 
 .placed-flower:active {
