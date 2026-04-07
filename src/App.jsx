@@ -589,7 +589,7 @@ const writings = [
     type: 'music',
   },
   {
-    title: 'Cracked software designers',
+    title: 'People that build cool shit',
     category: 'Collection',
     type: 'sites',
     sections: [],
@@ -1208,6 +1208,7 @@ const sites = [
   { name: 'Eryc', site: 'eryc.cc', href: 'https://eryc.cc/', img: 'https://eryc.cc/favicon.svg' },
   { name: 'Yiling', site: 'yiling.art', href: 'https://www.yiling.art/', img: 'https://www.yiling.art/favicon.jpg' },
   { name: 'Todd Hamilton', site: 'toddham.com', href: 'https://toddham.com/', img: 'https://toddham.com/favicon.ico' },
+  { name: 'Gunnar Gray', site: 'gunnargray.com', href: 'https://www.gunnargray.com/' },
 ]
 
 function SitesPage({ note, onBack }) {
@@ -1223,7 +1224,7 @@ function SitesPage({ note, onBack }) {
             <a key={i} className="sites-row" href={site.href} target="_blank" rel="noreferrer" onMouseEnter={() => playClick(0.4)}>
               <span className="sites-title-cell">
                 <span className="sites-thumb-wrap">
-                  <img src={site.img} alt="" className="sites-thumb" />
+                  {site.img ? <img src={site.img} alt="" className="sites-thumb" /> : <span className="sites-thumb-fallback" />}
                 </span>
                 <span className="sites-text">
                   <span className="sites-name">{site.name}</span>
