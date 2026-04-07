@@ -268,11 +268,6 @@ html, body, #app {
   width: 100%;
 }
 
-.footer-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
 
 a.footer-item {
   cursor: pointer;
@@ -584,9 +579,6 @@ a.footer-item:hover {
   position: relative;
 }
 
-.nav-indicator {
-  display: none;
-}
 
 .nav-active-layer {
   display: none;
@@ -764,6 +756,71 @@ a.footer-item:hover {
 }
 
 
+/* Notes grouped layout */
+.notes-group {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 0 40px;
+  width: 100%;
+}
+
+.notes-group-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dark);
+  padding-top: 14px;
+  white-space: nowrap;
+}
+
+.notes-group-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.notes-group-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 0;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.notes-group-date {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--light);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.notes-group-title {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--light);
+  transition: color 0.15s ease;
+}
+
+@media (hover: hover) and (min-width: 1251px) {
+  .notes-group-item:hover .notes-group-title {
+    color: var(--dark);
+  }
+}
+
+.notes-group-item.disabled:not(.animate) {
+  opacity: 0.3;
+}
+
+@media (hover: hover) and (min-width: 1251px) {
+  .notes-group-list:has(.notes-group-item:hover) .notes-group-item:not(:hover) {
+    opacity: 0.2;
+  }
+}
+
 .project.dim {
   cursor: not-allowed;
 }
@@ -858,8 +915,7 @@ a.footer-item:hover {
   gap: 24px;
 }
 
-.about-links a,
-.bio-links a {
+.about-links a {
   font-size: 14px;
   font-weight: 400;
   color: var(--light);
@@ -869,8 +925,7 @@ a.footer-item:hover {
   transition: color 0.15s ease, text-decoration-color 0.15s ease;
 }
 
-.about-links a:hover,
-.bio-links a:hover {
+.about-links a:hover {
   color: var(--dark);
   text-decoration-color: var(--dark);
 }
@@ -1093,6 +1148,8 @@ a.footer-item:hover {
   margin-top: -24px;
 }
 
+
+
 .page-content > .page-heading + .note-date {
   margin-top: -36px;
 }
@@ -1246,36 +1303,6 @@ a.footer-item:hover {
   min-width: 0;
 }
 
-.flower-sidebar-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.flower-sidebar-label {
-  font-family: 'Matter', sans-serif;
-  font-size: 12px;
-  color: var(--light);
-}
-
-.flower-sidebar input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 3px;
-  background: rgba(0, 0, 0, 0.08);
-  border-radius: 2px;
-  outline: none;
-}
-
-.flower-sidebar input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--dark);
-  cursor: pointer;
-}
 
 .flower-top-bar {
   display: flex;
@@ -1334,24 +1361,6 @@ a.footer-item:hover {
   border-color: rgba(0, 0, 0, 0.2);
 }
 
-.bookmark-gallery {
-  width: 100%;
-}
-
-.bookmark-gallery-heading {
-  font-family: 'Gambetta', serif;
-  font-size: 20px;
-  font-weight: 500;
-  color: var(--dark);
-  margin-bottom: 20px;
-  text-wrap: balance;
-}
-
-.bookmark-gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
 
 .bookmark-thumb {
   position: relative;
@@ -2071,10 +2080,6 @@ img.note-image-placeholder {
     padding: 64px 0 120px;
   }
 
-  .work-links {
-    padding: 0 24px 24px;
-  }
-
 
   .note-sidebar {
     display: none;
@@ -2086,6 +2091,20 @@ img.note-image-placeholder {
 
   .page-content {
     padding-top: 96px !important;
+  }
+
+  .notes-group {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .notes-group-label {
+    padding-top: 0;
+    padding-bottom: 8px;
+  }
+
+  .notes-group + .notes-group {
+    margin-top: 16px;
   }
 
   .setup-modal {
@@ -2103,7 +2122,6 @@ img.note-image-placeholder {
     color: var(--light) !important;
   }
   .about-links a:hover,
-  .bio-links a:hover,
   .quote-attr a:hover,
   .note-image-caption a:hover,
   .setup-modal a:hover {
@@ -2143,12 +2161,6 @@ img.note-image-placeholder {
   .flower-resize-handle,
   .flower-rotate-handle {
     display: none;
-  }
-
-
-  .bookmark-gallery-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
   }
 }
 
@@ -2220,10 +2232,6 @@ img.note-image-placeholder {
 
   .page-content {
     padding: 60px 24px 100px;
-  }
-
-  .work-links {
-    padding: 0 24px 24px;
   }
 
   .manga-grid {
@@ -2312,10 +2320,5 @@ img.note-image-placeholder {
 
   .flower-palette {
     grid-template-columns: repeat(3, 1fr);
-  }
-
-  .bookmark-gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
   }
 }

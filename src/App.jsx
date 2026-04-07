@@ -1,9 +1,5 @@
 import { useState, useEffect, useLayoutEffect, useRef, useCallback, Fragment, memo } from 'react'
 import { ShaderGradient, ShaderGradientCanvas } from 'shadergradient'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { EffectCards } from 'swiper/modules'
-import 'swiper/css'
-import 'swiper/css/effect-cards'
 
 const SPOTIFY_CLIENT_ID = '5ee9147feda6434aa4414c48c2a472bd'
 const SPOTIFY_REDIRECT  = `${window.location.origin}/callback`
@@ -91,7 +87,7 @@ function playClick(intensity = 0.4) {
   src.start()
 }
 
-import { ArrowDownLeft, Xmark, OpenNewWindow, Redo } from 'iconoir-react'
+import { Xmark, OpenNewWindow, Redo } from 'iconoir-react'
 
 const BackArrow = ({ width = 24, height = 24, strokeWidth = 2, ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -99,7 +95,7 @@ const BackArrow = ({ width = 24, height = 24, strokeWidth = 2, ...props }) => (
   </svg>
 )
 
-import { motion, AnimatePresence, useDragControls, useMotionValue, animate as motionAnimate } from 'motion/react'
+import { motion, AnimatePresence, useMotionValue, animate as motionAnimate } from 'motion/react'
 import './style.css'
 
 const projects = [
@@ -220,22 +216,6 @@ function GrainOverlay() {
   return <canvas ref={ref} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.05, pointerEvents: 'none', zIndex: 'var(--z-content)', mixBlendMode: 'overlay' }} />
 }
 
-function BackNav({ setPage }) {
-  return (
-    <button className="back-nav" onClick={() => setPage('work')}>
-      <ArrowDownLeft width={12} height={12} strokeWidth={1.75} />
-      Back
-    </button>
-  )
-}
-
-function Nav({ setPage }) {
-  return (
-    <nav className="nav">
-      <button className="nav-home" onClick={() => setPage('home')}>Baltzelle</button>
-    </nav>
-  )
-}
 
 function ProjectDetailPage({ project, onBack, setPage }) {
   const hasSections = project.sections?.length > 0
@@ -463,66 +443,6 @@ const WorkShader = memo(() => (
   </ShaderGradientCanvas>
 ))
 
-function WorkPage({ setPage, active }) {
-  const [activeProject, setActiveProject] = useState(null)
-  const [hoveredProject, setHoveredProject] = useState(null)
-  const [contentKey, setContentKey] = useState(0)
-
-  useEffect(() => {
-    if (active) setContentKey(k => k + 1)
-  }, [active])
-
-  return (
-    <>
-      {activeProject && (
-        <div key={activeProject.name} className="page-transition" style={{ zIndex: 'var(--z-overlay)', background: 'var(--bg, #FAF8F4)' }}>
-          <ProjectDetailPage project={activeProject} onBack={() => { setActiveProject(null); setContentKey(k => k + 1) }} setPage={setPage} />
-        </div>
-      )}
-      <div className="page" style={{ visibility: activeProject ? 'hidden' : 'visible' }}>
-        <Nav setPage={setPage} />
-        <div key={contentKey} className="page-content">
-          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Work</h1>
-          <ul className="projects no-bg-hover" style={{ width: '100%' }}>
-            {projects.map((p, i) => p.href ? (
-              <li key={p.name} className={`project writing-item animate`} style={{ animationDelay: `${0.15 + i * 0.05}s` }}>
-                <a
-                  className="project-link"
-                  href={p.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
-                  onMouseLeave={() => setHoveredProject(null)}
-                >
-                  <div className="writing-item-main">
-                    <span className="project-name">{p.name}</span>
-                    <span className="writing-meta">{p.desc}</span>
-                  </div>
-                  <span className="writing-category">{p.year}</span>
-                </a>
-              </li>
-            ) : (
-              <li
-                key={p.name}
-                className={`project writing-item animate disabled`}
-                style={{ animationDelay: `${0.15 + i * 0.05}s`, '--end-opacity': 0.3, cursor: 'not-allowed' }}
-              >
-                <div className="writing-item-main">
-                  <span className="project-name">{p.name}</span>
-                  <span className="writing-meta">{p.desc}</span>
-                </div>
-                <span className="writing-category">{p.year}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </>
-  )
-}
-
-
-
 
 
 
@@ -597,6 +517,7 @@ function SegmentedNav({ active, setPage }) {
       {clip && (
         <motion.div
           className="nav-active-layer"
+          aria-hidden="true"
           initial={{ clipPath: from || clip }}
           animate={{ clipPath: clip }}
           transition={{ type: 'spring', duration: 0.3, bounce: 0 }}
@@ -605,6 +526,7 @@ function SegmentedNav({ active, setPage }) {
             <button
               key={tab.key}
               className="active"
+              tabIndex={-1}
               onClick={() => handleTab(tab.key)}
             >
               {tab.label}
@@ -662,9 +584,16 @@ const mangaCovers = [
 
 const writings = [
   {
-    title: 'Quotes from animations',
+    title: 'What I\'m listening to',
     category: 'Collection',
-    type: 'anime',
+    type: 'music',
+  },
+  {
+    title: 'Cracked software designers',
+    category: 'Collection',
+    type: 'sites',
+    sections: [],
+    content: [],
   },
   // {
   //   title: 'Collection of my favorite manga covers',
@@ -672,16 +601,9 @@ const writings = [
   //   type: 'manga',
   // },
   {
-    title: 'Designers',
-    category: 'List',
-    type: 'sites',
-    sections: [],
-    content: [],
-  },
-  {
-    title: 'Music',
-    category: 'List',
-    type: 'music',
+    title: 'Quotes from animations',
+    category: 'Collection',
+    type: 'anime',
   },
   // {
   //   title: 'Flower bookmarks',
@@ -694,6 +616,20 @@ const writings = [
     category: 'Writing',
     type: 'audio',
     date: 'Apr 6, 2026',
+  },
+  {
+    title: 'The infestation of hackers in games',
+    category: 'Writing',
+    type: 'gaming',
+    date: 'Apr 6, 2026',
+    disabled: true,
+  },
+  {
+    title: 'Still trying to figure stuff out',
+    category: 'Writing',
+    type: 'figuring-out',
+    date: 'Apr 6, 2026',
+    disabled: true,
   },
 ]
 
@@ -1132,8 +1068,6 @@ function MangaPage({ note, onBack, setPage }) {
   const activeCover = openIdx !== null ? mangaCovers[openIdx] : null
   const isOpen = openIdx !== null
   const isMobile = window.matchMedia('(max-width: 480px)').matches
-  const dragControls = useDragControls()
-
   useEffect(() => {
     if (openIdx === null) return
     const content = document.querySelector('.manga-panel-content')
@@ -2154,6 +2088,20 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
   )
 }
 
+function GamingPage({ note, onBack }) {
+  return (
+    <div className="page">
+      <div className="page-content" style={{ paddingTop: '156px' }}>
+        <button className="back-btn" onClick={onBack} aria-label="Back">
+          <BackArrow width={16} height={16} strokeWidth={1.75} />
+        </button>
+        <h1 className="page-heading">{note?.title}</h1>
+        {note?.date && <p className="note-date">{note.date}</p>}
+      </div>
+    </div>
+  )
+}
+
 function WritingPage({ setPage, initialNote, tracks, loading }) {
   const [activeNote, setActiveNote] = useState(() => initialNote ? writings.find(w => w.type === initialNote) ?? null : null)
   const [animateList, setAnimateList] = useState(true)
@@ -2196,6 +2144,14 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
     )
   }
 
+  if (activeNote?.type === 'gaming' || activeNote?.type === 'figuring-out') {
+    return (
+      <div key={activeNote.title} className="page-transition">
+        <GamingPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
+      </div>
+    )
+  }
+
   if (activeNote?.type === 'music') {
     return (
       <MusicPage setPage={setPage} tracks={tracks} loading={loading} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
@@ -2225,15 +2181,30 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
           <SegmentedNav active="writing" setPage={setPage} />
         </nav>
         <div className="page-content" style={{ paddingTop: '96px' }}>
-          <h1 className="page-heading animate" style={{ animationDelay: '0.1s' }}>Notes</h1>
-          <ul className="projects no-bg-hover" style={{ width: '100%' }}>
-            {writings.map((w, i) => (
-              <li key={w.title} className={`project writing-item${animateList ? ' animate' : ''}${w.disabled ? ' disabled' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: w.disabled ? 'not-allowed' : 'pointer', '--end-opacity': w.disabled ? 0.3 : 1 }} onClick={() => !w.disabled && setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
-                <span className="project-name">{w.title}</span>
-                {w.category && <span className="writing-category">{w.category}</span>}
-              </li>
-            ))}
-          </ul>
+          {(() => {
+            const groups = []
+            let idx = 0
+            for (const w of writings) {
+              const last = groups[groups.length - 1]
+              if (last && last.category === w.category) last.items.push(w)
+              else groups.push({ category: w.category, items: [w] })
+            }
+            return groups.map((group) => (
+              <div key={group.category} className="notes-group">
+                <span className={`notes-group-label${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + idx * 0.05}s` }}>{group.category}</span>
+                <ul className="notes-group-list">
+                  {group.items.map((w) => {
+                    const i = idx++
+                    return (
+                      <li key={w.title} className={`notes-group-item${animateList ? ' animate' : ''}${w.disabled ? ' disabled' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: w.disabled ? 'not-allowed' : 'pointer', '--end-opacity': w.disabled ? 0.3 : 1 }} onClick={() => !w.disabled && setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
+                        <span className="notes-group-title">{w.title}</span>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            ))
+          })()}
         </div>
       </div>
     </>
@@ -2410,7 +2381,7 @@ export default function App() {
     if (!code) return
     exchangeCode(code).then(data => {
       if (data.access_token) {
-        localStorage.setItem('spotify_tokens', JSON.stringify({
+        sessionStorage.setItem('spotify_tokens', JSON.stringify({
           access_token: data.access_token,
           refresh_token: data.refresh_token,
           expires_at: Date.now() + data.expires_in * 1000 - 60000,
