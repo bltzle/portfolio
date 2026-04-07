@@ -1925,7 +1925,7 @@ function FlowersPage({ note, onBack }) {
   const selected = placed.find(f => f.id === selectedId)
 
   return (
-    <div className="page">
+    <div className="page" onClick={isMobile && selectedId ? () => setSelectedId(null) : undefined}>
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={onBack} aria-label="Back">
           <LongArrowUpLeft width={16} height={16} strokeWidth={1.75} />
