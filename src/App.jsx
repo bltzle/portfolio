@@ -2070,7 +2070,20 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
               ))}
             </div>
           )}
-          <button className="music-top-btn" aria-label="Scroll to top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <button className="music-top-btn" aria-label="Scroll to top" onClick={() => {
+            const start = window.scrollY
+            if (!start) return
+            const duration = Math.min(800, 300 + start * 0.15)
+            let startTime = null
+            const ease = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+            const step = ts => {
+              if (!startTime) startTime = ts
+              const p = Math.min((ts - startTime) / duration, 1)
+              window.scrollTo(0, start * (1 - ease(p)))
+              if (p < 1) requestAnimationFrame(step)
+            }
+            requestAnimationFrame(step)
+          }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V6M5 12l7-7 7 7"/></svg>
           </button>
           <div className="music-scroll-fade" />
