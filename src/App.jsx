@@ -1197,7 +1197,7 @@ const sites = [
   { name: 'Gabriel Valdivia', site: 'gabrielvaldivia.com', href: 'https://www.gabrielvaldivia.com/', img: 'https://pub-0c00865d02c1476494008dbb74525b2a.r2.dev/favicon.png' },
   { name: 'Eryc', site: 'eryc.cc', href: 'https://eryc.cc/', img: 'https://eryc.cc/favicon.svg' },
   { name: 'Todd Hamilton', site: 'toddham.com', href: 'https://toddham.com/', img: 'https://toddham.com/favicon.ico' },
-  { name: 'Jakub', site: 'jakub.kr', href: 'https://jakub.kr/', img: 'https://jakub.kr/favicon.ico' },
+  { name: 'Jakub', site: 'jakub.kr', href: 'https://jakub.kr/', img: '/images/sites/jakub.jpg' },
 ]
 
 function SitesPage({ note, onBack }) {
