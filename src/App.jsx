@@ -588,7 +588,7 @@ const writings = [
     type: 'music',
   },
   {
-    title: 'People that build cool shit',
+    title: 'Cracked design people',
     category: 'Collection',
     type: 'sites',
     sections: [],
