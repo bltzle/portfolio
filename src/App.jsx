@@ -786,7 +786,9 @@ function NoteDetailPage({ note, onBack, setPage }) {
 function dedupeTracks(items) {
   const seen = new Set()
   return items.filter(({ track, played_at }) => {
-    const key = `${track.id}_${played_at?.slice(0, 10)}`
+    const d = new Date(played_at)
+    const localDate = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+    const key = `${track.id}_${localDate}`
     if (seen.has(key)) return false
     seen.add(key)
     return true
