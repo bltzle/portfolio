@@ -1426,7 +1426,8 @@ img.note-image-placeholder {
   border: none;
   padding: 8px;
   border-radius: 50%;
-  margin: 24px auto 0;
+  margin: 24px auto 120px;
+  z-index: var(--z-overlay);
   color: var(--light);
   cursor: pointer;
   touch-action: manipulation;
