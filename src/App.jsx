@@ -87,13 +87,8 @@ function playClick(intensity = 0.4) {
   src.start()
 }
 
-import { Xmark, OpenNewWindow, Redo } from 'iconoir-react'
-
-const BackArrow = ({ width = 24, height = 24, strokeWidth = 2, ...props }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M10 16l-6-6 6-6"/><path d="M20 21v-7a4 4 0 0 0-4-4H5"/>
-  </svg>
-)
+import ArrowUturnLeftIcon from '@heroicons/react/24/outline/esm/ArrowUturnLeftIcon.js'
+import ArrowUpIcon from '@heroicons/react/24/outline/esm/ArrowUpIcon.js'
 
 import { motion, AnimatePresence, useMotionValue, animate as motionAnimate } from 'motion/react'
 
@@ -219,7 +214,6 @@ function GrainOverlay() {
 function ProjectDetailPage({ project, onBack, setPage }) {
   const hasSections = project.sections?.length > 0
   const [activeId, setActiveId] = useState('__intro')
-  const [sheetOpen, setSheetOpen] = useState(false)
   const containerRef = useRef(null)
   const scrollingRef = useRef(false)
 
@@ -228,17 +222,6 @@ function ProjectDetailPage({ project, onBack, setPage }) {
     if (scrollEl) scrollEl.scrollTop = 0
     else window.scrollTo(0, 0)
   }, [project])
-
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') setSheetOpen(false) }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [])
-
-  useEffect(() => {
-    document.body.classList.toggle('modal-open', sheetOpen)
-    return () => document.body.classList.remove('modal-open')
-  }, [sheetOpen])
 
   useEffect(() => {
     if (!hasSections) return
@@ -268,7 +251,7 @@ function ProjectDetailPage({ project, onBack, setPage }) {
       {hasSections && (
         <aside className="note-sidebar">
           <button className="back-btn" onClick={onBack} aria-label="Back">
-            <BackArrow width={16} height={16} strokeWidth={1.75} />
+            <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
           </button>
           <nav className="note-toc">
             <a
@@ -368,32 +351,9 @@ function ProjectDetailPage({ project, onBack, setPage }) {
         ))}
       </article>
     </div>
-    <div className={`sheet-backdrop note-backdrop${sheetOpen ? ' open' : ''}`} onClick={() => setSheetOpen(false)} />
-    <div className={`setup-modal${sheetOpen ? ' open' : ''}`}>
-      <p className="setup-modal-heading">About this project</p>
-      <button className="setup-modal-close" onClick={() => setSheetOpen(false)}>
-        <Xmark width={16} height={16} strokeWidth={1.75} />
-      </button>
-      {project.modalBody && <p>{project.modalBody}</p>}
-      {(project.modalContent || project.collaborators) && (
-        <p>
-          {project.modalContent}
-          {project.collaborators && (
-            <>{' '}{project.collaborators.map((name, i) => (
-              <span key={name} className="modal-collaborator">
-                <span className="modal-avatar">{name.split(' ').map(n => n[0]).join('')}</span>
-                {name}{i < project.collaborators.length - 1 ? (i === project.collaborators.length - 2 ? ', and ' : ', ') : ''}
-              </span>
-            ))}{' '}for collaborating on this.</>
-          )}
-        </p>
-      )}
-    </div>
     </>
   )
 }
-
-
 
 const WorkShader = memo(() => (
   <ShaderGradientCanvas style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
@@ -563,24 +523,6 @@ function AboutPage({ setPage }) {
   )
 }
 
-const mangaCovers = [
-  { title: 'Hell\'s Paradise: Jigokuraku', volume: 'Vol. 06', src: '/images/manga/hells-paradise-06.jpg', wiki: 'https://en.wikipedia.org/wiki/Hell%27s_Paradise:_Jigokuraku', body: 'Set in the Edo period of Japan, the series follows the journey of ninja Gabimaru and executioner Yamada Asaemon Sagiri as they search for the elixir of immortality. Multiple pairs of people with unaligned interests are thrown into an enclosed space, forced to work together.' },
-  { title: 'Chainsaw Man', volume: 'Vol. 12', src: '/images/manga/chainsaw-man-12.jpg', wiki: 'https://en.wikipedia.org/wiki/Chainsaw_Man', body: 'Chainsaw Man follows the story of Denji, an impoverished teenager who makes a contract that fuses his body with that of Pochita, the dog-like Chainsaw Devil, granting him the ability to transform parts of his body into chainsaws. Denji eventually joins the Public Safety Devil Hunters, a government agency focused on combating Devils whenever they become a threat to Japan.' },
-  { title: 'The Apothecary Diaries', volume: 'Vol. 10', src: '/images/manga/apothecary-diaries-10.jpg', wiki: 'https://en.wikipedia.org/wiki/The_Apothecary_Diaries', body: 'Set in a fictional country inspired by China in the Tang Dynasty, the series follows Maomao, a girl trained in medicine by her apothecary father. After being sold as a servant to the emperor\'s palace, she secretly uses her skills to solve mysteries and help others.' },
-  { title: 'Gachiakuta', volume: 'Vol. 08', src: '/images/manga/gachiakuta-08.jpg', wiki: 'https://en.wikipedia.org/wiki/Gachiakuta', body: 'A young teenage boy named Rudo lives in the slums of a wealthy society among the "tribesfolk", a population descended from criminals and exiled by society. Falsely charged with the murder of his foster father, Rudo is dumped into "the Pit," an endless landscape of trash below the floating city.' },
-  { title: 'Jujutsu Kaisen', volume: 'Vol. 00', src: '/images/manga/jujutsu-kaisen-00.jpg', wiki: 'https://en.wikipedia.org/wiki/Jujutsu_Kaisen', body: 'The series follows Yuta Okkotsu, a young student who becomes a sorcerer and seeks to control the Cursed Spirit of his childhood friend Rika Orimoto.' },
-  { title: 'After the Rain', volume: 'Vol. 05', src: '/images/manga/after-the-rain-05.jpg', wiki: 'https://en.wikipedia.org/wiki/After_the_Rain_(manga)', body: 'After the Rain tells the story of Akira Tachibana, a high school student working part-time at a family restaurant, who starts falling in love with the manager, Masami Kondo, a forty-five-year-old divorcee with a young son.' },
-  { title: 'Fly Me to the Moon', volume: 'Vol. 13', src: '/images/manga/fly-me-to-the-moon-13.jpg', wiki: 'https://en.wikipedia.org/wiki/Fly_Me_to_the_Moon_(manga)', body: 'The story centers around the teenage genius Nasa Yuzaki and his developing relationship with his new wife, Tsukasa, who saves him from a traffic accident during the beginning of the story.' },
-  { title: 'Made in Abyss', volume: 'Vol. 09', src: '/images/manga/made-in-abyss.jpg', wiki: 'https://en.wikipedia.org/wiki/Made_in_Abyss', body: 'Made in Abyss follows Riko, an orphan girl living on the edge of a vast chasm known as the Abyss, who descends into its depths alongside a mysterious robot boy named Reg in search of her missing mother, a legendary Cave Raider.' },
-  { title: 'My Hero Academia', volume: 'Vol. 29', src: '/images/manga/my-hero-academia-29.jpg', wiki: 'https://en.wikipedia.org/wiki/My_Hero_Academia', body: 'Set in a world where superpowers called "Quirks" have become commonplace, the story follows Izuku Midoriya, a boy who was born without a Quirk but still dreams of becoming a superhero. He is scouted by the world\'s greatest hero, All Might, who bestows his Quirk to Midoriya after recognizing his potential, and helps to enroll him in a prestigious high school for superheroes in training.' },
-  { title: 'Golden Kamuy', volume: 'Vol. 02', src: '/images/manga/golden-kamuy.jpg', wiki: 'https://en.wikipedia.org/wiki/Golden_Kamuy', body: 'Set in the early twentieth century, Golden Kamuy follows Saichi Sugimoto, a veteran of the Russo-Japanese War, as he searches for a hidden cache of Ainu gold in the wilderness of Hokkaido alongside a young Ainu girl named Asirpa.' },
-  { title: 'Kagurabachi', volume: 'Vol. 03', src: '/images/manga/kagurabachi.jpg', wiki: 'https://en.wikipedia.org/wiki/Kagurabachi', body: 'Kagurabachi follows Chihiro Rokuhira, a young swordsmith whose father is murdered by a criminal organization seeking enchanted blades. Armed with one of his father\'s legendary swords, Chihiro sets out for revenge.' },
-  { title: 'Fire Force', volume: 'Vol. 30', src: '/images/manga/fire-force.jpg', wiki: 'https://en.wikipedia.org/wiki/Fire_Force', body: 'Set in a world where people spontaneously combust into flame-wreathed monsters called Infernals, Fire Force follows Shinra Kusakabe, a third-generation pyrokinetic who joins Special Fire Force Company 8 to uncover the truth behind the phenomenon.' },
-  { title: 'That Time I Got Reincarnated as a Slime', volume: 'Vol. 19', src: '/images/manga/slime.jpg', wiki: 'https://en.wikipedia.org/wiki/That_Time_I_Got_Reincarnated_as_a_Slime', body: 'After being killed in a random street attack, thirty-seven-year-old Satoru Mikami is reincarnated in a fantasy world as a slime with unique abilities, eventually building a nation of monsters and forging alliances with humans and demons alike.' },
-  { title: 'Classroom of the Elite', volume: 'Vol. 09', src: '/images/manga/classroom-of-the-elite.jpg', wiki: 'https://en.wikipedia.org/wiki/Classroom_of_the_Elite', body: 'Set in a prestigious high school where students are secretly ranked by ability, Classroom of the Elite follows Kiyotaka Ayanokoji, a seemingly indifferent student in the lowest-ranked class who harbors exceptional intelligence and quietly manipulates events around him.' },
-  { title: 'Overlord', volume: 'Vol. 03', src: '/images/manga/overlord.jpg', wiki: 'https://en.wikipedia.org/wiki/Overlord_(novel_series)', body: 'When a popular fantasy game shuts down, the player Momonga finds himself trapped inside as his skeletal undead avatar. Rather than panic, he assumes the name Ainz Ooal Gown and sets out to explore this new world, accompanied by the now-sentient NPCs of his former guild.' },
-]
-
 const writings = [
   {
     title: 'What I\'m listening to',
@@ -629,21 +571,9 @@ function NoteDetailPage({ note, onBack, setPage }) {
   const hasSections = note.sections?.length > 0
   const [activeId, setActiveId] = useState('__intro')
   const [crumbInView, setCrumbInView] = useState(true)
-  const [sheetOpen, setSheetOpen] = useState(false)
   const containerRef = useRef(null)
   const breadcrumbRef = useRef(null)
   const scrollingRef = useRef(false)
-
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') setSheetOpen(false) }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [])
-
-  useEffect(() => {
-    document.body.classList.toggle('modal-open', sheetOpen)
-    return () => document.body.classList.remove('modal-open')
-  }, [sheetOpen])
 
   useEffect(() => {
     if (!hasSections) return
@@ -717,7 +647,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
       <article className="note-article" style={!hasSections ? { paddingBottom: '80px' } : undefined}>
         <div className="note-breadcrumb" ref={breadcrumbRef}>
           <button className="back-btn" onClick={onBack} aria-label="Back">
-            <BackArrow width={16} height={16} strokeWidth={1.75} />
+            <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
           </button>
           <h1 className="page-heading">{note.title}</h1>
         </div>
@@ -763,20 +693,6 @@ function NoteDetailPage({ note, onBack, setPage }) {
           </Fragment>
         ))}
       </article>
-    </div>
-    <div className={`sheet-backdrop note-backdrop${sheetOpen ? ' open' : ''}`} onClick={() => setSheetOpen(false)} />
-    <div className={`setup-modal${sheetOpen ? ' open' : ''}`}>
-      <p className="setup-modal-heading">About this note</p>
-      <button className="setup-modal-close" onClick={() => setSheetOpen(false)}>
-        <Xmark width={16} height={16} strokeWidth={1.75} />
-      </button>
-      {note.sheet ? (
-        <>
-          <p>{note.sheet.link ? <><a href={note.sheet.link.href} target="_blank" rel="noreferrer">Matter</a>{note.sheet.body.slice('Matter'.length)}</> : note.sheet.body}</p>
-        </>
-      ) : (
-        <p>Placeholder text for {note.title}. Add context about this piece here.</p>
-      )}
     </div>
     </>
   )
@@ -999,7 +915,7 @@ function AnimePage({ note, onBack, setPage }) {
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={onBack} aria-label="Back">
-          <BackArrow width={16} height={16} strokeWidth={1.75} />
+          <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         <div className="quote-list">
@@ -1053,146 +969,6 @@ function AnimePage({ note, onBack, setPage }) {
   )
 }
 
-function MangaPage({ note, onBack, setPage }) {
-  const [openIdx, setOpenIdx] = useState(null)
-  const activeCover = openIdx !== null ? mangaCovers[openIdx] : null
-  const isOpen = openIdx !== null
-  const isMobile = window.matchMedia('(max-width: 480px)').matches
-  useEffect(() => {
-    if (openIdx === null) return
-    const content = document.querySelector('.manga-panel-content')
-    if (content) content.scrollTop = 0
-  }, [openIdx])
-
-  useEffect(() => {
-    if (!isOpen) return
-    const onKey = (e) => {
-      if (e.key === 'Escape') setOpenIdx(null)
-      if (e.key === 'ArrowLeft')  setOpenIdx(i => Math.max(0, i - 1))
-      if (e.key === 'ArrowRight') setOpenIdx(i => Math.min(mangaCovers.length - 1, i + 1))
-    }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [isOpen])
-
-  useEffect(() => {
-    if (!isOpen) return
-    const pageTransition = document.querySelector('.page-transition')
-    const scrollY = window.scrollY
-    const scrollbarWidth = pageTransition ? pageTransition.offsetWidth - pageTransition.clientWidth : 0
-
-    document.documentElement.style.setProperty('--scrollbar-compensation', `${scrollbarWidth}px`)
-    document.documentElement.classList.add('modal-open')
-    document.body.classList.add('modal-open')
-    document.body.style.top = `-${scrollY}px`
-    pageTransition?.classList.add('manga-page-blurred')
-
-    const preventScroll = (e) => {
-      const panel = e.target.closest('.manga-panel')
-      if (!panel) { e.preventDefault(); return }
-      const scrollable = panel.querySelector('.manga-panel-content') || panel
-      const { scrollTop, scrollHeight, clientHeight } = scrollable
-      const atTop = scrollTop <= 0
-      const atBottom = scrollTop + clientHeight >= scrollHeight
-      const touch = e.touches[0]
-      const dy = touch.clientY - (preventScroll.lastY || touch.clientY)
-      preventScroll.lastY = touch.clientY
-      if ((atTop && dy > 0) || (atBottom && dy < 0)) e.preventDefault()
-    }
-    const resetLastY = () => { preventScroll.lastY = null }
-    document.addEventListener('touchmove', preventScroll, { passive: false })
-    document.addEventListener('touchstart', resetLastY, { passive: true })
-
-    return () => {
-      document.removeEventListener('touchmove', preventScroll)
-      document.removeEventListener('touchstart', resetLastY)
-      document.documentElement.classList.remove('modal-open')
-      document.body.classList.remove('modal-open')
-      document.body.style.top = ''
-      document.documentElement.style.removeProperty('--scrollbar-compensation')
-      pageTransition?.classList.remove('manga-page-blurred')
-      window.scrollTo(0, scrollY)
-    }
-  }, [isOpen])
-
-  return (
-    <div className="page">
-      <div className="page-content" style={{ paddingTop: '156px' }}>
-        <button className="back-btn" onClick={onBack} aria-label="Back">
-          <BackArrow width={16} height={16} strokeWidth={1.75} />
-        </button>
-        <h1 className="page-heading">{note?.title}</h1>
-        <div className="manga-grid">
-          {mangaCovers.map((cover, i) => (
-            <div key={i} className="manga-item">
-              <button className="manga-trigger" onClick={() => { if (window.matchMedia('(hover: hover)').matches) setOpenIdx(i) }}>
-                <img src={cover.src} alt={`${cover.title} ${cover.volume}`} className="manga-cover" draggable="false" />
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            <motion.div
-              className="manga-backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, ease: [0.19, 1, 0.22, 1] }}
-              onClick={() => setOpenIdx(null)}
-            />
-            <motion.aside
-              className={isMobile ? 'manga-panel manga-panel--full' : 'manga-panel'}
-              initial={isMobile ? { y: '100%' } : { x: '100%' }}
-              animate={isMobile ? { y: 0 } : { x: 0 }}
-              exit={isMobile ? { y: '100%' } : { x: '100%' }}
-              transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-            >
-              <div className="manga-panel-header">
-                {activeCover?.wiki && (
-                  <button className="manga-panel-close" aria-label="Open wiki" onClick={() => window.open(activeCover.wiki, '_blank', 'noreferrer')}>
-                    <OpenNewWindow width={15} height={15} strokeWidth={1.75} />
-                  </button>
-                )}
-                <button className="manga-panel-close" aria-label="Close panel" onClick={() => setOpenIdx(null)}>
-                  <Xmark width={18} height={18} strokeWidth={1.75} />
-                </button>
-              </div>
-              {activeCover && (
-                <div className="manga-panel-content">
-                  <img src={activeCover.src} alt={`${activeCover.title} ${activeCover.volume}`} className="manga-panel-cover" draggable="false" />
-                  <div className="manga-panel-info">
-                    <span className="manga-panel-title">{activeCover.title}<span className="manga-panel-vol">, {activeCover.volume}</span></span>
-                  </div>
-                  {activeCover.body && (
-                    <p className="manga-panel-body">{activeCover.body}</p>
-                  )}
-                  <div className="manga-panel-nav">
-                    {openIdx > 0 ? (
-                      <button className="manga-panel-nav-btn" onClick={() => setOpenIdx(openIdx - 1)}>
-                        <span className="manga-panel-label">Previous</span>
-                        <span className="manga-panel-nav-title">{mangaCovers[openIdx - 1].title}</span>
-                      </button>
-                    ) : <span />}
-                    {openIdx < mangaCovers.length - 1 ? (
-                      <button className="manga-panel-nav-btn manga-panel-nav-next" onClick={() => setOpenIdx(openIdx + 1)}>
-                        <span className="manga-panel-label">Next</span>
-                        <span className="manga-panel-nav-title">{mangaCovers[openIdx + 1].title}</span>
-                      </button>
-                    ) : <span />}
-                  </div>
-                </div>
-              )}
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
-    </div>
-  )
-}
-
 const sites = [
   { name: 'Gabriel Valdivia', site: 'gabrielvaldivia.com', href: 'https://www.gabrielvaldivia.com/', img: 'https://pub-0c00865d02c1476494008dbb74525b2a.r2.dev/favicon.png' },
   { name: 'Eryc', site: 'eryc.cc', href: 'https://eryc.cc/', img: 'https://eryc.cc/favicon.svg' },
@@ -1205,7 +981,7 @@ function SitesPage({ note, onBack }) {
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={onBack} aria-label="Back">
-          <BackArrow width={16} height={16} strokeWidth={1.75} />
+          <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         <div className="sites-rows">
@@ -1230,778 +1006,12 @@ function SitesPage({ note, onBack }) {
 }
 
 
-const WC_FILTER = (seed = 2) => (
-  <defs>
-    <filter id={`wc${seed}`} x="-10%" y="-10%" width="120%" height="120%">
-      <feTurbulence baseFrequency="0.04" numOctaves="3" seed={seed} result="n" />
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="3" />
-    </filter>
-  </defs>
-)
-
-const FLOWERS = [
-  {
-    id: 'clematis',
-    name: 'Clematis',
-    size: 100,
-    render: () => (
-      <svg viewBox="-10 -10 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(2)}
-        <g filter="url(#wc2)">
-          {[0, 60, 120, 180, 240, 300].map((a, i) => (
-            <g key={i} transform={`rotate(${a} 50 50)`}>
-              <ellipse cx="50" cy="22" rx="14" ry="26" fill={i % 2 === 0 ? '#d4a574' : '#c9a0b4'} opacity="0.75" />
-              <ellipse cx="52" cy="25" rx="10" ry="20" fill="#e8d4b8" opacity="0.35" />
-            </g>
-          ))}
-          <circle cx="50" cy="50" r="8" fill="#c4956a" opacity="0.7" />
-          <circle cx="50" cy="50" r="4" fill="#a67c52" opacity="0.5" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'buttercup',
-    name: 'Buttercup',
-    size: 56,
-    render: () => (
-      <svg viewBox="-8 -8 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(3)}
-        <g filter="url(#wc3)">
-          {[0, 72, 144, 216, 288].map((a, i) => (
-            <g key={i} transform={`rotate(${a} 28 28)`}>
-              <ellipse cx="28" cy="14" rx="9" ry="13" fill="#e0b832" opacity="0.8" />
-              <ellipse cx="29" cy="15" rx="7" ry="10" fill="#f0d060" opacity="0.45" />
-            </g>
-          ))}
-          <circle cx="28" cy="28" r="5" fill="#8b7320" opacity="0.6" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'pansy',
-    name: 'Pansy',
-    size: 72,
-    render: () => (
-      <svg viewBox="-8 -8 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(4)}
-        <g filter="url(#wc4)">
-          <ellipse cx="28" cy="20" rx="14" ry="16" fill="#5c3d6e" opacity="0.8" transform="rotate(-12 28 20)" />
-          <ellipse cx="44" cy="20" rx="14" ry="16" fill="#6b4d7e" opacity="0.75" transform="rotate(12 44 20)" />
-          <ellipse cx="20" cy="38" rx="12" ry="14" fill="#7a5a8e" opacity="0.65" transform="rotate(-8 20 38)" />
-          <ellipse cx="52" cy="38" rx="12" ry="14" fill="#7a5a8e" opacity="0.65" transform="rotate(8 52 38)" />
-          <ellipse cx="36" cy="50" rx="16" ry="14" fill="#4a2d5e" opacity="0.8" />
-          <circle cx="36" cy="34" r="6" fill="#2d1b3d" opacity="0.5" />
-          <circle cx="36" cy="34" r="3" fill="#e8c840" opacity="0.45" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'hydrangea',
-    name: 'Hydrangea',
-    size: 48,
-    render: () => (
-      <svg viewBox="-8 -8 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(5)}
-        <g filter="url(#wc5)">
-          {[0, 90, 180, 270].map((a, i) => (
-            <g key={i} transform={`rotate(${a} 24 24)`}>
-              <ellipse cx="24" cy="12" rx="9" ry="11" fill="#c4889e" opacity="0.7" />
-              <ellipse cx="25" cy="13" rx="7" ry="8" fill="#d4a0b4" opacity="0.35" />
-            </g>
-          ))}
-          <circle cx="24" cy="24" r="3" fill="#a06878" opacity="0.55" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'lace',
-    name: 'Queen Anne\'s Lace',
-    size: 64,
-    render: () => {
-      const dots = []
-      for (let ring = 0; ring < 3; ring++) {
-        const count = ring === 0 ? 5 : ring === 1 ? 8 : 12
-        const r = ring === 0 ? 4 : ring === 1 ? 11 : 20
-        for (let i = 0; i < count; i++) {
-          const angle = (i / count) * Math.PI * 2 + ring * 0.3
-          dots.push({ cx: 32 + Math.cos(angle) * r, cy: 32 + Math.sin(angle) * r, r: 2.5 - ring * 0.3, o: 0.85 - ring * 0.08 })
-        }
-      }
-      return (
-        <svg viewBox="-8 -8 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {WC_FILTER(6)}
-          <g filter="url(#wc6)">
-            {dots.map((d, i) => <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill="#c4b896" opacity={d.o} />)}
-          </g>
-        </svg>
-      )
-    },
-  },
-  {
-    id: 'rose',
-    name: 'Rose Petal',
-    size: 60,
-    render: () => (
-      <svg viewBox="-8 -8 76 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(7)}
-        <g filter="url(#wc7)">
-          <ellipse cx="30" cy="28" rx="22" ry="26" fill="#c45a6a" opacity="0.65" />
-          <ellipse cx="32" cy="26" rx="18" ry="22" fill="#d47a8a" opacity="0.35" />
-          <ellipse cx="28" cy="30" rx="16" ry="20" fill="#b44a5a" opacity="0.25" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'fan-leaf',
-    name: 'Fan Leaf',
-    size: 64,
-    render: () => (
-      <svg viewBox="-8 -8 80 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(8)}
-        <g filter="url(#wc8)">
-          {[-28, -14, 0, 14, 28].map((a, i) => (
-            <g key={i} transform={`rotate(${a} 32 62)`}>
-              <ellipse cx="32" cy="30" rx="9" ry="28" fill="#7a8c6a" opacity={0.55 + i * 0.04} />
-            </g>
-          ))}
-          <line x1="32" y1="50" x2="32" y2="72" stroke="#6a7c5a" strokeWidth="2" opacity="0.5" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'clover',
-    name: 'Clover Leaf',
-    size: 52,
-    render: () => (
-      <svg viewBox="-8 -8 68 76" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(9)}
-        <g filter="url(#wc9)">
-          <ellipse cx="26" cy="16" rx="12" ry="14" fill="#6a7a5a" opacity="0.65" />
-          <ellipse cx="16" cy="30" rx="12" ry="12" fill="#7a8a6a" opacity="0.6" />
-          <ellipse cx="36" cy="30" rx="12" ry="12" fill="#6a8060" opacity="0.65" />
-          <line x1="26" y1="38" x2="26" y2="58" stroke="#5a6a4a" strokeWidth="2" opacity="0.5" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'daisy',
-    name: 'Daisy',
-    size: 64,
-    render: () => (
-      <svg viewBox="-8 -8 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(10)}
-        <g filter="url(#wc10)">
-          {[0, 45, 90, 135, 180, 225, 270, 315].map((a, i) => (
-            <g key={i} transform={`rotate(${a} 32 32)`}>
-              <ellipse cx="32" cy="14" rx="6" ry="14" fill="#f0ece4" opacity="0.85" />
-              <ellipse cx="33" cy="15" rx="4" ry="11" fill="#fff" opacity="0.4" />
-            </g>
-          ))}
-          <circle cx="32" cy="32" r="8" fill="#e8c840" opacity="0.8" />
-          <circle cx="32" cy="32" r="5" fill="#d4b030" opacity="0.5" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'lavender',
-    name: 'Lavender',
-    size: 60,
-    render: () => (
-      <svg viewBox="-8 -8 56 86" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(11)}
-        <g filter="url(#wc11)">
-          {[0, 6, 12, 18, 24, 30].map((y, i) => (
-            <g key={i}>
-              <ellipse cx={18 + (i % 2 === 0 ? -2 : 2)} cy={8 + y * 1.4} rx="6" ry="4" fill="#9878b0" opacity={0.7 - i * 0.04} />
-              <ellipse cx={22 + (i % 2 === 0 ? 2 : -2)} cy={8 + y * 1.4} rx="6" ry="4" fill="#b090c8" opacity={0.5 - i * 0.03} />
-            </g>
-          ))}
-          <line x1="20" y1="48" x2="20" y2="70" stroke="#6a7c5a" strokeWidth="1.5" opacity="0.5" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'forget-me-not',
-    name: 'Forget-me-not',
-    size: 40,
-    render: () => (
-      <svg viewBox="-8 -8 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(12)}
-        <g filter="url(#wc12)">
-          {[0, 72, 144, 216, 288].map((a, i) => (
-            <g key={i} transform={`rotate(${a} 20 20)`}>
-              <ellipse cx="20" cy="10" rx="7" ry="8" fill="#7aaad4" opacity="0.75" />
-              <ellipse cx="21" cy="11" rx="5" ry="6" fill="#a0c4e0" opacity="0.4" />
-            </g>
-          ))}
-          <circle cx="20" cy="20" r="4" fill="#e8d860" opacity="0.7" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'poppy',
-    name: 'Poppy',
-    size: 80,
-    render: () => (
-      <svg viewBox="-10 -10 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(13)}
-        <g filter="url(#wc13)">
-          {[0, 72, 144, 216, 288].map((a, i) => (
-            <g key={i} transform={`rotate(${a} 40 40)`}>
-              <ellipse cx="40" cy="18" rx="16" ry="20" fill="#d45030" opacity="0.7" />
-              <ellipse cx="42" cy="20" rx="12" ry="16" fill="#e07050" opacity="0.35" />
-            </g>
-          ))}
-          <circle cx="40" cy="40" r="7" fill="#1a1a1a" opacity="0.5" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'cherry-blossom',
-    name: 'Cherry Blossom',
-    size: 52,
-    render: () => (
-      <svg viewBox="-8 -8 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(14)}
-        <g filter="url(#wc14)">
-          {[0, 72, 144, 216, 288].map((a, i) => (
-            <g key={i} transform={`rotate(${a} 26 26)`}>
-              <ellipse cx="26" cy="12" rx="9" ry="12" fill="#f0b8c8" opacity="0.75" />
-              <ellipse cx="27" cy="13" rx="6" ry="9" fill="#f8d0dc" opacity="0.4" />
-            </g>
-          ))}
-          <circle cx="26" cy="26" r="4" fill="#c87090" opacity="0.6" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'fern',
-    name: 'Fern',
-    size: 64,
-    render: () => (
-      <svg viewBox="-8 -8 56 86" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(15)}
-        <g filter="url(#wc15)">
-          <line x1="20" y1="5" x2="20" y2="68" stroke="#5a7a4a" strokeWidth="1.5" opacity="0.6" />
-          {[0, 1, 2, 3, 4, 5, 6, 7].map(i => (
-            <g key={i}>
-              <ellipse cx={12} cy={10 + i * 8} rx="8" ry="3" fill="#6a8c5a" opacity={0.6 - i * 0.03} transform={`rotate(${-20 + i * 2} 12 ${10 + i * 8})`} />
-              <ellipse cx={28} cy={10 + i * 8} rx="8" ry="3" fill="#7a9c6a" opacity={0.55 - i * 0.03} transform={`rotate(${20 - i * 2} 28 ${10 + i * 8})`} />
-            </g>
-          ))}
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'eucalyptus',
-    name: 'Eucalyptus',
-    size: 48,
-    render: () => (
-      <svg viewBox="-8 -8 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {WC_FILTER(16)}
-        <g filter="url(#wc16)">
-          <ellipse cx="24" cy="24" rx="18" ry="20" fill="#8aaa9a" opacity="0.6" />
-          <ellipse cx="26" cy="22" rx="14" ry="16" fill="#a0c0b0" opacity="0.35" />
-          <line x1="24" y1="32" x2="24" y2="48" stroke="#6a8a7a" strokeWidth="1.5" opacity="0.5" />
-        </g>
-      </svg>
-    ),
-  },
-  {
-    id: 'baby-breath',
-    name: 'Baby\'s Breath',
-    size: 56,
-    render: () => {
-      const dots = []
-      for (let i = 0; i < 18; i++) {
-        const angle = (i / 18) * Math.PI * 2 + (i % 3) * 0.5
-        const r = 5 + (i % 3) * 7
-        dots.push({ cx: 28 + Math.cos(angle) * r, cy: 28 + Math.sin(angle) * r, r: 2.2 + (i % 3) * 0.5, o: 0.8 + (i % 3) * 0.06 })
-      }
-      return (
-        <svg viewBox="-8 -8 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {WC_FILTER(17)}
-          <g filter="url(#wc17)">
-            {dots.map((d, i) => <circle key={i} cx={d.cx} cy={d.cy} r={d.r} fill="#d4cfc4" opacity={d.o} />)}
-            {dots.filter((_, i) => i % 3 === 0).map((d, i) => (
-              <line key={`s${i}`} x1="28" y1="28" x2={d.cx} y2={d.cy} stroke="#8a9a7a" strokeWidth="0.6" opacity="0.4" />
-            ))}
-          </g>
-        </svg>
-      )
-    },
-  },
-]
-
-let flowerId = 0
-
-const PAPER_COLORS = [
-  { id: 'cream', name: 'Cream', color: '#F7F6F2' },
-  { id: 'white', name: 'White', color: '#FFFFFF' },
-  { id: 'kraft', name: 'Kraft', color: '#d4c4a8' },
-  { id: 'blush', name: 'Blush', color: '#f0ddd5' },
-  { id: 'sage', name: 'Sage', color: '#d5dcd2' },
-  { id: 'slate', name: 'Slate', color: '#d0d3d6' },
-]
-
-function BookmarkThumb({ bookmark }) {
-  const bg = PAPER_COLORS.find(p => p.id === bookmark.paper)?.color || '#F7F6F2'
-  return (
-    <div className="bookmark-thumb" style={{ background: bg }}>
-      {bookmark.flowers.map((f, i) => {
-        const type = FLOWERS.find(t => t.id === f.type)
-        if (!type) return null
-        return (
-          <div key={i} style={{
-            position: 'absolute',
-            left: `${f.x}%`,
-            top: `${f.y}%`,
-            width: type.size * 0.45,
-            height: type.size * 0.45,
-            transform: `translate(-50%, -50%) rotate(${f.rotation}deg) scale(${f.scale})${f.flipped ? ' scaleX(-1)' : ''}`,
-          }}>
-            {type.render()}
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
-function FlowersPage({ note, onBack }) {
-  const [placed, setPlaced] = useState([])
-  const [selectedId, setSelectedId] = useState(null)
-  const [paperColor, setPaperColor] = useState('cream')
-  const [hoverImg, setHoverImg] = useState(false)
-  const [pipOpen, setPipOpen] = useState(false)
-  const canvasRef = useRef(null)
-  const dragRef = useRef(null)
-  const imgRef = useRef(null)
-  const imgMouse = useRef({ x: 0, y: 0 })
-  const imgPos = useRef({ x: 0, y: 0 })
-  const imgRaf = useRef(null)
-  const pipX = useMotionValue(0)
-  const pipY = useMotionValue(0)
-
-  useEffect(() => {
-    const onKey = (e) => {
-      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId) {
-        e.preventDefault()
-        removeFlower(selectedId)
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [selectedId])
-
-  const isMobile = window.matchMedia('(max-width: 1250px)').matches
-
-  useEffect(() => {
-    const img = new Image()
-    img.src = '/bookmark.png'
-  }, [])
-
-  useEffect(() => {
-    if (isMobile || !hoverImg) {
-      if (imgRaf.current) { cancelAnimationFrame(imgRaf.current); imgRaf.current = null }
-      return
-    }
-    const lerp = 0.15
-    const tick = () => {
-      imgPos.current.x += (imgMouse.current.x - imgPos.current.x) * lerp
-      imgPos.current.y += (imgMouse.current.y - imgPos.current.y) * lerp
-      if (imgRef.current) {
-        imgRef.current.style.left = `${imgPos.current.x + 16}px`
-        imgRef.current.style.top = `${imgPos.current.y}px`
-      }
-      imgRaf.current = requestAnimationFrame(tick)
-    }
-    imgRaf.current = requestAnimationFrame(tick)
-    return () => { if (imgRaf.current) cancelAnimationFrame(imgRaf.current) }
-  }, [hoverImg])
-
-  const onHoverEnter = (e) => {
-    if (isMobile) return
-    imgMouse.current = { x: e.clientX, y: e.clientY }
-    imgPos.current = { x: e.clientX, y: e.clientY }
-    setHoverImg(true)
-  }
-  const onHoverMove = (e) => { imgMouse.current = { x: e.clientX, y: e.clientY } }
-  const onHoverLeave = () => setHoverImg(false)
-
-  const getPipCorners = () => {
-    const pad = 16, w = 180, h = 140
-    const vw = window.innerWidth, vh = window.innerHeight
-    return [
-      { x: pad, y: pad },
-      { x: vw - w - pad, y: pad },
-      { x: pad, y: vh - h - pad },
-      { x: vw - w - pad, y: vh - h - pad },
-    ]
-  }
-
-  const snapPipToCorner = (cx, cy) => {
-    const corners = getPipCorners()
-    let closest = corners[0], best = Infinity
-    for (const c of corners) {
-      const d = Math.hypot(cx - c.x, cy - c.y)
-      if (d < best) { best = d; closest = c }
-    }
-    const spring = { type: 'spring', stiffness: 400, damping: 30 }
-    motionAnimate(pipX, closest.x, spring)
-    motionAnimate(pipY, closest.y, spring)
-  }
-
-  const onTriggerTap = () => {
-    if (!isMobile) return
-    if (pipOpen) { setPipOpen(false); return }
-    const pad = 16
-    const startX = window.innerWidth - 180 - pad
-    pipX.set(startX)
-    pipY.set(pad)
-    setPipOpen(true)
-  }
-
-  const onPipDragEnd = (_, info) => {
-    const elX = pipX.get() + info.velocity.x * 0.12
-    const elY = pipY.get() + info.velocity.y * 0.12
-    snapPipToCorner(elX, elY)
-  }
-
-  const addFlower = (typeId) => {
-    const type = FLOWERS.find(f => f.id === typeId)
-    const id = ++flowerId
-    setPlaced(prev => [...prev, {
-      id,
-      type: typeId,
-      x: 40 + Math.random() * 20,
-      y: 35 + Math.random() * 20,
-      rotation: Math.round(Math.random() * 360),
-      scale: 1,
-      flipped: false,
-    }])
-    setSelectedId(id)
-  }
-
-  const updateFlower = (id, updater) => {
-    setPlaced(prev => prev.map(f => f.id === id ? { ...f, ...updater(f) } : f))
-  }
-
-  const removeFlower = (id) => {
-    setPlaced(prev => prev.filter(f => f.id !== id))
-    setSelectedId(null)
-  }
-
-  const bringToFront = (id) => {
-    setPlaced(prev => {
-      const flower = prev.find(f => f.id === id)
-      if (!flower) return prev
-      return [...prev.filter(f => f.id !== id), flower]
-    })
-  }
-
-  const pinchRef = useRef(null)
-  const lastTapRef = useRef({ id: null, time: 0 })
-
-  const onDoubleTap = (flower) => {
-    const now = Date.now()
-    const last = lastTapRef.current
-    if (last.id === flower.id && now - last.time < 300) {
-      removeFlower(flower.id)
-      lastTapRef.current = { id: null, time: 0 }
-      return
-    }
-    lastTapRef.current = { id: flower.id, time: now }
-  }
-
-  const onPointerDown = (e, flower) => {
-    e.preventDefault()
-    e.stopPropagation()
-    e.currentTarget.setPointerCapture(e.pointerId)
-    bringToFront(flower.id)
-    setSelectedId(flower.id)
-    const canvas = canvasRef.current
-    const rect = canvas.getBoundingClientRect()
-    dragRef.current = {
-      id: flower.id,
-      originX: flower.x,
-      originY: flower.y,
-      startX: e.clientX,
-      startY: e.clientY,
-      w: rect.width,
-      h: rect.height,
-      moved: false,
-    }
-  }
-
-  const onResizeDown = (e, flower) => {
-    e.preventDefault()
-    e.stopPropagation()
-    e.currentTarget.setPointerCapture(e.pointerId)
-    const canvas = canvasRef.current
-    const rect = canvas.getBoundingClientRect()
-    const type = FLOWERS.find(f => f.id === flower.type)
-    const cx = rect.left + (flower.x / 100) * rect.width
-    const cy = rect.top + (flower.y / 100) * rect.height
-    const startDist = Math.hypot(e.clientX - cx, e.clientY - cy)
-    dragRef.current = {
-      resize: true,
-      id: flower.id,
-      originScale: flower.scale,
-      startDist,
-      baseSize: type.size,
-    }
-  }
-
-  const onRotateDown = (e, flower) => {
-    e.preventDefault()
-    e.stopPropagation()
-    e.currentTarget.setPointerCapture(e.pointerId)
-    const canvas = canvasRef.current
-    const rect = canvas.getBoundingClientRect()
-    const cx = rect.left + (flower.x / 100) * rect.width
-    const cy = rect.top + (flower.y / 100) * rect.height
-    const startAngle = Math.atan2(e.clientY - cy, e.clientX - cx) * (180 / Math.PI)
-    dragRef.current = {
-      rotate: true,
-      id: flower.id,
-      originRotation: flower.rotation,
-      startAngle,
-      cx, cy,
-    }
-  }
-
-  const onPointerMove = (e) => {
-    const d = dragRef.current
-    if (!d) return
-    if (d.resize) {
-      const flower = placed.find(f => f.id === d.id)
-      if (!flower) return
-      const canvas = canvasRef.current
-      const rect = canvas.getBoundingClientRect()
-      const cx = rect.left + (flower.x / 100) * rect.width
-      const cy = rect.top + (flower.y / 100) * rect.height
-      const dist = Math.hypot(e.clientX - cx, e.clientY - cy)
-      const ratio = dist / d.startDist
-      const scale = Math.max(0.3, Math.min(2.5, d.originScale * ratio))
-      setPlaced(prev => prev.map(f => f.id === d.id ? { ...f, scale } : f))
-      return
-    }
-    if (d.rotate) {
-      const angle = Math.atan2(e.clientY - d.cy, e.clientX - d.cx) * (180 / Math.PI)
-      const rotation = Math.round(d.originRotation + (angle - d.startAngle))
-      setPlaced(prev => prev.map(f => f.id === d.id ? { ...f, rotation } : f))
-      return
-    }
-    const dx = ((e.clientX - d.startX) / d.w) * 100
-    const dy = ((e.clientY - d.startY) / d.h) * 100
-    if (Math.abs(dx) > 1 || Math.abs(dy) > 1) d.moved = true
-    const x = Math.max(5, Math.min(95, d.originX + dx))
-    const y = Math.max(5, Math.min(95, d.originY + dy))
-    setPlaced(prev => prev.map(f => f.id === d.id ? { ...f, x, y } : f))
-  }
-
-  const onPointerUp = () => {
-    const d = dragRef.current
-    if (d && !d.resize && !d.rotate && !d.moved) {
-      const flower = placed.find(f => f.id === d.id)
-      if (flower) onDoubleTap(flower)
-    }
-    dragRef.current = null
-  }
-
-  const onTouchStart = (e, flower) => {
-    if (e.touches.length === 2) {
-      e.preventDefault()
-      const dx = e.touches[0].clientX - e.touches[1].clientX
-      const dy = e.touches[0].clientY - e.touches[1].clientY
-      const dist = Math.hypot(dx, dy)
-      const angle = Math.atan2(dy, dx) * (180 / Math.PI)
-      pinchRef.current = { id: flower.id, startDist: dist, originScale: flower.scale, startAngle: angle, originRotation: flower.rotation }
-      dragRef.current = null
-    }
-  }
-
-  const onTouchMove = (e) => {
-    const p = pinchRef.current
-    if (!p || e.touches.length !== 2) return
-    e.preventDefault()
-    const dx = e.touches[0].clientX - e.touches[1].clientX
-    const dy = e.touches[0].clientY - e.touches[1].clientY
-    const dist = Math.hypot(dx, dy)
-    const angle = Math.atan2(dy, dx) * (180 / Math.PI)
-    const scale = Math.max(0.3, Math.min(2.5, p.originScale * (dist / p.startDist)))
-    const rotation = Math.round(p.originRotation + (angle - p.startAngle))
-    setPlaced(prev => prev.map(f => f.id === p.id ? { ...f, scale, rotation } : f))
-  }
-
-  const onTouchEnd = () => {
-    pinchRef.current = null
-  }
-
-  const selected = placed.find(f => f.id === selectedId)
-
-  return (
-    <div className="page" onClick={isMobile && selectedId ? () => setSelectedId(null) : undefined}>
-      <div className="page-content" style={{ paddingTop: '156px' }}>
-        <button className="back-btn" onClick={onBack} aria-label="Back">
-          <BackArrow width={16} height={16} strokeWidth={1.75} />
-        </button>
-        <h1 className="page-heading">{note?.title}</h1>
-        {note?.date && <p className="note-date">{note.date}</p>}
-        <p className="note-body">In 2021, I was house and cat sitting for some family members. They went to Asia for a few weeks, making stops in Japan and Taiwan. On their dining table they had these hand made <span className="hover-trigger" onMouseEnter={onHoverEnter} onMouseMove={onHoverMove} onMouseLeave={onHoverLeave} onClick={onTriggerTap}>pressed flower bookmarks</span> that I thought were extremely beautiful. Now I'm not the most active book reader. When I do read physical books they tend to be more visual. Things like fashion, architecture, or comics. I wanted to make something that reminded me of these bookmarks.</p>
-        {isMobile ? (
-          <AnimatePresence>
-            {pipOpen && (
-              <motion.div
-                key="pip"
-                className="quote-avatar visible"
-                style={{ position: 'fixed', top: 0, left: 0, x: pipX, y: pipY, pointerEvents: 'auto' }}
-                drag
-                dragElastic={0.18}
-                dragMomentum={false}
-                onDragEnd={onPipDragEnd}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.2 }}
-              >
-                <img src="/bookmark.png" alt="" className="quote-avatar-img" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        ) : hoverImg && (
-          <div ref={imgRef} className="quote-avatar visible" style={{ left: imgPos.current.x + 16, top: imgPos.current.y }}>
-            <img src="/bookmark.png" alt="" className="quote-avatar-img" />
-          </div>
-        )}
-
-        <div className="flower-composer">
-          <div className="flower-top-bar">
-            <div className="flower-paper-swatches">
-              {PAPER_COLORS.map(p => (
-                <button
-                  key={p.id}
-                  className={`flower-paper-swatch${paperColor === p.id ? ' active' : ''}`}
-                  style={{ background: p.color }}
-                  onClick={() => setPaperColor(p.id)}
-                  aria-label={p.name}
-                  title={p.name}
-                />
-              ))}
-            </div>
-            <div className="flower-actions-row">
-              <button onClick={() => { setPlaced([]); setSelectedId(null) }}>Clear</button>
-            </div>
-          </div>
-          <div className="flower-canvas-wrap">
-            <div
-              className="flower-canvas"
-              ref={canvasRef}
-              style={{ background: PAPER_COLORS.find(p => p.id === paperColor)?.color }}
-              onPointerMove={onPointerMove}
-              onPointerUp={onPointerUp}
-              onClick={() => setSelectedId(null)}
-            >
-              {placed.map((flower) => {
-                const type = FLOWERS.find(f => f.id === flower.type)
-                return (
-                  <div
-                    key={flower.id}
-                    className={`placed-flower${selectedId === flower.id ? ' selected' : ''}`}
-                    style={{
-                      left: `${flower.x}%`,
-                      top: `${flower.y}%`,
-                      width: type.size,
-                      height: type.size,
-                      transform: `translate(-50%, -50%) rotate(${flower.rotation}deg) scale(${flower.scale})${flower.flipped ? ' scaleX(-1)' : ''}`,
-                    }}
-                    onPointerDown={(e) => onPointerDown(e, flower)}
-                    onTouchStart={(e) => onTouchStart(e, flower)}
-                    onTouchMove={onTouchMove}
-                    onTouchEnd={onTouchEnd}
-                    onClick={(e) => { e.stopPropagation(); setSelectedId(flower.id) }}
-                  >
-                    {type.render()}
-                  </div>
-                )
-              })}
-              {selected && (() => {
-                const type = FLOWERS.find(f => f.id === selected.type)
-                const half = (type.size * selected.scale) / 2 + 6
-                const corners = [[-1, -1], [1, -1], [1, 1], [-1, 1]]
-                const rotateOffset = half + 20
-                return <>
-                  {corners.map(([cx, cy], i) => (
-                    <div
-                      key={`handle-${i}`}
-                      className="flower-resize-handle"
-                      style={{
-                        left: `${selected.x}%`,
-                        top: `${selected.y}%`,
-                        marginLeft: cx * half,
-                        marginTop: cy * half,
-                        cursor: i % 2 === 0 ? 'nwse-resize' : 'nesw-resize',
-                      }}
-                      onPointerDown={(e) => onResizeDown(e, selected)}
-                    />
-                  ))}
-                  <button
-                    className="flower-rotate-handle"
-                    style={{
-                      left: `${selected.x}%`,
-                      top: `${selected.y}%`,
-                      marginTop: -rotateOffset - 12,
-                    }}
-                    onPointerDown={(e) => onRotateDown(e, selected)}
-                    aria-label="Rotate"
-                  ><Redo width={12} height={12} strokeWidth={1.75} /></button>
-                </>
-              })()}
-            </div>
-
-            <div className="flower-sidebar">
-              <div className="flower-palette">
-                {FLOWERS.map(f => {
-                  const count = placed.filter(p => p.type === f.id).length
-                  return (
-                    <button key={f.id} className="flower-palette-item" onClick={() => addFlower(f.id)}>
-                      <span className="flower-palette-preview">
-                        {f.render()}
-                        {count > 0 && <span className="flower-palette-count">{count}</span>}
-                      </span>
-                      <span className="flower-palette-label">{f.name}</span>
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function AudioPage({ note, onBack }) {
   return (
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={onBack} aria-label="Back">
-          <BackArrow width={16} height={16} strokeWidth={1.75} />
+          <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         {note?.date && <p className="note-date">{note.date}</p>}
@@ -2035,7 +1045,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
       <TopFade />
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={onBack || (() => setPage('home'))} aria-label="Back">
-          <BackArrow width={16} height={16} strokeWidth={1.75} />
+          <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading music-heading">Music</h1>
         <div className="music-col-headers">
@@ -2093,7 +1103,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
             }
             requestAnimationFrame(step)
           }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V6M5 12l7-7 7 7"/></svg>
+            <ArrowUpIcon width={16} height={16} strokeWidth={1.75} />
           </button>
           <div className="music-scroll-fade" />
         </div>
@@ -2107,7 +1117,7 @@ function GamingPage({ note, onBack }) {
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
         <button className="back-btn" onClick={onBack} aria-label="Back">
-          <BackArrow width={16} height={16} strokeWidth={1.75} />
+          <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         {note?.date && <p className="note-date">{note.date}</p>}
@@ -2134,21 +1144,6 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
     )
   }
 
-  if (activeNote?.type === 'manga') {
-    return (
-      <div key={activeNote.title} className="page-transition">
-        <MangaPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} setPage={setPage} />
-      </div>
-    )
-  }
-
-  if (activeNote?.type === 'flowers') {
-    return (
-      <div key={activeNote.title} className="page-transition">
-        <FlowersPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
-      </div>
-    )
-  }
 
   if (activeNote?.type === 'audio') {
     return (
@@ -2344,7 +1339,6 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    mangaCovers.forEach(c => { const img = new Image(); img.src = c.src })
     sites.forEach(s => { if (s.img) { const img = new Image(); img.src = s.img } })
   }, [])
 
