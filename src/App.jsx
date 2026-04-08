@@ -588,7 +588,7 @@ const writings = [
     type: 'music',
   },
   {
-    title: 'Cracked design people',
+    title: 'High craft individuals',
     category: 'Collection',
     type: 'sites',
     sections: [],
