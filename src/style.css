@@ -1417,6 +1417,38 @@ img.note-image-placeholder {
   background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
 }
 
+.music-top-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  padding: 8px;
+  border-radius: 50%;
+  margin: 24px auto 0;
+  color: var(--light);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.music-top-btn::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  min-width: 40px;
+  min-height: 40px;
+}
+@media (hover: hover) and (min-width: 1251px) {
+  .music-top-btn {
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .music-top-btn:hover {
+    color: var(--dark);
+    background: rgba(0, 0, 0, 0.08);
+  }
+}
+
 .music-scroll-fade {
   position: fixed;
   bottom: 0;
