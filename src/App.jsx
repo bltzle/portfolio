@@ -2071,7 +2071,8 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
             </div>
           )}
           <button className="music-top-btn" aria-label="Scroll to top" onClick={() => {
-            const start = window.scrollY
+            const el = document.querySelector('.music-page') || document.documentElement
+            const start = el.scrollTop || window.scrollY
             if (!start) return
             const duration = Math.min(800, 300 + start * 0.15)
             let startTime = null
@@ -2079,7 +2080,9 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
             const step = ts => {
               if (!startTime) startTime = ts
               const p = Math.min((ts - startTime) / duration, 1)
-              window.scrollTo(0, start * (1 - ease(p)))
+              const val = start * (1 - ease(p))
+              el.scrollTop = val
+              window.scrollTo(0, val)
               if (p < 1) requestAnimationFrame(step)
             }
             requestAnimationFrame(step)
