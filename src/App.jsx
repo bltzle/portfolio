@@ -65,6 +65,7 @@ async function exchangeCode(code) {
 let _audioCtx = null, _audioFilter = null, _audioGain = null
 
 function playClick(intensity = 0.4) {
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return
   if (!_audioCtx) {
     _audioCtx = new AudioContext()
     _audioFilter = _audioCtx.createBiquadFilter()
