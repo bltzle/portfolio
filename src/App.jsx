@@ -1139,7 +1139,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
               transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
               <div className="music-info-header">
-                <h2>About</h2>
+                <h2>How this list works</h2>
                 <button className="music-info-close" onClick={() => setShowInfo(false)} aria-label="Close">
                   <XMarkIcon width={18} height={18} strokeWidth={1.75} />
                 </button>

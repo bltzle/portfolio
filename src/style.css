@@ -946,8 +946,8 @@ img.note-image-placeholder {
 
 .music-info-header h2 {
   font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--dark);
   margin: 0;
 }
