@@ -1023,6 +1023,7 @@ function AudioPage({ note, onBack }) {
 }
 
 function MusicPage({ setPage, tracks, loading, onBack }) {
+  const [view, setView] = useState('list')
   const [sort, setSort] = useState({ col: null, dir: null })
   const cycleSort = (col) => setSort(s => {
     if (col === 'played') return s.col === 'played' ? { col: null, dir: null } : { col, dir: 'asc' }
@@ -1044,27 +1045,39 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
     <div className="music-page page-transition">
       <TopFade />
       <div className="page-content" style={{ paddingTop: '156px' }}>
-        <button className="back-btn" onClick={onBack || (() => setPage('home'))} aria-label="Back">
-          <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
-        </button>
-        <h1 className="page-heading music-heading">Music</h1>
-        <div className="music-col-headers">
-          {!loading && tracks.length > 0 && (
-            <div className="music-col-headers-row">
-              {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
-                <button key={col} onClick={() => cycleSort(col)} style={{ color: sort.col === col ? 'var(--dark)' : '' }}>
-                  {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
-                </button>
-              ))}
-            </div>
-          )}
+        <div className="music-toolbar">
+          <button className="back-btn" onClick={onBack || (() => setPage('home'))} aria-label="Back">
+            <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
+          </button>
+          <div className="music-view-toggle">
+            <button className={`music-view-btn${view === 'list' ? ' active' : ''}`} aria-label="List view" onClick={() => setView('list')}>
+              <svg width={16} height={16} fill="currentColor" viewBox="0 0 16 16"><path clipRule="evenodd" d="M2 3.75A.75.75 0 0 1 2.75 3h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 3.75ZM2 8a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 8Zm0 4.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" fillRule="evenodd" /></svg>
+            </button>
+            <button className={`music-view-btn${view === 'grid' ? ' active' : ''}`} aria-label="Grid view" onClick={() => setView('grid')}>
+              <svg width={16} height={16} fill="currentColor" viewBox="0 0 16 16"><path d="M3.5 2A1.5 1.5 0 0 0 2 3.5v2A1.5 1.5 0 0 0 3.5 7h2A1.5 1.5 0 0 0 7 5.5v-2A1.5 1.5 0 0 0 5.5 2h-2ZM3.5 9A1.5 1.5 0 0 0 2 10.5v2A1.5 1.5 0 0 0 3.5 14h2A1.5 1.5 0 0 0 7 12.5v-2A1.5 1.5 0 0 0 5.5 9h-2ZM9 3.5A1.5 1.5 0 0 1 10.5 2h2A1.5 1.5 0 0 1 14 3.5v2A1.5 1.5 0 0 1 12.5 7h-2A1.5 1.5 0 0 1 9 5.5v-2ZM10.5 9A1.5 1.5 0 0 0 9 10.5v2a1.5 1.5 0 0 0 1.5 1.5h2a1.5 1.5 0 0 0 1.5-1.5v-2A1.5 1.5 0 0 0 12.5 9h-2Z" /></svg>
+            </button>
+          </div>
         </div>
+        <h1 className="page-heading music-heading">Music</h1>
+        {view === 'list' && (
+          <div className="music-col-headers">
+            {!loading && tracks.length > 0 && (
+              <div className="music-col-headers-row">
+                {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
+                  <button key={col} onClick={() => cycleSort(col)} style={{ color: sort.col === col ? 'var(--dark)' : '' }}>
+                    {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
         <div className="music-scroll">
           {loading ? (
             <p className="music-empty">Loading...</p>
           ) : tracks.length === 0 && ['localhost', '127.0.0.1'].includes(window.location.hostname) ? (
             <button className="music-connect" onClick={initiateSpotifyAuth}>Connect Spotify</button>
-          ) : (
+          ) : view === 'list' ? (
             <div className="music-rows">
               {displayedTracks.map(({ track, played_at }, i) => (
                 <a key={i} className="music-row" href={track.external_urls.spotify} target="_blank" rel="noreferrer" onMouseEnter={() => playClick(0.4)}>
@@ -1077,6 +1090,18 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
                   </span>
                   <span className="music-artist music-artist-col">{track.artists.map(a => a.name).join(', ')}</span>
                   <span className="music-col-date">{formatDate(played_at)}</span>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <div className="music-grid">
+              {displayedTracks.map(({ track, played_at }, i) => (
+                <a key={i} className="music-grid-card" href={track.external_urls.spotify} target="_blank" rel="noreferrer" onMouseEnter={() => playClick(0.4)}>
+                  {track.album?.images?.[1]?.url && <img src={track.album.images[1].url} alt="" className="music-grid-art" />}
+                  <span className="music-grid-meta">
+                    <span className="music-grid-title">{cleanTitle(track.name)}</span>
+                    <span className="music-grid-artist">{track.artists.map(a => a.name).join(', ')}</span>
+                  </span>
                 </a>
               ))}
             </div>
