@@ -982,9 +982,10 @@ img.note-image-placeholder {
 
 .music-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
   width: 100%;
+  margin-top: 16px;
 }
 
 .music-grid-card {
@@ -992,10 +993,7 @@ img.note-image-placeholder {
   flex-direction: column;
   gap: 10px;
   text-decoration: none;
-  border-radius: 12px;
-  padding: 8px;
-  margin: 0 -8px;
-  transition: opacity 0.15s ease, background 0.15s ease;
+  transition: opacity 0.15s ease;
 }
 
 .music-grid-art {
@@ -1029,9 +1027,6 @@ img.note-image-placeholder {
 }
 
 @media (hover: hover) and (min-width: 1251px) {
-  .music-grid-card:hover {
-    background: var(--hover-bg);
-  }
   .music-grid:has(.music-grid-card:hover) .music-grid-card:not(:hover) {
     opacity: 0.2;
   }
