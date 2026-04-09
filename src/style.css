@@ -917,9 +917,9 @@ img.note-image-placeholder {
 .music-info-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(242, 241, 237, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(242, 241, 237, 0.5);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
   z-index: var(--z-modal);
 }
 
@@ -998,9 +998,26 @@ img.note-image-placeholder {
   display: none;
 }
 
+.music-heading-row {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.music-info-btn-mobile {
+  display: none;
+}
+
 @media (max-width: 480px) {
   .music-heading {
     display: block;
+  }
+  .music-heading-row {
+    display: flex;
+  }
+  .music-info-btn-mobile {
+    display: flex;
   }
 }
 

@@ -1056,7 +1056,12 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
         <button className="back-btn" onClick={onBack || (() => setPage('home'))} aria-label="Back">
           <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
         </button>
-        <h1 className="page-heading music-heading">Music</h1>
+        <div className="music-heading-row">
+          <h1 className="page-heading music-heading">Music</h1>
+          <button className="music-info-btn music-info-btn-mobile" onClick={() => setShowInfo(true)} aria-label="Info">
+            <InformationCircleIcon width={18} height={18} strokeWidth={1.5} />
+          </button>
+        </div>
         <div className="music-col-headers">
           {!loading && tracks.length > 0 && (
             <div className="music-col-headers-row">
