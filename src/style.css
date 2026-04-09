@@ -984,7 +984,7 @@ img.note-image-placeholder {
 
 .music-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
   width: 100%;
 }
@@ -1003,6 +1003,7 @@ img.note-image-placeholder {
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: 8px;
+  box-shadow: var(--shadow);
 }
 
 .music-grid-meta {
