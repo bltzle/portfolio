@@ -91,6 +91,7 @@ function playClick(intensity = 0.4) {
 import ArrowUturnLeftIcon from '@heroicons/react/24/outline/esm/ArrowUturnLeftIcon.js'
 import ArrowUpIcon from '@heroicons/react/24/outline/esm/ArrowUpIcon.js'
 import InformationCircleIcon from '@heroicons/react/24/outline/esm/InformationCircleIcon.js'
+import XMarkIcon from '@heroicons/react/24/outline/esm/XMarkIcon.js'
 
 import { motion, AnimatePresence, useMotionValue, animate as motionAnimate } from 'motion/react'
 
@@ -1025,6 +1026,13 @@ function AudioPage({ note, onBack }) {
 
 function MusicPage({ setPage, tracks, loading, onBack }) {
   const [sort, setSort] = useState({ col: null, dir: null })
+  const [showInfo, setShowInfo] = useState(false)
+  useEffect(() => {
+    if (!showInfo) return
+    const onKey = (e) => { if (e.key === 'Escape') setShowInfo(false) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [showInfo])
   const cycleSort = (col) => setSort(s => {
     if (col === 'played') return s.col === 'played' ? { col: null, dir: null } : { col, dir: 'asc' }
     return s.col !== col ? { col, dir: 'asc' } : s.dir === 'asc' ? { col, dir: 'desc' } : { col: null, dir: null }
@@ -1057,7 +1065,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
                   {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
                 </button>
               ))}
-              <button className="music-info-btn" aria-label="Info">
+              <button className="music-info-btn" aria-label="Info" onClick={() => setShowInfo(true)}>
                 <InformationCircleIcon width={16} height={16} strokeWidth={1.5} />
               </button>
             </div>
@@ -1112,6 +1120,17 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
           <div className="music-scroll-fade" />
         </div>
       </div>
+      {showInfo && (
+        <>
+          <div className="music-info-backdrop" onClick={() => setShowInfo(false)} />
+          <div className="music-info-modal">
+            <button className="music-info-close" onClick={() => setShowInfo(false)} aria-label="Close">
+              <XMarkIcon width={18} height={18} strokeWidth={1.75} />
+            </button>
+            <p>A running log of what I've been listening to, pulled from Spotify. Updated automatically.</p>
+          </div>
+        </>
+      )}
     </div>
   )
 }
