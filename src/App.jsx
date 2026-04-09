@@ -556,10 +556,9 @@ const writings = [
     disabled: true,
   },
   {
-    title: 'Still trying to figure stuff out',
-    category: 'Writing',
-    type: 'figuring-out',
-    date: 'Apr 6, 2026',
+    title: 'Interaction prototypes',
+    category: 'Experiments',
+    type: 'flowers',
     disabled: true,
   },
 ]
