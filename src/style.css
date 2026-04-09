@@ -917,9 +917,9 @@ img.note-image-placeholder {
 .music-info-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(242, 241, 237, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   z-index: var(--z-modal);
 }
 
@@ -930,7 +930,7 @@ img.note-image-placeholder {
   transform: translate(-50%, -50%);
   background: var(--bg);
   border-radius: 16px;
-  padding: 16px 20px 28px;
+  padding: 20px;
   max-width: 400px;
   width: calc(100% - 48px);
   z-index: calc(var(--z-modal) + 1);
