@@ -990,10 +990,6 @@ img.note-image-placeholder {
   color: var(--light);
 }
 
-.music-col-headers-row button:first-child {
-  padding-left: 44px;
-}
-
 .music-col-headers-row button {
   font-family: inherit;
   font-size: inherit;

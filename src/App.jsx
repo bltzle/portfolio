@@ -1084,7 +1084,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
           {!loading && tracks.length > 0 && (
             <div className="music-col-headers-row">
               {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
-                <button key={col} onClick={() => cycleSort(col)} style={{ color: sort.col === col ? 'var(--dark)' : '' }}>
+                <button key={col} onClick={() => cycleSort(col)} style={{ color: sort.col === col ? 'var(--dark)' : '', paddingLeft: col === 'song' ? 44 : 0 }}>
                   {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
                 </button>
               ))}
