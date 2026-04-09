@@ -1462,4 +1462,8 @@ img.note-image-placeholder {
     display: block;
   }
 
+  .notes-group-item {
+    width: 100%;
+  }
+
 }
