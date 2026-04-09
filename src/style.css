@@ -896,6 +896,30 @@ img.note-image-placeholder {
   overflow: clip;
 }
 
+.music-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.music-info-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 8px;
+  margin: -8px;
+  cursor: pointer;
+  color: var(--light);
+  transition: color 0.15s ease;
+}
+
+.music-info-btn:hover {
+  color: var(--dark);
+}
+
 .music-heading {
   padding: 0;
   display: none;

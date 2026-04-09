@@ -90,6 +90,7 @@ function playClick(intensity = 0.4) {
 
 import ArrowUturnLeftIcon from '@heroicons/react/24/outline/esm/ArrowUturnLeftIcon.js'
 import ArrowUpIcon from '@heroicons/react/24/outline/esm/ArrowUpIcon.js'
+import InformationCircleIcon from '@heroicons/react/24/outline/esm/InformationCircleIcon.js'
 
 import { motion, AnimatePresence, useMotionValue, animate as motionAnimate } from 'motion/react'
 
@@ -1044,9 +1045,14 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
     <div className="music-page page-transition">
       <TopFade />
       <div className="page-content" style={{ paddingTop: '156px' }}>
-        <button className="back-btn" onClick={onBack || (() => setPage('home'))} aria-label="Back">
-          <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
-        </button>
+        <div className="music-top-row">
+          <button className="back-btn" onClick={onBack || (() => setPage('home'))} aria-label="Back">
+            <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
+          </button>
+          <button className="music-info-btn" aria-label="Info">
+            <InformationCircleIcon width={18} height={18} strokeWidth={1.5} />
+          </button>
+        </div>
         <h1 className="page-heading music-heading">Music</h1>
         <div className="music-col-headers">
           {!loading && tracks.length > 0 && (
