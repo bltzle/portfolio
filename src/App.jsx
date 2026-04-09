@@ -90,8 +90,6 @@ function playClick(intensity = 0.4) {
 
 import ArrowUturnLeftIcon from '@heroicons/react/24/outline/esm/ArrowUturnLeftIcon.js'
 import ArrowUpIcon from '@heroicons/react/24/outline/esm/ArrowUpIcon.js'
-import InformationCircleIcon from '@heroicons/react/24/outline/esm/InformationCircleIcon.js'
-import XMarkIcon from '@heroicons/react/24/outline/esm/XMarkIcon.js'
 
 import { motion, AnimatePresence, useMotionValue, animate as motionAnimate } from 'motion/react'
 
@@ -1026,13 +1024,6 @@ function AudioPage({ note, onBack }) {
 
 function MusicPage({ setPage, tracks, loading, onBack }) {
   const [sort, setSort] = useState({ col: null, dir: null })
-  const [showInfo, setShowInfo] = useState(false)
-  useEffect(() => {
-    if (!showInfo) return
-    const onKey = (e) => { if (e.key === 'Escape') setShowInfo(false) }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [showInfo])
   const cycleSort = (col) => setSort(s => {
     if (col === 'played') return s.col === 'played' ? { col: null, dir: null } : { col, dir: 'asc' }
     return s.col !== col ? { col, dir: 'asc' } : s.dir === 'asc' ? { col, dir: 'desc' } : { col: null, dir: null }
@@ -1056,12 +1047,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
         <button className="back-btn" onClick={onBack || (() => setPage('home'))} aria-label="Back">
           <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
         </button>
-        <div className="music-heading-row">
-          <h1 className="page-heading music-heading">Music</h1>
-          <button className="music-info-btn music-info-btn-mobile" onClick={() => setShowInfo(true)} aria-label="Info">
-            <InformationCircleIcon width={18} height={18} strokeWidth={1.5} />
-          </button>
-        </div>
+        <h1 className="page-heading music-heading">Music</h1>
         <div className="music-col-headers">
           {!loading && tracks.length > 0 && (
             <div className="music-col-headers-row">
@@ -1070,9 +1056,6 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
                   {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
                 </button>
               ))}
-              <button className="music-info-btn" aria-label="Info" onClick={() => setShowInfo(true)}>
-                <InformationCircleIcon width={16} height={16} strokeWidth={1.5} />
-              </button>
             </div>
           )}
         </div>
@@ -1125,36 +1108,6 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
           <div className="music-scroll-fade" />
         </div>
       </div>
-      <AnimatePresence>
-        {showInfo && (
-          <>
-            <motion.div
-              className="music-info-backdrop"
-              onClick={() => setShowInfo(false)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-            />
-            <motion.div
-              className="music-info-modal"
-              initial={{ opacity: 0, transform: 'translate(-50%, -50%) scale(0.95)' }}
-              animate={{ opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }}
-              exit={{ opacity: 0, transform: 'translate(-50%, -50%) scale(0.95)' }}
-              transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-            >
-              <div className="music-info-header">
-                <h2>How this list works</h2>
-                <button className="music-info-close" onClick={() => setShowInfo(false)} aria-label="Close">
-                  <XMarkIcon width={18} height={18} strokeWidth={1.75} />
-                </button>
-              </div>
-              <p>I love discovering new music and seeing what different pockets of music other people are listening to.</p>
-              <p>This is a running list my music listening history. I tend to listen to certain songs on repeat for extended periods of time so each individual track is documented only once a day in order to combat this.</p>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
