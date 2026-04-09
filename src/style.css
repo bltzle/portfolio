@@ -264,53 +264,6 @@ html, body, #app {
   }
 }
 
-.music-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 24px;
-}
-
-.music-toolbar .back-btn {
-  margin-bottom: 0;
-}
-
-.music-view-toggle {
-  display: flex;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
-  padding: 4px;
-}
-
-.music-view-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  padding: 6px;
-  border-radius: 7px;
-  color: var(--light);
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.music-view-btn.active {
-  color: var(--dark);
-  background: rgba(0, 0, 0, 0.07);
-}
-
-@media (hover: hover) and (min-width: 1251px) {
-  .music-view-btn {
-    transition: color 0.15s ease, background 0.15s ease;
-  }
-  .music-view-btn:not(.active):hover {
-    color: var(--dark);
-  }
-}
-
 /* Home nav */
 .home-nav {
   display: flex;
@@ -957,7 +910,6 @@ img.note-image-placeholder {
 .music-page .page-content {
   gap: 8px;
   padding-bottom: 16px;
-  align-items: stretch;
 }
 
 .music-page .page-content > .page-heading + * {
@@ -980,59 +932,6 @@ img.note-image-placeholder {
   pointer-events: none;
   z-index: var(--z-fade);
   background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
-}
-
-.music-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  width: 100%;
-}
-
-.music-grid-card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  text-decoration: none;
-  transition: opacity 0.15s ease;
-  min-width: 0;
-}
-
-.music-grid-art {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
-}
-
-.music-grid-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.music-grid-title {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--dark);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.music-grid-artist {
-  font-size: 12px;
-  color: var(--light);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-@media (hover: hover) and (min-width: 1251px) {
-  .music-grid:has(.music-grid-card:hover) .music-grid-card:not(:hover) {
-    opacity: 0.2;
-  }
 }
 
 .music-top-btn {
@@ -1534,10 +1433,6 @@ img.note-image-placeholder {
 
   .music-artist-sub {
     display: block;
-  }
-
-  .music-grid {
-    grid-template-columns: 1fr;
   }
 
   .music-track-info {
