@@ -1023,7 +1023,7 @@ img.note-image-placeholder {
 
 .music-row {
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr;
+  grid-template-columns: 3fr 2fr auto;
   align-items: center;
   transition: opacity 0.15s ease, background 0.15s ease;
   cursor: pointer;
