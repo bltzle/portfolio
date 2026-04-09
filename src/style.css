@@ -968,13 +968,12 @@ img.note-image-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.05);
+  background: none;
   border: none;
   padding: 8px;
-  border-radius: 50%;
-  width: fit-content;
-  color: var(--light);
+  margin: -8px;
   cursor: pointer;
+  color: var(--light);
 }
 
 .music-info-close::after {
@@ -987,11 +986,10 @@ img.note-image-placeholder {
 
 @media (hover: hover) and (min-width: 1251px) {
   .music-info-close {
-    transition: color 0.15s ease, background 0.15s ease;
+    transition: color 0.15s ease;
   }
   .music-info-close:hover {
     color: var(--dark);
-    background: rgba(0, 0, 0, 0.08);
   }
 }
 
