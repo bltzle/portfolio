@@ -421,10 +421,11 @@ html, body, #app {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 14px 0;
-  width: fit-content;
+  padding: 14px 8px;
+  margin: 0 -8px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease, background 0.15s ease;
 }
 
 .notes-group-date {
@@ -447,8 +448,8 @@ html, body, #app {
 }
 
 @media (hover: hover) and (min-width: 1251px) {
-  .notes-group-list:has(.notes-group-item:hover) .notes-group-item:not(:hover) {
-    opacity: 0.2;
+  .notes-group-item:hover {
+    background: var(--hover-bg);
   }
 }
 
@@ -458,7 +459,6 @@ html, body, #app {
 
 @media (hover: hover) and (min-width: 1251px) {
   .projects:has(.project:hover) .project:not(:hover) {
-    opacity: 0.2 !important;
   }
 }
 
@@ -1040,7 +1040,6 @@ img.note-image-placeholder {
   }
 
   .music-rows:has(.music-row:hover) .music-row:not(:hover) {
-    opacity: 0.2;
   }
 }
 
@@ -1143,7 +1142,6 @@ img.note-image-placeholder {
     background: var(--hover-bg);
   }
   .sites-rows:has(.sites-row:hover) .sites-row:not(:hover) {
-    opacity: 0.2;
   }
 }
 
