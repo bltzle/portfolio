@@ -1045,14 +1045,9 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
     <div className="music-page page-transition">
       <TopFade />
       <div className="page-content" style={{ paddingTop: '156px' }}>
-        <div className="music-top-row">
-          <button className="back-btn" onClick={onBack || (() => setPage('home'))} aria-label="Back">
-            <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
-          </button>
-          <button className="music-info-btn" aria-label="Info">
-            <InformationCircleIcon width={18} height={18} strokeWidth={1.5} />
-          </button>
-        </div>
+        <button className="back-btn" onClick={onBack || (() => setPage('home'))} aria-label="Back">
+          <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
+        </button>
         <h1 className="page-heading music-heading">Music</h1>
         <div className="music-col-headers">
           {!loading && tracks.length > 0 && (
@@ -1062,6 +1057,9 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
                   {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
                 </button>
               ))}
+              <button className="music-info-btn" aria-label="Info">
+                <InformationCircleIcon width={16} height={16} strokeWidth={1.5} />
+              </button>
             </div>
           )}
         </div>

@@ -896,17 +896,11 @@ img.note-image-placeholder {
   overflow: clip;
 }
 
-.music-top-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
 .music-info-btn {
   display: flex;
   align-items: center;
   justify-content: center;
+  justify-self: end;
   background: none;
   border: none;
   padding: 8px;
@@ -1004,7 +998,7 @@ img.note-image-placeholder {
 
 .music-col-headers-row {
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr auto;
   align-items: center;
   padding: 0 8px 16px;
   margin: 0 -8px;
