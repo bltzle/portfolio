@@ -1536,6 +1536,10 @@ img.note-image-placeholder {
     display: block;
   }
 
+  .music-grid {
+    grid-template-columns: 1fr;
+  }
+
   .music-track-info {
     flex-direction: column;
     gap: 0;
