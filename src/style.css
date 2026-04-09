@@ -995,6 +995,7 @@ img.note-image-placeholder {
   gap: 10px;
   text-decoration: none;
   transition: opacity 0.15s ease;
+  min-width: 0;
 }
 
 .music-grid-art {
