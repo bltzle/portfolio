@@ -88,6 +88,34 @@ function playClick(intensity = 0.4) {
   src.start()
 }
 
+let _velvetBuf = null
+
+function velvetClick() {
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return
+  if (!_audioCtx) {
+    _audioCtx = new AudioContext()
+  }
+  if (_audioCtx.state === 'suspended') _audioCtx.resume()
+  if (!_velvetBuf) {
+    _velvetBuf = _audioCtx.createBuffer(1, Math.floor(_audioCtx.sampleRate * 0.008), _audioCtx.sampleRate)
+    const data = _velvetBuf.getChannelData(0)
+    for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * Math.exp(-i / 50)
+  }
+  const filter = _audioCtx.createBiquadFilter()
+  filter.type = 'lowpass'
+  filter.frequency.value = 1800
+  filter.Q.value = 1
+  const gain = _audioCtx.createGain()
+  gain.gain.value = 0.25
+  const src = _audioCtx.createBufferSource()
+  src.buffer = _velvetBuf
+  src.connect(filter)
+  filter.connect(gain)
+  gain.connect(_audioCtx.destination)
+  src.onended = () => { src.disconnect(); filter.disconnect(); gain.disconnect() }
+  src.start()
+}
+
 import ArrowUturnLeftIcon from '@heroicons/react/24/outline/esm/ArrowUturnLeftIcon.js'
 import ArrowUpIcon from '@heroicons/react/24/outline/esm/ArrowUpIcon.js'
 
@@ -251,7 +279,7 @@ function ProjectDetailPage({ project, onBack, setPage }) {
       <TopFade />
       {hasSections && (
         <aside className="note-sidebar">
-          <button className="back-btn" onClick={onBack} aria-label="Back">
+          <button className="back-btn" onClick={() => { velvetClick(); onBack() }} aria-label="Back">
             <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
           </button>
           <nav className="note-toc">
@@ -468,7 +496,7 @@ function SegmentedNav({ active, setPage }) {
             key={tab.key}
             ref={el => btnRefs.current[tab.key] = el}
             className={visualActive === tab.key ? 'active' : ''}
-            onClick={() => handleTab(tab.key)}
+            onClick={() => { velvetClick(); handleTab(tab.key) }}
           >
             {tab.label}
           </button>
@@ -487,7 +515,7 @@ function SegmentedNav({ active, setPage }) {
               key={tab.key}
               className="active"
               tabIndex={-1}
-              onClick={() => handleTab(tab.key)}
+              onClick={() => { velvetClick(); handleTab(tab.key) }}
             >
               {tab.label}
             </button>
@@ -514,9 +542,9 @@ function AboutPage({ setPage }) {
         <div className="animate" style={{ animationDelay: '0.3s' }}>
           <h2 className="page-heading" style={{ marginBottom: '16px' }}>Connect</h2>
           <div className="about-links">
-            <a href="mailto:mabaltzelle@gmail.com">Email</a>
-            <a href="http://www.linkedin.com/in/matthew-baltzelle" target="_blank" rel="noreferrer">LinkedIn</a>
-            <a href="https://x.com/bltzle" target="_blank" rel="noreferrer">Twitter</a>
+            <a href="mailto:mabaltzelle@gmail.com" onClick={velvetClick}>Email</a>
+            <a href="http://www.linkedin.com/in/matthew-baltzelle" target="_blank" rel="noreferrer" onClick={velvetClick}>LinkedIn</a>
+            <a href="https://x.com/bltzle" target="_blank" rel="noreferrer" onClick={velvetClick}>Twitter</a>
           </div>
         </div>
       </div>
@@ -612,7 +640,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
       {hasSections && (
         <aside className="note-sidebar">
           <div className={`note-sidebar-crumb${crumbInView ? '' : ' visible'}`}>
-            <button className="note-back" onClick={onBack}>Notes</button>
+            <button className="note-back" onClick={() => { velvetClick(); onBack() }}>Notes</button>
           </div>
           <nav className="note-toc">
             <a
@@ -646,7 +674,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
       )}
       <article className="note-article" style={!hasSections ? { paddingBottom: '80px' } : undefined}>
         <div className="note-breadcrumb" ref={breadcrumbRef}>
-          <button className="back-btn" onClick={onBack} aria-label="Back">
+          <button className="back-btn" onClick={() => { velvetClick(); onBack() }} aria-label="Back">
             <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
           </button>
           <h1 className="page-heading">{note.title}</h1>
@@ -914,7 +942,7 @@ function AnimePage({ note, onBack, setPage }) {
   return (
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
-        <button className="back-btn" onClick={onBack} aria-label="Back">
+        <button className="back-btn" onClick={() => { velvetClick(); onBack() }} aria-label="Back">
           <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
@@ -925,7 +953,7 @@ function AnimePage({ note, onBack, setPage }) {
             return (
               <div key={i} ref={el => quoteRefs.current[i] = el} className="quote-block" style={{ opacity: dimmed ? 0.3 : 1 }} onClick={isMobile ? () => handleTap(i) : undefined} onMouseEnter={!isMobile ? e => handleEnter(e, i) : undefined} onMouseMove={!isMobile ? handleMove : undefined} onMouseLeave={!isMobile ? () => setHovered(null) : undefined}>
                 <p className="quote-text">{item.quote}</p>
-                <p className="quote-attr">— <span className="quote-name">{item.quoteAttr ?? item.title}</span>{item.quoteSource && <>, <a href={item.quoteHref} target="_blank" rel="noreferrer">{item.quoteSource}</a></>}</p>
+                <p className="quote-attr">— <span className="quote-name">{item.quoteAttr ?? item.title}</span>{item.quoteSource && <>, <a href={item.quoteHref} target="_blank" rel="noreferrer" onClick={velvetClick}>{item.quoteSource}</a></>}</p>
               </div>
             )
           })}
@@ -974,19 +1002,23 @@ const sites = [
   { name: 'Eryc', site: 'eryc.cc', href: 'https://eryc.cc/', img: 'https://eryc.cc/favicon.svg' },
   { name: 'Todd Hamilton', site: 'toddham.com', href: 'https://toddham.com/', img: 'https://toddham.com/favicon.ico' },
   { name: 'Jakub', site: 'jakub.kr', href: 'https://jakub.kr/', img: '/images/sites/jakub.jpg' },
+  { name: 'Cynthia Cui', site: 'cynth.cafe', href: 'https://www.cynth.cafe/', img: 'https://www.cynth.cafe/favicon.ico' },
+  { name: 'Paul Macgregor', site: 'works.pm', href: 'https://works.pm/', img: 'https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://works.pm&size=128' },
+  { name: 'Justin Jay Wang', site: 'justinjay.wang', href: 'https://justinjay.wang/', img: 'https://justinjay.wang/favicon.ico' },
+  { name: 'Raphael Salaja', site: 'raphaelsalaja.com', href: 'https://www.raphaelsalaja.com/', img: 'https://www.raphaelsalaja.com/icon?5458c24e8064194c' },
 ]
 
 function SitesPage({ note, onBack }) {
   return (
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
-        <button className="back-btn" onClick={onBack} aria-label="Back">
+        <button className="back-btn" onClick={() => { velvetClick(); onBack() }} aria-label="Back">
           <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
         <div className="sites-rows">
           {sites.map((site, i) => (
-            <a key={i} className="sites-row" href={site.href} target="_blank" rel="noreferrer" onMouseEnter={() => playClick(0.4)}>
+            <a key={i} className="sites-row" href={site.href} target="_blank" rel="noreferrer" onClick={velvetClick}>
               <span className="sites-title-cell">
                 <span className="sites-thumb-wrap">
                   {site.img ? <img src={site.img} alt="" className="sites-thumb" /> : <span className="sites-thumb-fallback" />}
@@ -1010,7 +1042,7 @@ function AudioPage({ note, onBack }) {
   return (
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
-        <button className="back-btn" onClick={onBack} aria-label="Back">
+        <button className="back-btn" onClick={() => { velvetClick(); onBack() }} aria-label="Back">
           <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
@@ -1044,7 +1076,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
     <div className="music-page page-transition">
       <TopFade />
       <div className="page-content" style={{ paddingTop: '156px' }}>
-        <button className="back-btn" onClick={onBack || (() => setPage('home'))} aria-label="Back">
+        <button className="back-btn" onClick={() => { velvetClick(); (onBack || (() => setPage('home')))() }} aria-label="Back">
           <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading music-heading">Music</h1>
@@ -1067,7 +1099,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
           ) : (
             <div className="music-rows">
               {displayedTracks.map(({ track, played_at }, i) => (
-                <a key={i} className="music-row" href={track.external_urls.spotify} target="_blank" rel="noreferrer" onMouseEnter={() => playClick(0.4)}>
+                <a key={i} className="music-row" href={track.external_urls.spotify} target="_blank" rel="noreferrer">
                   <span className="music-title-cell">
                     {track.album?.images?.[1]?.url && <img src={track.album.images[1].url} alt="" className="music-thumb" />}
                     <span className="music-track-info">
@@ -1081,7 +1113,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
               ))}
             </div>
           )}
-          <button className="music-top-btn" aria-label="Scroll to top" onClick={(e) => {
+          <button className="music-top-btn" aria-label="Scroll to top" onClick={(e) => { velvetClick();
             let el = e.currentTarget.parentElement
             while (el && el !== document.documentElement) {
               if (el.scrollTop > 0) break
@@ -1116,7 +1148,7 @@ function GamingPage({ note, onBack }) {
   return (
     <div className="page">
       <div className="page-content" style={{ paddingTop: '156px' }}>
-        <button className="back-btn" onClick={onBack} aria-label="Back">
+        <button className="back-btn" onClick={() => { velvetClick(); onBack() }} aria-label="Back">
           <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
         </button>
         <h1 className="page-heading">{note?.title}</h1>
@@ -1205,7 +1237,7 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
                   {group.items.map((w) => {
                     const i = idx++
                     return (
-                      <li key={w.title} className={`notes-group-item${animateList ? ' animate' : ''}${w.disabled ? ' disabled' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: w.disabled ? 'not-allowed' : 'pointer', '--end-opacity': w.disabled ? 0.3 : 1 }} onClick={() => !w.disabled && setActiveNote(w)} onMouseEnter={() => playClick(0.4)}>
+                      <li key={w.title} className={`notes-group-item${animateList ? ' animate' : ''}${w.disabled ? ' disabled' : ''}`} style={{ animationDelay: `${0.1 + i * 0.05}s`, cursor: w.disabled ? 'not-allowed' : 'pointer', '--end-opacity': w.disabled ? 0.3 : 1 }} onClick={() => { if (!w.disabled) { velvetClick(); setActiveNote(w) } }}>
                         <span className="notes-group-title">{w.title}</span>
                       </li>
                     )
@@ -1274,7 +1306,8 @@ function HomePage({ setPage }) {
                   href={p.href}
                   target="_blank"
                   rel="noreferrer"
-                  onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
+                  onClick={velvetClick}
+                  onMouseEnter={() => setHoveredProject(p)}
                   onMouseLeave={() => { setLastHoverText(hoverLines[hoverIndexRef.current % hoverLines.length]); hoverIndexRef.current++; setHoveredProject(null) }}
                 >
                   <span className="project-name">{p.name}</span>
@@ -1288,7 +1321,7 @@ function HomePage({ setPage }) {
                 key={p.name}
                 className={`project animate dim disabled`}
                 style={{ animationDelay: `${0.2 + i * 0.04}s`, '--end-opacity': 0.3 }}
-                onMouseEnter={() => { setHoveredProject(p); playClick(0.4) }}
+                onMouseEnter={() => setHoveredProject(p)}
                 onMouseLeave={() => { setLastHoverText(hoverLines[hoverIndexRef.current % hoverLines.length]); hoverIndexRef.current++; setHoveredProject(null) }}
               >
                 <span className="project-name">{p.name}</span>

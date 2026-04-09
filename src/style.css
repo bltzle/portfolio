@@ -1160,7 +1160,7 @@ img.note-image-placeholder {
   flex-shrink: 0;
   border-radius: 8px;
   overflow: hidden;
-  background: rgba(0,0,0,0.05);
+  background: transparent;
 }
 
 .sites-thumb {
