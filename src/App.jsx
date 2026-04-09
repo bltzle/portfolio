@@ -1120,17 +1120,32 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
           <div className="music-scroll-fade" />
         </div>
       </div>
-      {showInfo && (
-        <>
-          <div className="music-info-backdrop" onClick={() => setShowInfo(false)} />
-          <div className="music-info-modal">
-            <button className="music-info-close" onClick={() => setShowInfo(false)} aria-label="Close">
-              <XMarkIcon width={18} height={18} strokeWidth={1.75} />
-            </button>
-            <p>A running log of what I've been listening to, pulled from Spotify. Updated automatically.</p>
-          </div>
-        </>
-      )}
+      <AnimatePresence>
+        {showInfo && (
+          <>
+            <motion.div
+              className="music-info-backdrop"
+              onClick={() => setShowInfo(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            />
+            <motion.div
+              className="music-info-modal"
+              initial={{ opacity: 0, transform: 'translate(-50%, -50%) scale(0.95)' }}
+              animate={{ opacity: 1, transform: 'translate(-50%, -50%) scale(1)' }}
+              exit={{ opacity: 0, transform: 'translate(-50%, -50%) scale(0.95)' }}
+              transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              <button className="music-info-close" onClick={() => setShowInfo(false)} aria-label="Close">
+                <XMarkIcon width={18} height={18} strokeWidth={1.75} />
+              </button>
+              <p>A running log of what I've been listening to, pulled from Spotify. Updated automatically.</p>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
