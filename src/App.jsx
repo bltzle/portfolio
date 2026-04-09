@@ -1005,7 +1005,7 @@ const sites = [
   { name: 'Cynthia Cui', site: 'cynth.cafe', href: 'https://www.cynth.cafe/', img: 'https://www.cynth.cafe/favicon.ico' },
   { name: 'Paul Macgregor', site: 'works.pm', href: 'https://works.pm/', img: 'https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://works.pm&size=128' },
   { name: 'Justin Jay Wang', site: 'justinjay.wang', href: 'https://justinjay.wang/', img: 'https://justinjay.wang/favicon.ico' },
-  { name: 'Raphael Salaja', site: 'raphaelsalaja.com', href: 'https://www.raphaelsalaja.com/', img: 'https://www.raphaelsalaja.com/icon?5458c24e8064194c' },
+  { name: 'Raphael Salaja', site: 'raphaelsalaja.com', href: 'https://www.raphaelsalaja.com/', img: 'https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.raphaelsalaja.com&size=128' },
 ]
 
 function SitesPage({ note, onBack }) {

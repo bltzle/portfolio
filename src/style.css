@@ -980,7 +980,7 @@ img.note-image-placeholder {
 
 .music-col-headers-row {
   display: grid;
-  grid-template-columns: 3fr 2fr auto;
+  grid-template-columns: 3fr 2fr 75px;
   align-items: center;
   padding: 0 8px 16px;
   margin: 0 -8px;
@@ -1027,7 +1027,7 @@ img.note-image-placeholder {
 
 .music-row {
   display: grid;
-  grid-template-columns: 3fr 2fr auto;
+  grid-template-columns: 3fr 2fr 75px;
   align-items: center;
   transition: opacity 0.15s ease, background 0.15s ease;
   cursor: pointer;
