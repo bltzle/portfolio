@@ -940,28 +940,45 @@ img.note-image-placeholder {
 .music-info-modal p {
   font-size: 14px;
   line-height: 1.6;
-  color: var(--light);
+  color: var(--dark);
   margin: 0;
 }
 
+.music-info-modal p + p {
+  margin-top: 12px;
+}
+
 .music-info-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
+  background: rgba(0, 0, 0, 0.05);
   border: none;
   padding: 8px;
-  margin: -8px;
-  cursor: pointer;
+  border-radius: 50%;
+  width: fit-content;
+  margin-bottom: 16px;
   color: var(--light);
-  transition: color 0.15s ease;
+  cursor: pointer;
 }
 
-.music-info-close:hover {
-  color: var(--dark);
+.music-info-close::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+@media (hover: hover) and (min-width: 1251px) {
+  .music-info-close {
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .music-info-close:hover {
+    color: var(--dark);
+    background: rgba(0, 0, 0, 0.08);
+  }
 }
 
 .music-heading {

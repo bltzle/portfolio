@@ -1141,7 +1141,8 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
               <button className="music-info-close" onClick={() => setShowInfo(false)} aria-label="Close">
                 <XMarkIcon width={18} height={18} strokeWidth={1.75} />
               </button>
-              <p>I love discovering new music and seeing what different pockets of music other people are listening to. This is a running list my music listening history. I tend to listen to certain songs on repeat for extended periods of time so each individual track is documented only once a day in order to combat this.</p>
+              <p>I love discovering new music and seeing what different pockets of music other people are listening to.</p>
+              <p>This is a running list my music listening history. I tend to listen to certain songs on repeat for extended periods of time so each individual track is documented only once a day in order to combat this.</p>
             </motion.div>
           </>
         )}
