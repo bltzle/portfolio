@@ -269,6 +269,7 @@ html, body, #app {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  margin-bottom: 24px;
 }
 
 .music-toolbar .back-btn {
@@ -956,6 +957,7 @@ img.note-image-placeholder {
 .music-page .page-content {
   gap: 8px;
   padding-bottom: 16px;
+  align-items: stretch;
 }
 
 .music-page .page-content > .page-heading + * {
@@ -985,7 +987,6 @@ img.note-image-placeholder {
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   width: 100%;
-  margin-top: 16px;
 }
 
 .music-grid-card {
