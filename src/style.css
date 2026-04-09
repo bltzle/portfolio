@@ -958,6 +958,7 @@ img.note-image-placeholder {
   padding: 8px;
   border-radius: 50%;
   width: fit-content;
+  margin-left: auto;
   margin-bottom: 16px;
   color: var(--light);
   cursor: pointer;
