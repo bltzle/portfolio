@@ -1006,6 +1006,8 @@ const sites = [
   { name: 'Paul Macgregor', site: 'works.pm', href: 'https://works.pm/', img: 'https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://works.pm&size=128' },
   { name: 'Justin Jay Wang', site: 'justinjay.wang', href: 'https://justinjay.wang/', img: 'https://justinjay.wang/favicon.ico' },
   { name: 'Raphael Salaja', site: 'raphaelsalaja.com', href: 'https://www.raphaelsalaja.com/', img: 'https://avatars.githubusercontent.com/u/52125687?v=4' },
+  { name: 'Josh Puckett', site: 'joshpuckett.me', href: 'https://joshpuckett.me/', img: 'https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://joshpuckett.me&size=128' },
+  { name: 'Charlie Deets', site: 'charliedeets.com', href: 'https://charliedeets.com/', img: 'https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://charliedeets.com&size=128' },
 ]
 
 function SitesPage({ note, onBack }) {
