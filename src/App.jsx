@@ -118,6 +118,9 @@ function velvetClick() {
 
 import ArrowUturnLeftIcon from '@heroicons/react/24/outline/esm/ArrowUturnLeftIcon.js'
 import ArrowUpIcon from '@heroicons/react/24/outline/esm/ArrowUpIcon.js'
+import EyeIcon from '@heroicons/react/24/outline/esm/EyeIcon.js'
+import CheckCircleIcon from '@heroicons/react/24/outline/esm/CheckCircleIcon.js'
+import HeartIcon from '@heroicons/react/24/outline/esm/HeartIcon.js'
 
 import { motion, AnimatePresence, useMotionValue, animate as motionAnimate } from 'motion/react'
 
@@ -128,7 +131,6 @@ const projects = [
     year: '2024',
     img: '/images/ritual-dental/cover.png',
     href: 'https://ritualdental.com',
-    linkOnly: true,
     tagline: 'Personalized preventative oral care that sticks',
     role: 'Product Designer',
     tools: 'Figma',
@@ -559,16 +561,21 @@ const writings = [
     type: 'music',
   },
   {
-    title: 'High craft individuals',
+    title: 'Sites of high craft individuals',
     category: 'Collection',
     type: 'sites',
     sections: [],
     content: [],
   },
   {
-    title: 'Quotes from animations',
+    title: 'Quotes from animations that stuck with me',
     category: 'Collection',
     type: 'anime',
+  },
+  {
+    title: 'My anime library',
+    category: 'Collection',
+    type: 'anime-library',
   },
   {
     title: 'For the love of sound',
@@ -743,7 +750,7 @@ function dedupeTracks(items) {
 const animeData = {
   watching: [
     {
-      title: 'Frieren: Beyond Journey\'s End', studio: 'Madhouse', episodes: 28,
+      title: 'Frieren: Beyond Journey\'s End', studio: 'Madhouse', episodes: 28, favorite: true, anilistId: 154587,
       cover: 'https://image.tmdb.org/t/p/original/dqZENchTd7lp5zht7BdlqM7RBhD.jpg',
       desc: [
         'Frieren follows an elven mage who outlives the companions she adventured with, watching decades pass like seasons. The show is less about the journey than about what gets left behind. There\'s a line in the show that has stayed with me.',
@@ -757,7 +764,7 @@ const animeData = {
       quoteImg: '/images/quotes/frieren.gif',
     },
     {
-      title: 'Avatar: The Last Airbender', studio: 'Nickelodeon', episodes: 61,
+      title: 'Avatar: The Last Airbender', studio: 'Nickelodeon', episodes: 61, href: 'https://en.wikipedia.org/wiki/Avatar:_The_Last_Airbender',
       cover: 'https://image.tmdb.org/t/p/original/9RQhVb3r3mCMqYVhLoCu4EvuipP.jpg',
       quote: 'Sometimes life is like this tunnel. You can\'t always see the light at the end of the tunnel, but if you keep moving, you will come to a better place.',
       quoteAttr: 'Iroh',
@@ -771,7 +778,7 @@ const animeData = {
       ],
     },
     {
-      title: 'Made in Abyss', studio: 'Kinema Citrus', episodes: 25,
+      title: 'Made in Abyss', studio: 'Kinema Citrus', episodes: 25, favorite: true, anilistId: 97986,
       cover: 'https://image.tmdb.org/t/p/original/f6U3odfIb3pCXMGKRTQGGF9o1Qg.jpg',
       quote: 'I want to go. Even if it means I can never come back.',
       quoteAttr: 'Riko',
@@ -785,7 +792,7 @@ const animeData = {
       ],
     },
     {
-      title: 'Hunter x Hunter', studio: 'Madhouse', episodes: 148,
+      title: 'Hunter x Hunter', studio: 'Madhouse', episodes: 148, favorite: true, anilistId: 11061,
       cover: 'https://image.tmdb.org/t/p/original/i2EEr2uBvRlAwJ8d8zTG2Y19mIa.jpg',
       quote: 'Gon, you are light. Sometimes you shine so brightly, I must look away. But even so, is it still okay if I stay by your side?',
       quoteAttr: 'Killua',
@@ -799,7 +806,7 @@ const animeData = {
       ],
     },
     {
-      title: 'Jujutsu Kaisen', studio: 'MAPPA', episodes: 47,
+      title: 'Jujutsu Kaisen', studio: 'MAPPA', episodes: 47, anilistId: 113415,
       cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg',
       desc: [
         'Jujutsu Kaisen follows Yuji Itadori, a high schooler who swallows a cursed finger and gets pulled into a world of sorcerers and malevolent spirits. The premise moves fast and the show keeps pace with it.',
@@ -808,7 +815,7 @@ const animeData = {
       ],
     },
     {
-      title: 'My Hero Academia', studio: 'Bones', episodes: 138,
+      title: 'My Hero Academia', studio: 'Bones', episodes: 138, anilistId: 21459,
       cover: 'https://image.tmdb.org/t/p/original/ivOLM47yJt90P19RH1NvJrAJz9F.jpg',
       quote: 'Who protects the heroes when they are hurting?',
       quoteAttr: 'Uraraka',
@@ -817,7 +824,7 @@ const animeData = {
       quoteImg: '/images/quotes/uraraka.gif',
     },
     {
-      title: 'Ranking of Kings', studio: 'Wit Studio', episodes: 23,
+      title: 'Ranking of Kings', studio: 'Wit Studio', episodes: 23, anilistId: 113717,
       cover: 'https://image.tmdb.org/t/p/original/ujMjMUi6z02uOfQEerEDC4rH6aG.jpg',
       quote: 'Because of what you are missing, you have experienced many things that an ordinary person never would. While they may be painful, they will surely help you to clear your own path. So love everything about yourself.',
       quoteAttr: 'Despa',
@@ -827,10 +834,10 @@ const animeData = {
     },
   ],
   finished: [
-    { title: 'Jujutsu Kaisen', studio: 'MAPPA', episodes: 47, year: 2025, cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg' },
-    { title: 'Ranking of Kings', studio: 'Wit Studio', episodes: 23, year: 2025, cover: 'https://image.tmdb.org/t/p/original/ujMjMUi6z02uOfQEerEDC4rH6aG.jpg' },
-    { title: 'Mob Psycho 100', studio: 'Bones', episodes: 37, year: 2024, cover: 'https://image.tmdb.org/t/p/original/vR7hwaGQ0ySRoq1WobiNRaPs4WO.jpg' },
-    { title: 'Ping Pong the Animation', studio: 'Tatsunoko', episodes: 11, year: 2024, cover: 'https://image.tmdb.org/t/p/original/frgVn3ww547TVQH8vS2bWKZnEBu.jpg' },
+    { title: 'Jujutsu Kaisen', studio: 'MAPPA', episodes: 47, year: 2025, anilistId: 113415, cover: 'https://image.tmdb.org/t/p/original/fHpKWq9ayzSk8nSwqRuaAUemRKh.jpg' },
+    { title: 'Ranking of Kings', studio: 'Wit Studio', episodes: 23, year: 2025, anilistId: 113717, cover: 'https://image.tmdb.org/t/p/original/ujMjMUi6z02uOfQEerEDC4rH6aG.jpg' },
+    { title: 'Mob Psycho 100', studio: 'Bones', episodes: 37, year: 2024, anilistId: 21507, cover: 'https://image.tmdb.org/t/p/original/vR7hwaGQ0ySRoq1WobiNRaPs4WO.jpg' },
+    { title: 'Ping Pong the Animation', studio: 'Tatsunoko', episodes: 11, year: 2024, anilistId: 20607, cover: 'https://image.tmdb.org/t/p/original/frgVn3ww547TVQH8vS2bWKZnEBu.jpg' },
   ],
 }
 
@@ -992,6 +999,120 @@ function AnimePage({ note, onBack, setPage }) {
             })()}
           </div>
         )}
+      </div>
+    </div>
+  )
+}
+
+const animeLibraryTabs = [
+  { key: 'watching', icon: EyeIcon },
+  { key: 'finished', icon: CheckCircleIcon },
+  { key: 'favorites', icon: HeartIcon },
+]
+
+function AnimeLibraryPage({ note, onBack }) {
+  const all = [...animeData.watching, ...animeData.finished]
+  const seen = new Set()
+  const items = all.filter(item => {
+    if (seen.has(item.title)) return false
+    seen.add(item.title)
+    return true
+  })
+
+  const grouped = {}
+  for (let y = 2026; y >= 2020; y--) grouped[y] = []
+  for (const item of items) {
+    const year = item.year ?? new Date().getFullYear()
+    if (!grouped[year]) grouped[year] = []
+    grouped[year].push(item)
+  }
+
+  const sortedKeys = Object.keys(grouped).sort((a, b) => Number(b) - Number(a))
+
+  const [hovered, setHovered] = useState(null)
+  const avatarRef = useRef(null)
+  const mouse = useRef({ x: 0, y: 0 })
+  const pos = useRef({ x: 0, y: 0 })
+  const raf = useRef(null)
+
+  useEffect(() => {
+    items.forEach(item => {
+      if (item.cover) { const img = new Image(); img.src = item.cover }
+    })
+  }, [])
+
+  useEffect(() => {
+    if (hovered === null) {
+      if (raf.current) { cancelAnimationFrame(raf.current); raf.current = null }
+      return
+    }
+    const lerp = 0.15
+    const tick = () => {
+      pos.current.x += (mouse.current.x - pos.current.x) * lerp
+      pos.current.y += (mouse.current.y - pos.current.y) * lerp
+      if (avatarRef.current) {
+        avatarRef.current.style.left = `${pos.current.x + 16}px`
+        avatarRef.current.style.top = `${pos.current.y}px`
+      }
+      raf.current = requestAnimationFrame(tick)
+    }
+    raf.current = requestAnimationFrame(tick)
+    return () => { if (raf.current) cancelAnimationFrame(raf.current) }
+  }, [hovered])
+
+  const handleMove = (e) => {
+    mouse.current.x = e.clientX
+    mouse.current.y = e.clientY
+  }
+
+  const handleEnter = (e, item) => {
+    mouse.current.x = e.clientX
+    mouse.current.y = e.clientY
+    pos.current.x = e.clientX
+    pos.current.y = e.clientY
+    setHovered(item)
+  }
+
+  return (
+    <div className="page">
+      <div className="page-content" style={{ paddingTop: '156px' }}>
+        <button className="back-btn" onClick={() => { velvetClick(); onBack() }} aria-label="Back">
+          <ArrowUturnLeftIcon width={16} height={16} strokeWidth={1.75} />
+        </button>
+        <h1 className="page-heading">{note?.title}</h1>
+        {sortedKeys.map(year => (
+          <div key={year} className="anime-lib-year-group">
+            <span className="anime-lib-year">{year}</span>
+            <div className="anime-lib-list">
+              {grouped[year].map((item, i) => {
+                const link = item.anilistId ? `https://anilist.co/anime/${item.anilistId}` : item.href
+                return (
+                  <a
+                    key={i}
+                    className="anime-lib-row"
+                    href={link}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ opacity: hovered && hovered !== item ? 0.3 : 1 }}
+                    onMouseEnter={e => handleEnter(e, item)}
+                    onMouseMove={handleMove}
+                    onMouseLeave={() => setHovered(null)}
+                    onClick={velvetClick}
+                  >
+                    <div className="anime-lib-row-left">
+                      <span className="anime-lib-title">{item.title}</span>
+                      <span className="anime-lib-studio">{item.studio}</span>
+                    </div>
+                    <span className="anime-lib-status">{item.year ? 'Finished' : 'Watching'}</span>
+                  </a>
+                )
+              })}
+            </div>
+          </div>
+        ))}
+        <div ref={avatarRef} className={`anime-lib-hover-card${hovered ? ' visible' : ''}`}>
+          {hovered?.cover && <img src={hovered.cover} alt="" className="anime-lib-hover-img" />}
+        </div>
       </div>
     </div>
   )
@@ -1178,6 +1299,14 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
     )
   }
 
+  if (activeNote?.type === 'anime-library') {
+    return (
+      <div key={activeNote.title} className="page-transition">
+        <AnimeLibraryPage note={activeNote} onBack={() => { setAnimateList(true); setActiveNote(null) }} />
+      </div>
+    )
+  }
+
 
   if (activeNote?.type === 'audio') {
     return (
@@ -1301,7 +1430,22 @@ function HomePage({ setPage }) {
             <p className="animate" style={{ animationDelay: '0.15s' }}>Designer crafting stories for early-stage companies</p>
           </header>
           <ul className="projects">
-            {projects.map((p, i) => p.href ? (
+            {projects.map((p, i) => p.content ? (
+              <li key={p.name} className={`project animate`} style={{ animationDelay: `${0.2 + i * 0.04}s` }}>
+                <a
+                  className="project-link"
+                  href="#"
+                  onClick={e => { e.preventDefault(); velvetClick(); setActiveProject(p) }}
+                  onMouseEnter={() => setHoveredProject(p)}
+                  onMouseLeave={() => { setLastHoverText(hoverLines[hoverIndexRef.current % hoverLines.length]); hoverIndexRef.current++; setHoveredProject(null) }}
+                >
+                  <span className="project-name">{p.name}</span>
+                  <span className="project-desc">{p.desc}</span>
+                  <span className="project-leader" />
+                  <span className="project-year">{p.year}</span>
+                </a>
+              </li>
+            ) : p.href ? (
               <li key={p.name} className={`project animate`} style={{ animationDelay: `${0.2 + i * 0.04}s` }}>
                 <a
                   className="project-link"
