@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Click Sound Lab</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #F2F1ED;
+      font-family: 'Inter', system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .lab {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 320px;
+    }
+    h2 {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(0,0,0,0.4);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+    button {
+      background: white;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(0,0,0,0.7);
+      cursor: pointer;
+      text-align: left;
+      transition: box-shadow 0.15s ease, scale 0.1s ease-out;
+    }
+    button:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    button:active {
+      scale: 0.97;
+    }
+    .desc {
+      font-size: 12px;
+      color: rgba(0,0,0,0.35);
+      font-weight: 400;
+      margin-top: 3px;
+    }
+    .divider {
+      height: 1px;
+      background: rgba(0,0,0,0.06);
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="lab">
+    <h2>Current</h2>
+    <button onclick="current()">
+      Filtered noise
+      <div class="desc">What you have now — bandpass noise, exp decay</div>
+    </button>
+
+    <div class="divider"></div>
+    <h2>New attempts</h2>
+
+    <button onclick="velvetClick()">
+      Velvet
+      <div class="desc">Lowpass noise, longer buffer, gentler decay — soft pillow tap</div>
+    </button>
+
+    <button onclick="muteClick()">
+      Muted
+      <div class="desc">Lower bandpass freq, wider Q — like tapping a closed book</div>
+    </button>
+
+    <button onclick="cushionClick()">
+      Cushion
+      <div class="desc">Dual lowpass, slow rolloff, longer tail — padded, round</div>
+    </button>
+
+    <button onclick="whisperClick()">
+      Whisper
+      <div class="desc">Very quiet bandpass, narrow band, fast fade — barely there</div>
+    </button>
+
+    <button onclick="brushClick()">
+      Brush
+      <div class="desc">Gentle noise shaped by lowpass sweep — soft brush stroke</div>
+    </button>
+
+    <button onclick="velvetV2()">
+      Velvet v2
+      <div class="desc">Velvet with gain envelope, Q 0.707, longer tail — no edge clicks</div>
+    </button>
+
+    <div class="divider"></div>
+    <h2>Library (src/sounds.js)</h2>
+
+    <button onclick="lib.click()">
+      click
+      <div class="desc">General-purpose soft tap</div>
+    </button>
+    <button onclick="lib.tap()">
+      tap
+      <div class="desc">Sharper percussive — primary buttons</div>
+    </button>
+    <button onclick="lib.hover()">
+      hover
+      <div class="desc">Barely there hover accent</div>
+    </button>
+    <button onclick="lib.toggle()">
+      toggle
+      <div class="desc">Two-stage pitch lift for state changes</div>
+    </button>
+    <button onclick="lib.confirm()">
+      confirm
+      <div class="desc">Richer two-tone success</div>
+    </button>
+    <button onclick="lib.drop()">
+      drop
+      <div class="desc">Low thud with pitch fall — something landing</div>
+    </button>
+
+    <div class="divider"></div>
+    <h2>Click variants</h2>
+    <button onclick="clicks.soft()">soft <div class="desc">Lowpass 1400Hz, Q 0.7, long decay — muffled pillow</div></button>
+    <button onclick="clicks.aero()">aero <div class="desc">Lowpass sweep 3000→900Hz — airy whoosh-click</div></button>
+    <button onclick="clicks.arcade()">arcade <div class="desc">Narrow bandpass 4200Hz, Q 8 — bright blip</div></button>
+    <button onclick="clicks.organic()">organic <div class="desc">Bandpass 1800Hz, Q 2 — natural wooden tap</div></button>
+    <button onclick="clicks.glass()">glass <div class="desc">Bandpass 5500Hz, Q 7 — thin ping</div></button>
+    <button onclick="clicks.industrial()">industrial <div class="desc">Bandpass 700Hz, Q 3 — dense low click</div></button>
+    <button onclick="clicks.minimal()">minimal <div class="desc">Bandpass 2200Hz, Q 2 — clean neutral</div></button>
+    <button onclick="clicks.retro()">retro <div class="desc">Bandpass 3200Hz, Q 5, square-ish decay — 8-bit blip</div></button>
+    <button onclick="clicks.crisp()">crisp <div class="desc">Bandpass 4600Hz, Q 4 — snappy</div></button>
+  </div>
+
+  <script>
+    let ctx = null
+
+    function ensureCtx() {
+      if (!ctx) ctx = new AudioContext()
+      if (ctx.state === 'suspended') ctx.resume()
+      return ctx
+    }
+
+    // ── Library (mirrors src/sounds.js) ─────────────────
+    function _noiseBuf(c, dur, tau) {
+      const b = c.createBuffer(1, Math.floor(c.sampleRate * dur), c.sampleRate)
+      const d = b.getChannelData(0)
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / tau)
+      return b
+    }
+    function _env(c, g, peak, a, r) {
+      const t = c.currentTime
+      g.gain.setValueAtTime(0, t)
+      g.gain.linearRampToValueAtTime(peak, t + a)
+      g.gain.exponentialRampToValueAtTime(0.0001, t + a + r)
+    }
+    const lib = {
+      click() {
+        const c = ensureCtx()
+        const src = c.createBufferSource(); src.buffer = _noiseBuf(c, 0.018, 120)
+        const f = c.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1600; f.Q.value = 0.707
+        const g = c.createGain(); _env(c, g, 0.28, 0.0015, 0.016)
+        src.connect(f); f.connect(g); g.connect(c.destination)
+        src.start(); src.onended = () => { src.disconnect(); f.disconnect(); g.disconnect() }
+      },
+      tap() {
+        const c = ensureCtx()
+        const src = c.createBufferSource(); src.buffer = _noiseBuf(c, 0.01, 45)
+        const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 2600; f.Q.value = 4
+        const g = c.createGain(); _env(c, g, 0.22, 0.001, 0.008)
+        src.connect(f); f.connect(g); g.connect(c.destination)
+        src.start(); src.onended = () => { src.disconnect(); f.disconnect(); g.disconnect() }
+      },
+      hover() {
+        const c = ensureCtx()
+        const src = c.createBufferSource(); src.buffer = _noiseBuf(c, 0.008, 30)
+        const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1600; f.Q.value = 6
+        const g = c.createGain(); _env(c, g, 0.08, 0.001, 0.006)
+        src.connect(f); f.connect(g); g.connect(c.destination)
+        src.start(); src.onended = () => { src.disconnect(); f.disconnect(); g.disconnect() }
+      },
+      toggle() {
+        const c = ensureCtx(); const t = c.currentTime
+        const o = c.createOscillator(); o.type = 'sine'
+        o.frequency.setValueAtTime(520, t)
+        o.frequency.exponentialRampToValueAtTime(780, t + 0.06)
+        const g = c.createGain(); _env(c, g, 0.12, 0.003, 0.07)
+        o.connect(g); g.connect(c.destination)
+        o.start(t); o.stop(t + 0.08)
+        o.onended = () => { o.disconnect(); g.disconnect() }
+      },
+      confirm() {
+        const c = ensureCtx(); const t = c.currentTime
+        const o1 = c.createOscillator(); o1.type = 'sine'; o1.frequency.setValueAtTime(660, t)
+        const o2 = c.createOscillator(); o2.type = 'sine'; o2.frequency.setValueAtTime(990, t + 0.05)
+        const g = c.createGain()
+        g.gain.setValueAtTime(0, t)
+        g.gain.linearRampToValueAtTime(0.14, t + 0.005)
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.18)
+        o1.connect(g); o2.connect(g); g.connect(c.destination)
+        o1.start(t); o1.stop(t + 0.18)
+        o2.start(t + 0.05); o2.stop(t + 0.18)
+        o2.onended = () => { o1.disconnect(); o2.disconnect(); g.disconnect() }
+      },
+      drop() {
+        const c = ensureCtx(); const t = c.currentTime
+        const dur = 0.14
+        const o = c.createOscillator(); o.type = 'sine'
+        o.frequency.setValueAtTime(200, t)
+        o.frequency.exponentialRampToValueAtTime(55, t + dur)
+        const og = c.createGain()
+        og.gain.setValueAtTime(0, t)
+        og.gain.linearRampToValueAtTime(0.35, t + 0.004)
+        og.gain.exponentialRampToValueAtTime(0.0001, t + dur)
+        o.connect(og); og.connect(c.destination)
+        o.start(t); o.stop(t + dur)
+
+        const src = c.createBufferSource(); src.buffer = _noiseBuf(c, 0.012, 40)
+        const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1200; f.Q.value = 1.5
+        const ng = c.createGain(); _env(c, ng, 0.12, 0.001, 0.01)
+        src.connect(f); f.connect(ng); ng.connect(c.destination)
+        src.start(t)
+
+        o.onended = () => { o.disconnect(); og.disconnect() }
+        src.onended = () => { src.disconnect(); f.disconnect(); ng.disconnect() }
+      },
+    }
+    window.lib = lib
+
+    // ── Iteration helpers ───────────────────────────────
+    function _noiseClick(freq, q, dur, tau, peak, attack, release, type = 'lowpass') {
+      const c = ensureCtx()
+      const src = c.createBufferSource(); src.buffer = _noiseBuf(c, dur, tau)
+      const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q
+      const g = c.createGain(); _env(c, g, peak, attack, release)
+      src.connect(f); f.connect(g); g.connect(c.destination)
+      src.start(); src.onended = () => { src.disconnect(); f.disconnect(); g.disconnect() }
+    }
+    function _sweep(fromHz, toHz, dur, peak, attackSec) {
+      const c = ensureCtx(); const t = c.currentTime
+      const o = c.createOscillator(); o.type = 'sine'
+      o.frequency.setValueAtTime(fromHz, t)
+      o.frequency.exponentialRampToValueAtTime(toHz, t + dur)
+      const g = c.createGain()
+      g.gain.setValueAtTime(0, t)
+      g.gain.linearRampToValueAtTime(peak, t + attackSec)
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
+      o.connect(g); g.connect(c.destination)
+      o.start(t); o.stop(t + dur)
+      o.onended = () => { o.disconnect(); g.disconnect() }
+    }
+    function _sweepSwell(fromHz, toHz, dur, peak) {
+      const c = ensureCtx(); const t = c.currentTime
+      const o = c.createOscillator(); o.type = 'sine'
+      o.frequency.setValueAtTime(fromHz, t)
+      o.frequency.exponentialRampToValueAtTime(toHz, t + dur)
+      const g = c.createGain()
+      g.gain.setValueAtTime(0.0001, t)
+      g.gain.exponentialRampToValueAtTime(peak, t + dur * 0.6)
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur)
+      o.connect(g); g.connect(c.destination)
+      o.start(t); o.stop(t + dur)
+      o.onended = () => { o.disconnect(); g.disconnect() }
+    }
+    function _dropWithContact(fromHz, toHz, dur, peak) {
+      const c = ensureCtx(); const t = c.currentTime
+      const o = c.createOscillator(); o.type = 'sine'
+      o.frequency.setValueAtTime(fromHz, t)
+      o.frequency.exponentialRampToValueAtTime(toHz, t + dur)
+      const og = c.createGain()
+      og.gain.setValueAtTime(0, t)
+      og.gain.linearRampToValueAtTime(peak, t + 0.004)
+      og.gain.exponentialRampToValueAtTime(0.0001, t + dur)
+      o.connect(og); og.connect(c.destination)
+      o.start(t); o.stop(t + dur)
+
+      const src = c.createBufferSource(); src.buffer = _noiseBuf(c, 0.012, 40)
+      const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1200; f.Q.value = 1.5
+      const ng = c.createGain(); _env(c, ng, 0.12, 0.001, 0.01)
+      src.connect(f); f.connect(ng); ng.connect(c.destination)
+      src.start(t)
+
+      o.onended = () => { o.disconnect(); og.disconnect() }
+      src.onended = () => { src.disconnect(); f.disconnect(); ng.disconnect() }
+    }
+
+    const clicks = {
+      soft: () => _noiseClick(1400, 0.7, 0.02, 140, 0.28, 0.0018, 0.018, 'lowpass'),
+      aero: () => {
+        const c = ensureCtx(); const t = c.currentTime
+        const src = c.createBufferSource(); src.buffer = _noiseBuf(c, 0.022, 180)
+        const f = c.createBiquadFilter(); f.type = 'lowpass'
+        f.frequency.setValueAtTime(3000, t)
+        f.frequency.exponentialRampToValueAtTime(900, t + 0.022)
+        f.Q.value = 0.8
+        const g = c.createGain(); _env(c, g, 0.24, 0.002, 0.02)
+        src.connect(f); f.connect(g); g.connect(c.destination)
+        src.start()
+        src.onended = () => { src.disconnect(); f.disconnect(); g.disconnect() }
+      },
+      arcade: () => _noiseClick(4200, 8, 0.007, 25, 0.22, 0.0005, 0.006, 'bandpass'),
+      organic: () => _noiseClick(1800, 2, 0.014, 60, 0.26, 0.0012, 0.012, 'bandpass'),
+      glass: () => _noiseClick(5500, 7, 0.005, 20, 0.18, 0.0005, 0.004, 'bandpass'),
+      industrial: () => _noiseClick(700, 3, 0.018, 90, 0.3, 0.0015, 0.016, 'bandpass'),
+      minimal: () => _noiseClick(2200, 2, 0.008, 40, 0.22, 0.001, 0.007, 'bandpass'),
+      retro: () => _noiseClick(3200, 5, 0.01, 35, 0.22, 0.0008, 0.008, 'bandpass'),
+      crisp: () => _noiseClick(4600, 4, 0.006, 22, 0.22, 0.0006, 0.005, 'bandpass'),
+    }
+    window.clicks = clicks
+
+    // ── Current (what you have) ──────────────────────────
+    function current() {
+      const c = ensureCtx()
+      const filter = c.createBiquadFilter()
+      filter.type = 'bandpass'
+      filter.Q.value = 8
+      filter.frequency.value = 2800
+      const gain = c.createGain()
+      gain.gain.value = 0.2
+      filter.connect(gain)
+      gain.connect(c.destination)
+
+      const buf = c.createBuffer(1, Math.floor(c.sampleRate * 0.004), c.sampleRate)
+      const d = buf.getChannelData(0)
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / 25)
+      const src = c.createBufferSource()
+      src.buffer = buf
+      src.connect(filter)
+      src.onended = () => { src.disconnect(); filter.disconnect(); gain.disconnect() }
+      src.start()
+    }
+
+    // ── Velvet ────────────────────────────────────────────
+    // Lowpass noise, longer buffer, gentler decay. Soft pillow tap.
+    function velvetClick() {
+      const c = ensureCtx()
+      const buf = c.createBuffer(1, Math.floor(c.sampleRate * 0.008), c.sampleRate)
+      const d = buf.getChannelData(0)
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / 50)
+
+      const filter = c.createBiquadFilter()
+      filter.type = 'lowpass'
+      filter.frequency.value = 1800
+      filter.Q.value = 1
+
+      const gain = c.createGain()
+      gain.gain.value = 0.25
+
+      const src = c.createBufferSource()
+      src.buffer = buf
+      src.connect(filter)
+      filter.connect(gain)
+      gain.connect(c.destination)
+      src.start()
+      src.onended = () => { src.disconnect(); filter.disconnect(); gain.disconnect() }
+    }
+
+    // ── Muted ────────────────────────────────────────────
+    // Lower bandpass, wider Q. Like tapping a closed book.
+    function muteClick() {
+      const c = ensureCtx()
+      const buf = c.createBuffer(1, Math.floor(c.sampleRate * 0.005), c.sampleRate)
+      const d = buf.getChannelData(0)
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / 30)
+
+      const filter = c.createBiquadFilter()
+      filter.type = 'bandpass'
+      filter.frequency.value = 1200
+      filter.Q.value = 3
+
+      const gain = c.createGain()
+      gain.gain.value = 0.22
+
+      const src = c.createBufferSource()
+      src.buffer = buf
+      src.connect(filter)
+      filter.connect(gain)
+      gain.connect(c.destination)
+      src.start()
+      src.onended = () => { src.disconnect(); filter.disconnect(); gain.disconnect() }
+    }
+
+    // ── Cushion ──────────────────────────────────────────
+    // Dual lowpass, slow rolloff, longer tail. Padded, round.
+    function cushionClick() {
+      const c = ensureCtx()
+      const buf = c.createBuffer(1, Math.floor(c.sampleRate * 0.01), c.sampleRate)
+      const d = buf.getChannelData(0)
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / 60)
+
+      const lp1 = c.createBiquadFilter()
+      lp1.type = 'lowpass'
+      lp1.frequency.value = 1400
+      lp1.Q.value = 0.7
+
+      const lp2 = c.createBiquadFilter()
+      lp2.type = 'lowpass'
+      lp2.frequency.value = 2000
+      lp2.Q.value = 0.5
+
+      const gain = c.createGain()
+      gain.gain.value = 0.3
+
+      const src = c.createBufferSource()
+      src.buffer = buf
+      src.connect(lp1)
+      lp1.connect(lp2)
+      lp2.connect(gain)
+      gain.connect(c.destination)
+      src.start()
+      src.onended = () => { src.disconnect(); lp1.disconnect(); lp2.disconnect(); gain.disconnect() }
+    }
+
+    // ── Whisper ──────────────────────────────────────────
+    // Very quiet bandpass, narrow band, fast fade. Barely there.
+    function whisperClick() {
+      const c = ensureCtx()
+      const buf = c.createBuffer(1, Math.floor(c.sampleRate * 0.004), c.sampleRate)
+      const d = buf.getChannelData(0)
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / 18)
+
+      const filter = c.createBiquadFilter()
+      filter.type = 'bandpass'
+      filter.frequency.value = 1600
+      filter.Q.value = 5
+
+      const gain = c.createGain()
+      gain.gain.value = 0.1
+
+      const src = c.createBufferSource()
+      src.buffer = buf
+      src.connect(filter)
+      filter.connect(gain)
+      gain.connect(c.destination)
+      src.start()
+      src.onended = () => { src.disconnect(); filter.disconnect(); gain.disconnect() }
+    }
+
+    // ── Velvet v2 ────────────────────────────────────────
+    // Envelope ramps remove edge clicks. Flat lowpass, longer tail.
+    function velvetV2() {
+      const c = ensureCtx()
+      const t = c.currentTime
+      const dur = 0.018
+      const buf = c.createBuffer(1, Math.floor(c.sampleRate * dur), c.sampleRate)
+      const d = buf.getChannelData(0)
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / 120)
+
+      const filter = c.createBiquadFilter()
+      filter.type = 'lowpass'
+      filter.frequency.value = 1600
+      filter.Q.value = 0.707
+
+      const gain = c.createGain()
+      gain.gain.setValueAtTime(0, t)
+      gain.gain.linearRampToValueAtTime(0.28, t + 0.0015)
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + dur)
+
+      const src = c.createBufferSource()
+      src.buffer = buf
+      src.connect(filter)
+      filter.connect(gain)
+      gain.connect(c.destination)
+      src.start()
+      src.onended = () => { src.disconnect(); filter.disconnect(); gain.disconnect() }
+    }
+
+    // ── Brush ────────────────────────────────────────────
+    // Gentle noise shaped by lowpass sweep. Soft brush stroke.
+    function brushClick() {
+      const c = ensureCtx()
+      const t = c.currentTime
+      const buf = c.createBuffer(1, Math.floor(c.sampleRate * 0.012), c.sampleRate)
+      const d = buf.getChannelData(0)
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / 70)
+
+      const filter = c.createBiquadFilter()
+      filter.type = 'lowpass'
+      filter.frequency.setValueAtTime(2200, t)
+      filter.frequency.exponentialRampToValueAtTime(400, t + 0.012)
+      filter.Q.value = 0.8
+
+      const gain = c.createGain()
+      gain.gain.value = 0.2
+
+      const src = c.createBufferSource()
+      src.buffer = buf
+      src.connect(filter)
+      filter.connect(gain)
+      gain.connect(c.destination)
+      src.start()
+      src.onended = () => { src.disconnect(); filter.disconnect(); gain.disconnect() }
+    }
+  </script>
+</body>
+</html>
