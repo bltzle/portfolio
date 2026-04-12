@@ -525,10 +525,31 @@ const writings = [
     date: 'Apr 6, 2026',
   },
   {
-    title: 'The infestation of hackers in games',
+    title: 'Trying to write more',
     category: 'Writing',
-    type: 'gaming',
-    date: 'Apr 6, 2026',
+    type: 'writing',
+    date: 'Apr 11, 2026',
+    disabled: true,
+  },
+  {
+    title: 'The importance of perseverance',
+    category: 'Writing',
+    type: 'writing',
+    date: 'Apr 11, 2026',
+    disabled: true,
+  },
+  {
+    title: 'On being kind',
+    category: 'Writing',
+    type: 'writing',
+    date: 'Apr 11, 2026',
+    disabled: true,
+  },
+  {
+    title: 'Jumping browsers',
+    category: 'Writing',
+    type: 'writing',
+    date: 'Apr 11, 2026',
     disabled: true,
   },
   {
@@ -1174,7 +1195,7 @@ function WritingPage({ setPage, initialNote, tracks, loading }) {
               else groups.push({ category: w.category, items: [w] })
             }
             return groups.map((group) => (
-              <div key={group.category} className="notes-group">
+              <div key={group.category} className={`notes-group${animateList ? ' animate' : ''}`} style={{ '--divider-delay': `${0.1 + idx * 0.05}s` }}>
                 <span className={`notes-group-label${animateList ? ' animate' : ''}`} style={{ animationDelay: `${0.1 + idx * 0.05}s` }}>{group.category}</span>
                 <ul className="notes-group-list">
                   {group.items.map((w) => {

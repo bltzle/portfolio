@@ -401,6 +401,26 @@ html, body, #app {
   width: 100%;
 }
 
+.notes-group + .notes-group {
+  padding-top: 40px;
+  position: relative;
+}
+
+.notes-group + .notes-group::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--border-light);
+}
+
+.notes-group.animate + .notes-group.animate::before {
+  opacity: 0;
+  animation: itemIn 1s cubic-bezier(0.215, 0.61, 0.355, 1) forwards;
+  animation-delay: var(--divider-delay, 0.1s);
+}
+
 .notes-group-label {
   font-size: 14px;
   font-weight: 500;
@@ -421,11 +441,9 @@ html, body, #app {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 14px 8px;
-  margin: 0 -8px;
-  border-radius: 12px;
+  padding: 14px 0;
   cursor: pointer;
-  transition: opacity 0.15s ease, background 0.15s ease;
+  transition: opacity 0.15s ease;
 }
 
 .notes-group-date {
@@ -448,8 +466,15 @@ html, body, #app {
 }
 
 @media (hover: hover) and (min-width: 1251px) {
-  .notes-group-item:hover {
-    background: var(--hover-bg);
+  .notes-group-item,
+  .notes-group-label {
+    transition: opacity 0.15s ease;
+  }
+  .notes-group-list:has(.notes-group-item:not(.disabled):hover) .notes-group-item:not(:hover) {
+    opacity: 0.3;
+  }
+  .notes-group-item:hover:not(.disabled) .notes-group-title {
+    text-decoration-color: var(--dark);
   }
 }
 
