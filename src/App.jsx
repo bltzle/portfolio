@@ -236,6 +236,7 @@ function ProjectDetailPage({ project, onBack, setPage }) {
               href="#"
               onClick={e => {
                 e.preventDefault()
+                velvetClick()
                 setActiveId('__intro')
                 scrollingRef.current = true
                 const scrollEl = document.getElementById('app') ?? document.documentElement
@@ -250,6 +251,7 @@ function ProjectDetailPage({ project, onBack, setPage }) {
                 className={`note-toc-item${activeId === s.id ? ' active' : ''}`}
                 onClick={e => {
                   e.preventDefault()
+                  velvetClick()
                   setActiveId(s.id)
                   scrollingRef.current = true
                   containerRef.current?.querySelector(`#${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -617,6 +619,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
               href="#"
               onClick={e => {
                 e.preventDefault()
+                velvetClick()
                 setActiveId('__intro')
                 scrollingRef.current = true
                 const scrollEl = containerRef.current?.closest('.page-transition') ?? window
@@ -631,6 +634,7 @@ function NoteDetailPage({ note, onBack, setPage }) {
                 className={`note-toc-item${activeId === s.id ? ' active' : ''}`}
                 onClick={e => {
                   e.preventDefault()
+                  velvetClick()
                   setActiveId(s.id)
                   scrollingRef.current = true
                   containerRef.current?.querySelector(`#${s.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -1049,7 +1053,7 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
           {!loading && tracks.length > 0 && (
             <div className="music-col-headers-row">
               {[['song', 'Title'], ['artist', 'Artist'], ['played', 'Played']].map(([col, label]) => (
-                <button key={col} onClick={() => cycleSort(col)} style={{ color: sort.col === col ? 'var(--dark)' : '' }}>
+                <button key={col} onClick={() => { velvetClick(); cycleSort(col) }} style={{ color: sort.col === col ? 'var(--dark)' : '' }}>
                   {label} {sort.col === col ? (sort.dir === 'asc' ? '↑' : '↓') : ''}
                 </button>
               ))}
@@ -1060,11 +1064,11 @@ function MusicPage({ setPage, tracks, loading, onBack }) {
           {loading ? (
             <p className="music-empty">Loading...</p>
           ) : tracks.length === 0 && ['localhost', '127.0.0.1'].includes(window.location.hostname) ? (
-            <button className="music-connect" onClick={initiateSpotifyAuth}>Connect Spotify</button>
+            <button className="music-connect" onClick={() => { velvetClick(); initiateSpotifyAuth() }}>Connect Spotify</button>
           ) : (
             <div className="music-rows">
               {displayedTracks.map(({ track, played_at }, i) => (
-                <a key={i} className="music-row" href={track.external_urls.spotify} target="_blank" rel="noreferrer">
+                <a key={i} className="music-row" href={track.external_urls.spotify} target="_blank" rel="noreferrer" onClick={velvetClick}>
                   <span className="music-title-cell">
                     {track.album?.images?.[1]?.url && <img src={track.album.images[1].url} alt="" className="music-thumb" />}
                     <span className="music-track-info">
